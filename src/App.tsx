@@ -4,6 +4,7 @@ import { CssBaseline } from '@mui/material';
 
 import Index from 'pages/Index'
 import Signin from 'pages/Signin'
+import Signup from 'pages/Signup'
 import Home from 'pages/Home'
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={
           <RequireAuth>
             <Home />
