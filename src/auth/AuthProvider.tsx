@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  useLocation,
-  Navigate,
-} from "react-router-dom";
 import { fakeAuthProvider } from "./auth";
-
 
 export interface AuthContextType {
   user: any;
@@ -19,6 +14,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let signin = (newUser: string, callback: VoidFunction) => {
     return fakeAuthProvider.signin(() => {
+      console.log(newUser);
       setUser(newUser);
       callback();
     });
@@ -40,19 +36,4 @@ function useAuth() {
   return React.useContext(AuthContext);
 }
 
-function RequireAuth({ children }: { children: JSX.Element }) {
-  let auth = useAuth();
-  let location = useLocation();
-
-  if (!auth.user) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-    return <Navigate to="/signin" state={{ from: location }} replace />;
-  }
-
-  return children;
-}
-
-export { AuthProvider, RequireAuth, useAuth }
+export { AuthProvider, useAuth }

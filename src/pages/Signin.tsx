@@ -13,6 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { firebaseAuth } from '../firebase';
 import { useAuth } from 'auth/AuthProvider'
 
 function Copyright(props: any) {
@@ -41,9 +43,11 @@ export default function SignIn() {
 
     let formData = new FormData(event.currentTarget);
     let username = formData.get("email") as string;
-    console.log("foo");
+    let email = String(formData.get('email'));
+    let password = String(formData.get('password'));
 
     auth.signin(username, () => {
+
       // Send them back to the page they tried to visit when they were
       // redirected to the login page. Use { replace: true } so we don't create
       // another entry in the history stack for the login page.  This means that
