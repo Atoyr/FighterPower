@@ -12,8 +12,27 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from 'auth/AuthProvider';
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-import { useAuth } from 'auth/AuthProvider'
+function LogoIcon(props: SvgIconProps) {
+  return (
+    <SvgIcon viewBox="0 0 250 250">
+      <circle cx="57" cy="125" r="27" fill="#f55"  />
+      <circle cx="141" cy="105" r="22" fill="#f55"  />
+      <circle cx="135" cy="145" r="22" fill="#f55"  />
+      <circle cx="181" cy="90" r="22" fill="#f55"  />
+      <circle cx="175" cy="130" r="22" fill="#f55"  />
+      <circle cx="221" cy="90" r="22" fill="#f55"  />
+      <circle cx="215" cy="130" r="22" fill="#f55"  />
+
+      <circle cx="135" cy="145" r="17" fill="#fff"  />
+      <circle cx="141" cy="105" r="17" fill="#fff"  />
+      <circle cx="181" cy="90" r="17" fill="#fff"  />
+      <circle cx="221" cy="90" r="17" fill="#fff"  />
+    </SvgIcon>
+  );
+}
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -56,7 +75,7 @@ const ResponsiveAppBar = () => {
               component="div"
               sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             >
-              LOGO
+              <LogoIcon />
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -89,7 +108,7 @@ const ResponsiveAppBar = () => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem key={page} onClick={() => navigate("/goalsheet/10")}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
@@ -101,13 +120,13 @@ const ResponsiveAppBar = () => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              LOGO
+              <LogoIcon />
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => navigate("/goalsheet/10")}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   {page}
@@ -159,7 +178,7 @@ const ResponsiveAppBar = () => {
               component="div"
               sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             >
-              LOGO
+              <LogoIcon />
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -204,7 +223,7 @@ const ResponsiveAppBar = () => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              LOGO
+              <LogoIcon />
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
