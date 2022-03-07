@@ -1,3 +1,8 @@
+import { 
+  FirestoreDataConverter, 
+  Timestamp,
+  serverTimestamp
+} from 'firebase/firestore'
 export type User = {
   __type : 'user';
   id? : string;
@@ -7,4 +12,31 @@ export type User = {
   iconUrl? : string;
   twitter? : string;
   discord? : string;
+};
+
+export const UserConverter: FirestoreDataConverter<User> = {
+  toFirestore: (user) => {
+    return {
+      __type : 'user',
+      id : user.id,
+      displayName : user.displayName,
+      // TODO
+      createdAt : user.createdAt ? new Date() : serverTimestamp(),
+      modifiedAt : user.modifiedAt ? new Date(): serverTimestamp(),
+      iconUrl : user.iconUrl ? user.iconUrl : null,
+      twitter : user.twitter ? user.twitter : null,
+      discord : user.discord ? user.discord : null,
+    };
+  },
+  fromFirestore: (snapshot) => {
+    const data = snapshot.data();
+    const user = {
+      id: snapshot.id,
+      ...data,
+      createdAt: data.createdAt?.toDate(),
+      modifiedAt: data.modifiedAt?.toDate(),
+    } as User;
+    user.id = snapshot.id;
+    return user;
+  },
 };

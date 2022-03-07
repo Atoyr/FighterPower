@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase';
-import { useAuth } from 'auth/AuthProvider'
+import { useAuth, AuthParameter } from 'auth/AuthProvider'
 
 function Copyright(props: any) {
   return (
@@ -42,18 +42,15 @@ export default function SignIn() {
     event.preventDefault();
 
     let formData = new FormData(event.currentTarget);
-    let username = formData.get("email") as string;
-    let email = String(formData.get('email'));
-    let password = String(formData.get('password'));
+    let email = formData.get('email') as string;
+    let password = formData.get('password') as string;
+    let authParam = {
+      AuthType: "EmailAndPassword",
+      email : email,
+      password : password,
+    } as AuthParameter;
 
-    auth.signin(username, () => {
-
-      // Send them back to the page they tried to visit when they were
-      // redirected to the login page. Use { replace: true } so we don't create
-      // another entry in the history stack for the login page.  This means that
-      // when they get to the protected page and click the back button, they
-      // won't end up back on the login page, which is also really nice for the
-      // user experience.
+    auth.signin(authParam, () => {
       navigate(from, { replace: true });
     });
   };
