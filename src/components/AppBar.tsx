@@ -55,8 +55,11 @@ const ResponsiveAppBar = () => {
 
   let navigate = useNavigate();
   const handleSignin = () => {
-    console.log('signin');
     navigate("/signin");
+  };
+
+  const handleSignup = () => {
+    navigate("/signup");
   };
 
   let auth = useAuthContext();
@@ -238,7 +241,18 @@ const ResponsiveAppBar = () => {
               ))}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ 
+                  flexGrow: 0 ,
+                  display: 'flex',
+                  flexDirection: 'row-reverse',
+                  borderRadius: 1,
+                  }}>
+              <Button
+                key='signin'
+                onClick={handleSignup}
+                sx={{ my: 2, color: 'white', display: 'block', border:1, m: 2 }}>
+                SIGN UP
+              </Button>
               <Button
                 key='signin'
                 onClick={handleSignin}
