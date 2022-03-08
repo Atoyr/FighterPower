@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,8 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { firebaseAuth } from '../firebase';
+import { useAuthContext } from 'context/AuthProvider'
+import { AuthParameter } from 'data/authParameter'
 
 function Copyright(props: any) {
   return (
@@ -31,12 +32,23 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+  let navigate = useNavigate();
+  let auth = useAuthContext();
+  let from = "/home";
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let email = String(data.get('email'));
     let password = String(data.get('password'));
-    createUserWithEmailAndPassword(firebaseAuth, email, password);
+    let authParam = {
+      AuthType: "EmailAndPassword",
+      email : email,
+      password : password,
+    } as AuthParameter;
+
+    auth.signup(authParam, () => {
+      navigate(from, { replace: true });
+    });
   };
 
   return (

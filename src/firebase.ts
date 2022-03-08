@@ -17,4 +17,4 @@ const firebaseAuth = getAuth();
 const firebaseFirestore = getFirestore();
 
 export default app;
-export { firebaseAuth, firebaseFirestore }
+export { firebaseAuth, firebaseFirestore };

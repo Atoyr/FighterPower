@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from 'auth/AuthProvider';
+import { useAuthContext } from 'context/AuthProvider';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 function LogoIcon(props: SvgIconProps) {
@@ -55,15 +55,16 @@ const ResponsiveAppBar = () => {
 
   let navigate = useNavigate();
   const handleSignin = () => {
+    console.log('signin');
     navigate("/signin");
   };
 
-  let auth = useAuth();
+  let auth = useAuthContext();
 
   const pages = ['Products', 'Pricing', 'Blog'];
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-  if ( auth.user)
+  if ( auth.authState.user != null)
   {
     return (
       <AppBar position="static">

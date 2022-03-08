@@ -13,9 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { firebaseAuth } from '../firebase';
-import { useAuth, AuthParameter } from 'auth/AuthProvider'
+import { useAuthContext } from 'context/AuthProvider'
+import { AuthParameter } from 'data/authParameter'
 
 function Copyright(props: any) {
   return (
@@ -35,7 +34,7 @@ const theme = createTheme();
 export default function SignIn() {
   // let location = useLocation();
   let navigate = useNavigate();
-  let auth = useAuth();
+  let auth = useAuthContext();
   let from = "/home";
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

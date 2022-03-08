@@ -1,19 +1,16 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { fakeAuthProvider } from "./auth";
 import { firebaseAuth } from "../firebase";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
-import { User } from "data/user"
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, 
+  signOut 
+} from "firebase/auth"
 
-export type AuthParameter = {
-  __type : "auth_parameter";
-  AuthType : string;
-  email? : string;
-  password? : string;
-};
+import { AuthParameter } from "data/authParameter"
+import { useAuthState, AuthState } from "hook/useAuthState"
 
 export interface AuthContextType {
-  user: User;
+  authState: AuthState;
   signup: (param: AuthParameter, callback: VoidFunction) => void;
   signin: (param: AuthParameter, callback: VoidFunction) => void;
   signout: (callback: VoidFunction) => void;
@@ -22,46 +19,34 @@ export interface AuthContextType {
 let AuthContext = React.createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  let [user, setUser] = React.useState<any>(null);
+  let authState = useAuthState();
 
   let signup = (param: AuthParameter, callback: VoidFunction) => {
-      // setUser(newUser);
+      createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
       callback();
   };
 
   let signin = (param: AuthParameter, callback: VoidFunction) => {
-    return () => {
       switch (param.AuthType) {
         case "EmailAndPassword":
           signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
           break;
       }
-
-      // setUser(newUser);
       callback();
-    };
   };
 
   let signout = (callback: VoidFunction) => {
-    return () => {
-      firebaseAuth.signOut();
+      signOut(firebaseAuth);
       callback();
-    };
   };
 
-  let value = { user, signup, signin, signout };
-
-  useEffect(() => {
-    onAuthStateChanged(firebaseAuth, (user) => {
-      console.log(user);
-    });
-  }, []);
+  let value = { authState, signup, signin, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-function useAuth() {
+function useAuthContext() {
   return React.useContext(AuthContext);
 }
 
-export { AuthProvider, useAuth }
+export { AuthProvider, useAuthContext }

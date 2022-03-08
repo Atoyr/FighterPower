@@ -3,9 +3,12 @@ import {
   Timestamp,
   serverTimestamp
 } from 'firebase/firestore'
+import { User as FirebaseUser } from "firebase/auth"
+
 export type User = {
   __type : 'user';
   id? : string;
+  firebaseUser? : FirebaseUser | null;
   displayName : string;
   createdAt? : Date;
   modifiedAt? : Date;
@@ -23,6 +26,7 @@ export const UserConverter: FirestoreDataConverter<User> = {
       // TODO
       createdAt : user.createdAt ? new Date() : serverTimestamp(),
       modifiedAt : user.modifiedAt ? new Date(): serverTimestamp(),
+
       iconUrl : user.iconUrl ? user.iconUrl : null,
       twitter : user.twitter ? user.twitter : null,
       discord : user.discord ? user.discord : null,

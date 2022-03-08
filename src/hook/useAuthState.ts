@@ -3,17 +3,24 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 
 import { firebaseAuth } from '../firebase';
 
-export const useAuthState = (): [User | null, boolean] => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+}
 
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-    setLoading(false);
-    setUser(user);
-  });
-  return unsubscribe;
-}, [firebaseAuth]);
+export const useAuthState = (): AuthState => {
+  const [ AuthState, setAuthState ] = useState<AuthState>({ user: null, loading: false});
 
-  return [user, loading];
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      let authState = {
+        user: user,
+        loading: false,
+      };
+      setAuthState(authState);
+    });
+    return unsubscribe;
+  }, [firebaseAuth]);
+
+  return AuthState;
 };
