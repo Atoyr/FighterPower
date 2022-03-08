@@ -22,27 +22,27 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let authState = useAuthState();
 
   let signup = (param: AuthParameter, callback: VoidFunction) => {
-      createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
-      callback();
+      createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+      .then(user => callback());
   };
 
   let signin = (param: AuthParameter, callback: VoidFunction) => {
       switch (param.AuthType) {
         case "EmailAndPassword":
-          signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
+          signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+          .then(user => callback());
           break;
       }
-      callback();
   };
 
   let signout = (callback: VoidFunction) => {
-      signOut(firebaseAuth);
-      callback();
+      signOut(firebaseAuth)
+      .then(() => callback());
   };
 
   let value = { authState, signup, signin, signout };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{!authState.loading && children}</AuthContext.Provider>;
 }
 
 function useAuthContext() {

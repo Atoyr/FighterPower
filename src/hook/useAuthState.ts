@@ -9,7 +9,7 @@ export interface AuthState {
 }
 
 export const useAuthState = (): AuthState => {
-  const [ AuthState, setAuthState ] = useState<AuthState>({ user: null, loading: false});
+  const [ AuthState, setAuthState ] = useState<AuthState>({ user: null, loading: true});
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
