@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function NotFound() {
+export default function Profile() {
   return (
   <div>
-    Page Not Found.
+    Profile
   </div>
   );
 }

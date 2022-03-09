@@ -45,7 +45,6 @@ export default function GoalSheet() {
   let { id } = useParams<"id">();
   return (
   <Box sx={{ flexGrow: 1 }}>
-    <AppBar />
     <Grid>
       <Grid item xs={12}>
         <Paper

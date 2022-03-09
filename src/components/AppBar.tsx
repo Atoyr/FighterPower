@@ -11,13 +11,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Outlet, } from "react-router-dom";
 import { useAuthContext } from 'context/AuthProvider';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 function LogoIcon(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 0 250 250">
+    <SvgIcon viewBox="0 0 250 250" fontSize="large">
       <circle cx="57" cy="125" r="27" fill="#f55"  />
       <circle cx="141" cy="105" r="22" fill="#f55"  />
       <circle cx="135" cy="145" r="22" fill="#f55"  />
@@ -70,6 +70,7 @@ const ResponsiveAppBar = () => {
   if ( auth.authState.user != null)
   {
     return (
+      <div>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -170,9 +171,12 @@ const ResponsiveAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
+      <Outlet />
+      </div>
     );
   } else {
     return (
+    <div>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -263,6 +267,8 @@ const ResponsiveAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
+      <Outlet />
+      </div>
     );
   }
 };

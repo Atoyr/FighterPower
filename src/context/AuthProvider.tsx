@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword, 
   signOut 
 } from "firebase/auth"
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { AuthParameter } from "data/authParameter"
 import { useAuthState, AuthState } from "hook/useAuthState"
@@ -42,7 +44,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let value = { authState, signup, signin, signout };
 
-  return <AuthContext.Provider value={value}>{!authState.loading && children}</AuthContext.Provider>;
+  return( 
+    <AuthContext.Provider value={value}>
+      {authState.loading ? 
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+       : children}
+    </AuthContext.Provider>
+  );
 }
 
 function useAuthContext() {
