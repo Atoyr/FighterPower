@@ -6,51 +6,35 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Drawer from '@mui/material/Drawer';
 import { useLocation, useNavigate, Outlet, } from "react-router-dom";
 import { useAuthContext } from 'context/AuthProvider';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
-
-function LogoIcon(props: SvgIconProps) {
-  return (
-    <SvgIcon viewBox="0 0 250 250" fontSize="large">
-      <circle cx="57" cy="125" r="27" fill="#f55"  />
-      <circle cx="141" cy="105" r="22" fill="#f55"  />
-      <circle cx="135" cy="145" r="22" fill="#f55"  />
-      <circle cx="181" cy="90" r="22" fill="#f55"  />
-      <circle cx="175" cy="130" r="22" fill="#f55"  />
-      <circle cx="221" cy="90" r="22" fill="#f55"  />
-      <circle cx="215" cy="130" r="22" fill="#f55"  />
-
-      <circle cx="135" cy="145" r="17" fill="#fff"  />
-      <circle cx="141" cy="105" r="17" fill="#fff"  />
-      <circle cx="181" cy="90" r="17" fill="#fff"  />
-      <circle cx="221" cy="90" r="17" fill="#fff"  />
-    </SvgIcon>
-  );
-}
+import SiteLogo from './SiteLogo';
 
 const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [openMenu, setOpenMenu] = React.useState<boolean>(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+    setOpenMenu(true);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+    setOpenMenu(false);
   };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   let navigate = useNavigate();
@@ -69,16 +53,7 @@ const ResponsiveAppBar = () => {
 
   const LeftArea = () => {
     return (
-      <Box sx={{ flexGrow: 0 , px: 0.5}}>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-        >
-          <LogoIcon />
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Box sx={{ flexGrow: 0, px: 0.5 }}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -89,57 +64,30 @@ const ResponsiveAppBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            open={Boolean(anchorElNav)}
+          <Drawer
+            anchor="left"
+            open={openMenu}
             onClose={handleCloseNavMenu}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-            }}
           >
-            {pages.map((page) => (
-              <MenuItem key={page} onClick={() => navigate("/goalsheet/10")}>
-                <Typography textAlign="center">{page}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
+            <Box
+              sx={{ width: 250}}
+              role="presentation"
+            >
+      <List>
+          <ListItem button >
+            <ListItemText primary={"foo"} />
+          </ListItem>
+      </List>
+    </Box>
+          </Drawer>
         </Box>
-      </Box>
     );
   };
 
   const CenterArea = () => {
     return (
-      <Box sx={{flexGrow: 1, px: 0.5 }}>
-        <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-        >
-          <LogoIcon />
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-        {pages.map((page) => (
-              <Button
-              key={page}
-              onClick={() => navigate("/goalsheet/10")}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-              {page}
-              </Button>
-              ))}
-        </Box>
+      <Box sx={{flexGrow: 1, px: 0.5, display: 'flex', flexDirection: 'row' }}>
+        <SiteLogo size={36} />
       </Box>
     );
   };
@@ -155,7 +103,6 @@ const ResponsiveAppBar = () => {
         <Menu
           sx={{ mt: '45px' }}
           id="menu-appbar"
-          anchorEl={anchorElUser}
           anchorOrigin={{
             vertical: 'top',
             horizontal: 'right',
@@ -165,7 +112,7 @@ const ResponsiveAppBar = () => {
             vertical: 'top',
             horizontal: 'right',
           }}
-          open={Boolean(anchorElUser)}
+          open={false}
           onClose={handleCloseUserMenu}
         >
           {settings.map((setting) => (
@@ -180,6 +127,7 @@ const ResponsiveAppBar = () => {
 
   if ( auth.authState.user != null)
   {
+  }
     return (
       <div>
       <AppBar position="static">
@@ -189,106 +137,11 @@ const ResponsiveAppBar = () => {
             <RightArea />
           </Toolbar>
       </AppBar>
-      <Outlet />
+      <Container maxWidth="xl">
+        <Outlet />
+      </Container>
       </div>
     );
-  } else {
-    return (
-    <div>
-      <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            >
-              <LogoIcon />
-            </Typography>
-
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-            >
-              <LogoIcon />
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
-
-            <Box sx={{ 
-                  flexGrow: 0 ,
-                  display: 'flex',
-                  flexDirection: 'row-reverse',
-                  borderRadius: 1,
-                  }}>
-              <Button
-                key='signin'
-                onClick={handleSignup}
-                sx={{ my: 2, color: 'white', display: 'block', border:1, m: 2 }}>
-                SIGN UP
-              </Button>
-              <Button
-                key='signin'
-                onClick={handleSignin}
-                sx={{ my: 2, color: 'white', display: 'block', border:1 }}>
-                SIGN IN
-              </Button>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <Outlet />
-      </div>
-    );
-  }
 };
 
 export default ResponsiveAppBar;

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { useAuthContext } from 'context/AuthProvider'
+import SiteLogo from 'components/SiteLogo';
 
 export default function Index() {
   let auth = useAuthContext();
@@ -31,6 +32,8 @@ export default function Index() {
       </Button>
     </Box>
     Home Page.
+    <SiteLogo />
+
     <Button onClick={() => {auth.signout(() => {})}}>signout</Button>
   </div>
   );
