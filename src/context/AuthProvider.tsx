@@ -3,7 +3,8 @@ import { firebaseAuth } from "../firebase";
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword, 
-  signOut 
+  signOut,
+  updateProfile
 } from "firebase/auth"
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -25,6 +26,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let signup = (param: AuthParameter, callback: VoidFunction) => {
       createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+      .then(user => {
+        updateProfile(user.user, { displayName: param.displayName ?? "" })
+      })
       .then(user => callback());
   };
 
