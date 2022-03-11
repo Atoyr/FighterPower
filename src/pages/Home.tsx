@@ -4,12 +4,24 @@ import Box from '@mui/material/Box';
 import { useAuthContext } from 'context/AuthProvider'
 import { useUserContext } from 'context/UserProvider'
 import SiteLogo from 'components/SiteLogo';
+import { setGoalSheet, newGoalSheet } from 'data/goalSheet';
+import { newGoal } from 'data/goal';
+
 
 export default function Index() {
   let authContext = useAuthContext();
   let userContext = useUserContext();
-  console.log(userContext);
   const displayName = userContext ? userContext.displayName : "";
+
+  const handleSubmit = () => {
+    let id =userContext.id as string;
+    let gs = newGoalSheet("title!", "note");
+    let g1 = newGoal("goal1", 1);
+    let g2 = newGoal("goal2", 2);
+    gs.goals = [g1, g2];
+
+   setGoalSheet(id, gs);
+  };
   return (
   <div>
     <Box sx={{m: 1, p: 1}}>
@@ -37,6 +49,12 @@ export default function Index() {
     </Box>
     Home Page. <br />
     name is {displayName }
+
+    <Box sx={{m: 1, p: 1}}>
+      <Button variant="outlined" fullWidth onClick={handleSubmit}>
+        目標シートを追加
+      </Button>
+    </Box>
     <SiteLogo />
 
     <Button onClick={() => {authContext.signout(() => {})}}>signout</Button>
