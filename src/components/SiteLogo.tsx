@@ -21,19 +21,27 @@ const SiteLogo = (props: siteLogoProps) => {
       <circle cx="135" cy="145" r="27" fill="#f55"  />
       <circle cx="181" cy="90" r="27" fill="#f55"  />
       <circle cx="175" cy="130" r="27" fill="#f55"  />
-      <circle cx="221" cy="90" r="27" fill="#f55"  />
-      <circle cx="215" cy="130" r="27" fill="#f55"  />
+      <circle cx="222" cy="90" r="27" fill="#f55"  />
+      <circle cx="216" cy="130" r="27" fill="#f55"  />
 
-      <circle cx="141" cy="105" r="22" fill="#fff" />
-      <circle cx="135" cy="145" r="22" fill="#fff" />
-      <circle cx="181" cy="90" r="22" fill="#fff" />
-      <circle cx="175" cy="130" r="22" fill="#fff" />
-      <circle cx="221" cy="90" r="22" fill="#fff" />
-      <circle cx="215" cy="130" r="22" fill="#fff" />
+      <circle cx="141" cy="105" r="22" fill="#000" />
+      <circle cx="135" cy="145" r="22" fill="#000" />
+      <circle cx="181" cy="90" r="22" fill="#000" />
+      <circle cx="175" cy="130" r="22" fill="#000" />
+      <circle cx="222" cy="90" r="22" fill="#000" />
+      <circle cx="216" cy="130" r="22" fill="#000" />
+
+      <circle cx="141" cy="105" r="20" fill="#f55" />
+      <circle cx="135" cy="145" r="20" fill="#f55" />
+      <circle cx="181" cy="90" r="20" fill="#f55" />
+      <circle cx="175" cy="130" r="20" fill="#f55" />
+      <circle cx="222" cy="90" r="20" fill="#f55" />
+      <circle cx="216" cy="130" r="20" fill="#f55" />
       <text alignmentBaseline="middle" x="280" y="125"
         style={{
           fontSize: 200,
           fill: "#FFF",
+          userSelect: "none",
         }}
       >FighterPower</text>
     </svg>
