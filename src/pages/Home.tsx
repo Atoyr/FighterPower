@@ -38,7 +38,7 @@ export default function Index() {
        alignItems="center"
        justifyContent="center"
             sx={{
-              height: 120,
+              height: { xs: 120, sm: 400 },
               backgroundColor: 'primary',
               '&:hover': {
                 backgroundColor: 'primary.main',
