@@ -37,7 +37,6 @@ export const GoalConverter: FirestoreDataConverter<Goal> = {
     };
   },
   fromFirestore: (snapshot) => {
-    console.log(snapshot)
     const data = snapshot.data();
     const goal = {
       id: snapshot.id,

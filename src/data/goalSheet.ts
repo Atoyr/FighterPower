@@ -9,8 +9,8 @@ import {
   collection,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
-import { Goal, setGoal, GoalConverter } from './goal'
-import { Result } from './result'
+import { Goal, setGoal } from './goal'
+import { Result, setResult } from './result'
 
 export type GoalSheet = {
   __type : 'goal_sheet';
@@ -99,6 +99,12 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet) => Promise<str
     if (goalSheet.goals) {
       goalSheet.goals.forEach(async v => {
         setGoal( userId, goalSheetId, v, transaction);
+      });
+    }
+
+    if (goalSheet.results) {
+      goalSheet.results.forEach(async v => {
+        setResult( userId, goalSheetId, v, transaction);
       });
     }
   });
