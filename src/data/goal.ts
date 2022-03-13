@@ -49,7 +49,8 @@ export const GoalConverter: FirestoreDataConverter<Goal> = {
   },
 };
 
-export const getGoal: (userId: string, goalSheetId: string, goalId: string, transaction?: Transaction) => { goal: (Goal | null), exists: boolean } = (userId, goalSheetId, goalId, transaction?) => {
+export const getGoal: (userId: string, goalSheetId: string, goalId: string, transaction?: Transaction) => { goal: (Goal | null), exists: boolean } 
+  = (userId, goalSheetId, goalId, transaction?) => {
   if (goalId == "") {
     return {
       goal : null,
@@ -85,5 +86,4 @@ export const setGoal: (userId: string, goalSheetId: string, goal: Goal, transact
   transaction ? transaction.set( newGoalRef.withConverter(GoalConverter), goal) : setDoc(newGoalRef.withConverter(GoalConverter), goal)
   return goal.id as string;
 };
-
 

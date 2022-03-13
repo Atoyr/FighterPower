@@ -23,6 +23,8 @@ export type GoalSheet = {
   goals? : Goal[]
   results? : Result[]
   tags? : string[];
+  goalCount : number;
+  resultCount : number;
 };
 
 export const newGoalSheet : (title: string, note: string) => GoalSheet = (title, note) => {
@@ -30,6 +32,8 @@ export const newGoalSheet : (title: string, note: string) => GoalSheet = (title,
     title : title,
     note : note,
     valid : true,
+    goalCount : 0,
+    resultCount : 0,
   } as GoalSheet;
 }
 
@@ -64,38 +68,46 @@ function emptyGoalSheet(): GoalSheet {
   return newGoalSheet("", "");
 }
 
-export const getGoalSheet: (userId: string, goalSheetId: string, transaction?: Transaction) => Promise<GoalSheet> = async (userId, goalSheetId, transaction?) => {
+export const getGoalSheet: (userId: string, goalSheetId: string, transaction?: Transaction) => { goalSheet : (GoalSheet | null), exists : boolean } 
+  = (userId, goalSheetId, transaction?) => {
   if (goalSheetId == "") {
-    return emptyGoalSheet();
+    return {
+      goalSheet : null,
+      exists : false,
+    };
   }
   const ref = doc(firebaseFirestore, `user/${userId}/goalSheets`, goalSheetId).withConverter(GoalSheetConverter);
-
-  const snapshot = transaction ? await transaction.get(ref) : await getDoc(ref);
-  if (snapshot.exists()) {
-    return snapshot.data();
-  } else {
-    return emptyGoalSheet();
-  }
+  let goalSheet : ( GoalSheet | null) = null;
+  let exists : boolean = false;
+  (transaction ? transaction.get(ref) : getDoc(ref))
+  .then((tx) => {
+    exists = tx.exists();
+    goalSheet = tx.exists() ? tx.data() : null;
+  });
+  return {
+    goalSheet : goalSheet,
+    exists : exists,
+  };
 };
 
-export const setGoalSheet: (userId: string, goalSheet: GoalSheet) => Promise<string> = async (userId: string, goalSheet: GoalSheet) => {
-  let goalSheetId = goalSheet.id ?? "";
-  await runTransaction(firebaseFirestore, async (transaction) => {
-    const refGoalSheet = await getGoalSheet( userId, goalSheetId, transaction);
-    let newGoalSheetRef;
-    if ((refGoalSheet.id ?? "") == "" ) {
-      newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`));
-      goalSheet.id = newGoalSheetRef.id;
-      goalSheetId = newGoalSheetRef.id;
-    } else {
-      if (refGoalSheet.modifiedAt && refGoalSheet.modifiedAt != goalSheet.modifiedAt) {
-        console.log("goalSheet update error");
-        return;
-      }
-      newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`, goalSheet.id as string));
+export const setGoalSheet: (userId: string, goalSheet: GoalSheet, transaction?: Transaction) => string = (userId, goalSheet, transaction?) => {
+  let goalSheetId : string = goalSheet.id ?? "";
+  const refGoalSheet = getGoalSheet( userId, goalSheetId, transaction);
+  let newGoalSheetRef;
+  if (refGoalSheet.exists) {
+    if ((refGoalSheet.goalSheet as GoalSheet).modifiedAt && (refGoalSheet.goalSheet as GoalSheet).modifiedAt != goalSheet.modifiedAt) {
+      console.log("goalSheet update error");
+      return "";
     }
-    await transaction.set(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet);
+    newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`, goalSheet.id as string));
+  } else {
+    newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`));
+    goalSheet.id = newGoalSheetRef.id;
+    goalSheetId = newGoalSheetRef.id!;
+  }
+  (transaction ? transaction.set(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet) : setDoc(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet))
 
+  if (transaction) {
     if (goalSheet.goals) {
       goalSheet.goals.forEach(async v => {
         setGoal( userId, goalSheetId, v, transaction);
@@ -107,7 +119,7 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet) => Promise<str
         setResult( userId, goalSheetId, v, transaction);
       });
     }
-  });
+  }
   return goalSheetId;
 };
 
