@@ -54,7 +54,7 @@ export const getGoal: (userId: string, goalSheetId: string, goalId: string, tran
     return {
       goal : null,
       exists : false,
-    }
+    };
   }
   const ref = doc(firebaseFirestore, `user/${userId}/goalSheets/${goalSheetId}/goals`, goalId).withConverter(GoalConverter);
   let exists : boolean;
@@ -70,7 +70,7 @@ export const getGoal: (userId: string, goalSheetId: string, goalId: string, tran
   return {
     goal : goal,
     exists : exists,
-  }
+  };
 };
 
 export const setGoal: (userId: string, goalSheetId: string, goal: Goal, transaction?: Transaction) => string = (userId, goalSheetId, goal, transaction?) => {
