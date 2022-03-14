@@ -68,7 +68,7 @@ export const getGoalResults : (userId: string, goalSheetId: string) => Promise<R
   }
 
   const ref = collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`).withConverter(GoalResultConverter);
-  const q = query( ref, orderBy("no", "desc"));
+  const q = query( ref, orderBy("no"));
   const snapshot = await getDocs(q);
   let goalResults : Array<GoalResult> = [];
   snapshot.forEach((doc) => {
