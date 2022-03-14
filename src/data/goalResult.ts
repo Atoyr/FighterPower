@@ -9,8 +9,8 @@ import {
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
 
-export type Result = {
-  __type : 'result';
+export type GoalResult = {
+  __type : 'goal_result';
   id? : string;
   title : string;
   no : number;
@@ -21,15 +21,15 @@ export type Result = {
   modifiedAt? : Date;
 };
 
-export const newResult : (title: string, no: number, note: string) => Result = (title, no, note ) => {
+export const newGoalResult : (title: string, no: number, note: string) => GoalResult = (title, no, note ) => {
   return {
     title : title,
     no : no,
     note : note,
-  } as Result;
+  } as GoalResult;
 }
 
-export const ResultConverter: FirestoreDataConverter<Result> = {
+export const ResultConverter: FirestoreDataConverter<GoalResult> = {
   toFirestore: (result) => {
     return {
       __type : 'result',
@@ -48,13 +48,13 @@ export const ResultConverter: FirestoreDataConverter<Result> = {
       ...data,
       createdAt: data.createdAt?.toDate(),
       modifiedAt: data.modifiedAt?.toDate(),
-    } as Result;
+    } as GoalResult;
     result.id = snapshot.id;
     return result;
   },
 };
 
-export const getResult: (userId: string, goalSheetId: string, resultId: string, transaction?: Transaction) => { result: (Result | null), exists: boolean } = (userId, goalSheetId, resultId, transaction?) => {
+export const getGoalResult: (userId: string, goalSheetId: string, resultId: string, transaction?: Transaction) => { result: (GoalResult | null), exists: boolean } = (userId, goalSheetId, resultId, transaction?) => {
   if (resultId == "") {
     return {
       result : null,
@@ -63,7 +63,7 @@ export const getResult: (userId: string, goalSheetId: string, resultId: string, 
   }
   const ref = doc(firebaseFirestore, `user/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(ResultConverter);
   let exists : boolean;
-  let result : (Result | null);
+  let result : (GoalResult | null);
   exists = false;
   result = null;
 
@@ -78,17 +78,17 @@ export const getResult: (userId: string, goalSheetId: string, resultId: string, 
   }
 };
 
-export const setResult: (userId: string, goalSheetId: string, result: Result, transaction?: Transaction) => string = (userId, goalSheetId, result, transaction?) => {
-  const ref = getResult( userId, goalSheetId, result.id ?? "", transaction);
-  let newResultRef;
+export const setGoalResult: (userId: string, goalSheetId: string, goalResult: GoalResult, transaction?: Transaction) => string = (userId, goalSheetId, goalResult, transaction?) => {
+  const ref = getGoalResult( userId, goalSheetId, goalResult.id ?? "", transaction);
+  let newGoalResultRef;
   if (!ref.exists) {
-    newResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`));
-    result.id = newResultRef.id;
+    newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`));
+    goalResult.id = newGoalResultRef.id;
   } else {
-    newResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, result.id as string));
+    newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, goalResult.id as string));
   }
-  transaction ? transaction.set( newResultRef.withConverter(ResultConverter), result) : setDoc(newResultRef.withConverter(ResultConverter), result)
-  return result.id as string;
+  transaction ? transaction.set( newGoalResultRef.withConverter(ResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(ResultConverter), goalResult)
+  return goalResult.id as string;
 };
 
 

@@ -7,7 +7,7 @@ import { useUserContext } from 'context/UserProvider'
 import SiteLogo from 'components/SiteLogo';
 import { setGoalSheet, newGoalSheet } from 'data/goalSheet';
 import { newGoal } from 'data/goal';
-import { newResult } from 'data/result';
+import { newGoalResult } from 'data/goalResult';
 
 
 export default function Index() {
@@ -20,7 +20,7 @@ export default function Index() {
     let gs = newGoalSheet("title!", "note");
     let g1 = newGoal("goal1", 1);
     let g2 = newGoal("goal2", 2);
-    let r1 = newResult("result1", 1, "note");
+    let r1 = newGoalResult("result1", 1, "note");
     gs.goals = [g1, g2];
     gs.results = [r1];
 
