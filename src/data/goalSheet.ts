@@ -92,7 +92,7 @@ export const getGoalSheet: (userId: string, goalSheetId: string, transaction?: T
     return new Failure(new RangeError("userId is empty."));
   }
   if (goalSheetId == "") {
-    return new Failure(new RangeError("goalSheetId is empty."));
+    return new Success(null);
   }
 
   const ref = doc(firebaseFirestore, `users/${userId}/goalSheets`, goalSheetId).withConverter(GoalSheetConverter);
