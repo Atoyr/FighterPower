@@ -8,11 +8,13 @@ import SiteLogo from 'components/SiteLogo';
 import { setGoalSheet, newGoalSheet } from 'data/goalSheet';
 import { newGoal } from 'data/goal';
 import { newGoalResult } from 'data/goalResult';
+import { useGoalSheets } from 'hook/useGoalSheets';
 
 
 export default function Index() {
   let authContext = useAuthContext();
   let userContext = useUserContext();
+  let goalSheets = useGoalSheets(userContext?.id ?? "");
   const displayName = userContext ? userContext.displayName : "";
 
   const handleSubmit = () => {
@@ -24,7 +26,8 @@ export default function Index() {
     gs.goals = [g1, g2];
     gs.results = [r1];
 
-   setGoalSheet(id, gs);
+    let result = setGoalSheet(id, gs);
+    console.log(result);
   };
   return (
     <Container maxWidth="xl" 
@@ -42,16 +45,23 @@ export default function Index() {
         }}>
         目標シートを追加
       </Button>
-      <Button variant="outlined" fullWidth 
-        sx={{
-          m:1,
-          p:1,
-          width: { sm: 250 },
-          height : { xs : 200 },
-        }}
-      href="/goalsheet/10">
-        目標シート1
-      </Button>
+
+      { goalSheets.map((goalSheet) => {
+        const href = `goalsheet/${goalSheet.id}`;
+        return (
+        <Button variant="outlined" fullWidth 
+          key={goalSheet.id}
+          sx={{
+            m:1,
+            p:1,
+            width: { sm: 250 },
+            height : { xs : 200 },
+          }}
+          href={href}>
+          {goalSheet.title}
+        </Button>
+        );
+      })}
     </Box>
     Home Page. <br />
     name is {displayName }

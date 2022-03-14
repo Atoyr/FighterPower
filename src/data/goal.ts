@@ -51,7 +51,7 @@ export const GoalConverter: FirestoreDataConverter<Goal> = {
 
 export const getGoal: (userId: string, goalSheetId: string, goalId: string, transaction?: Transaction) => { goal: (Goal | null), exists: boolean } 
   = (userId, goalSheetId, goalId, transaction?) => {
-  if (goalId == "") {
+  if (userId == "" || goalSheetId == "" || goalId == "") {
     return {
       goal : null,
       exists : false,

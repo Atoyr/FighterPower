@@ -61,7 +61,7 @@ export const getGoalResult: (userId: string, goalSheetId: string, resultId: stri
       exists : false,
     }
   }
-  const ref = doc(firebaseFirestore, `user/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(ResultConverter);
+  const ref = doc(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(ResultConverter);
   let exists : boolean;
   let result : (GoalResult | null);
   exists = false;
