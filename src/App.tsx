@@ -20,6 +20,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<AppBar />}>
             <Route index element={<Index />} />
+            <Route path="index" element={<Index />} />
             <Route path="home" element={
               <RequireAuth>
                 <Home />

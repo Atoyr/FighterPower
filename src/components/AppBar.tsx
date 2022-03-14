@@ -6,28 +6,31 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import Drawer from '@mui/material/Drawer';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { useNavigate, Outlet, Link } from "react-router-dom";
 import { useAuthContext } from 'context/AuthProvider';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import { useUserContext } from 'context/UserProvider';
 import SiteLogo from './SiteLogo';
 
 const ResponsiveAppBar = () => {
   const [openMenu, setOpenMenu] = React.useState<boolean>(false);
+  const [openUserMenu, setOpenUserMenu] = React.useState<boolean>(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenu(true);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setOpenUserMenu(true);
   };
 
   const handleCloseNavMenu = () => {
@@ -35,21 +38,12 @@ const ResponsiveAppBar = () => {
   };
 
   const handleCloseUserMenu = () => {
+    setOpenUserMenu(false);
   };
 
   let navigate = useNavigate();
-  const handleSignin = () => {
-    navigate("/signin");
-  };
-
-  const handleSignup = () => {
-    navigate("/signup");
-  };
-
   let auth = useAuthContext();
-
-  const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+  let user = useUserContext();
 
   const LeftArea = () => {
     return (
@@ -64,22 +58,47 @@ const ResponsiveAppBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Drawer
+          <SwipeableDrawer
             anchor="left"
             open={openMenu}
+            onOpen={handleOpenNavMenu}
             onClose={handleCloseNavMenu}
           >
             <Box
               sx={{ width: 250}}
-              role="presentation"
-            >
-        <List>
-            <ListItem button >
-              <ListItemText primary={"foo"} />
-            </ListItem>
-        </List>
-      </Box>
-          </Drawer>
+              role="presentation">
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  minHeight: 56,
+                  height: 56,
+                  backgroundColor: "primary.main",
+                }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleCloseNavMenu}
+                  color="inherit"
+                  sx={{
+                    mx:0.5
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <SiteLogo size={36} isTitle />
+              </Box>
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton component="a" href="home">
+                    <ListItemText primary="Home" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Box>
+          </SwipeableDrawer>
         </Box>
     );
   };
@@ -114,7 +133,7 @@ const ResponsiveAppBar = () => {
             SIGN IN
           </Button>
           <Button
-            key='signin'
+            key='signup'
             onClick={() => navigate('/signup')}
             sx={{ my: 2, color: 'white', display: 'block', border:1, m: 2 }}>
             SIGN UP
@@ -125,8 +144,8 @@ const ResponsiveAppBar = () => {
       return(
         <Box sx={{ flexGrow: 0 , px: 0.5}}>
           <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mx: 0.5 }}>
+              <Avatar alt={user?.displayName ?? "user"} />
             </IconButton>
           </Tooltip>
           <Menu
@@ -141,14 +160,12 @@ const ResponsiveAppBar = () => {
               vertical: 'top',
               horizontal: 'right',
             }}
-            open={false}
+            open={openUserMenu}
             onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+          > 
+            <MenuItem onClick={() => { auth.signout(() => { navigate('/', { replace: true })});
+
+              }}>Sign out</MenuItem>
           </Menu>
         </Box>
         );
@@ -160,8 +177,16 @@ const ResponsiveAppBar = () => {
   }
     return (
       <Box>
-        <AppBar position="static">
-            <Toolbar disableGutters>
+        <AppBar position="static" 
+          sx={{
+            minHeight: 56,
+            height: 56
+          }}>
+            <Toolbar disableGutters
+              sx={{
+                minHeight: { xs:56, sm:56 },
+                height: { xs:56, sm: 56 }
+              }}>
               <LeftArea />
               <CenterArea />
               <RightArea />
