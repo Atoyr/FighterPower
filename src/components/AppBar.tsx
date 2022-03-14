@@ -159,18 +159,16 @@ const ResponsiveAppBar = () => {
   {
   }
     return (
-      <div>
-      <AppBar position="static">
-          <Toolbar disableGutters>
-            <LeftArea />
-            <CenterArea />
-            <RightArea />
-          </Toolbar>
-      </AppBar>
-      <Container maxWidth="xl">
+      <Box>
+        <AppBar position="static">
+            <Toolbar disableGutters>
+              <LeftArea />
+              <CenterArea />
+              <RightArea />
+            </Toolbar>
+        </AppBar>
         <Outlet />
-      </Container>
-      </div>
+      </Box>
     );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import { useAuthContext } from 'context/AuthProvider'
 import { useUserContext } from 'context/UserProvider'
 import SiteLogo from 'components/SiteLogo';
@@ -26,28 +27,30 @@ export default function Index() {
    setGoalSheet(id, gs);
   };
   return (
-  <div>
-    <Box sx={{m: 1, p: 1}}>
-      <Button variant="outlined" fullWidth >
+    <Container maxWidth="xl" 
+    sx={{
+      mt: { xs: 1, sm: 10 }
+    }}>
+    <h2>目標シート</h2>
+    <Box>
+      <Button variant="outlined" fullWidth 
+        sx={{
+          m:1,
+          p:1,
+          width: { sm: 250 },
+          height : { xs : 50, sm: 200 }
+        }}>
         目標シートを追加
       </Button>
-    </Box>
-    <Box sx={{m: 1, p: 1}}>
-      <Button variant="outlined" fullWidth href="/goalsheet/10">
-       <Box
-       alignItems="center"
-       justifyContent="center"
-            sx={{
-              height: { xs: 120, sm: 400 },
-              backgroundColor: 'primary',
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                opacity: [0.9, 0.8, 0.7],
-              },
-            }}
-          >
+      <Button variant="outlined" fullWidth 
+        sx={{
+          m:1,
+          p:1,
+          width: { sm: 250 },
+          height : { xs : 200 },
+        }}
+      href="/goalsheet/10">
         目標シート1
-        </Box>
       </Button>
     </Box>
     Home Page. <br />
@@ -61,6 +64,6 @@ export default function Index() {
     <SiteLogo />
 
     <Button onClick={() => {authContext.signout(() => {})}}>signout</Button>
-  </div>
+  </Container>
   );
 }
