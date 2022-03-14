@@ -2,12 +2,16 @@ import {
   FirestoreDataConverter, 
   doc,
   getDoc,
+  getDocs,
   setDoc,
   collection,
   serverTimestamp,
   Transaction,
+  query,
+  orderBy,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
+import { Result, Success, Failure } from './result'
 
 export type Goal = {
   __type : 'goal';
@@ -48,6 +52,27 @@ export const GoalConverter: FirestoreDataConverter<Goal> = {
     return goal;
   },
 };
+
+export const getGoals : (userId: string, goalSheetId: string) => Promise<Result<Array<Goal>, Error>> 
+  = async (userId, goalSheetId) => {
+  if (userId == "") {
+    return new Failure(new RangeError("userId is empty."));
+  }
+  if (goalSheetId == "") {
+    return new Failure(new RangeError("goalSheetId is empty."));
+  }
+
+  const ref = collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/goals`).withConverter(GoalConverter);
+  const q = query( ref, orderBy("order", "desc"));
+  const snapshot = await getDocs(q);
+  let goals : Array<Goal> = [];
+  snapshot.forEach((doc) => {
+    goals.push(doc.data());
+  });
+
+  return new Success(goals);
+};
+
 
 export const getGoal: (userId: string, goalSheetId: string, goalId: string, transaction?: Transaction) => { goal: (Goal | null), exists: boolean } 
   = (userId, goalSheetId, goalId, transaction?) => {

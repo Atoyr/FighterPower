@@ -9,12 +9,9 @@ import {
   query,
   orderBy,
   limit,
-  runTransaction,
   setDoc,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
-import { Goal, setGoal } from './goal'
-import { GoalResult, setGoalResult } from './goalResult'
 import { Result, Success, Failure } from './result'
 
 export type GoalSheet = {
@@ -25,8 +22,6 @@ export type GoalSheet = {
   valid : boolean;
   createdAt? : Date;
   modifiedAt? : Date;
-  goals? : Goal[]
-  results? : GoalResult[]
   tags? : string[];
   goalCount : number;
   resultCount : number;
@@ -68,7 +63,7 @@ export const GoalSheetConverter: FirestoreDataConverter<GoalSheet> = {
   },
 };
 
-export const getGoalSheets: (userId: string) => Promise<Result<Array<GoalSheet>, Error>>
+export const getGoalSheets: (userId: string, from?: number, limit?: number) => Promise<Result<Array<GoalSheet>, Error>>
   = async (userId) => {
   if (userId == "") {
     return new Failure(new RangeError("userId is empty."));
@@ -76,7 +71,7 @@ export const getGoalSheets: (userId: string) => Promise<Result<Array<GoalSheet>,
 
   const ref = collection(firebaseFirestore, `users/${userId}/goalSheets`).withConverter(GoalSheetConverter);
   // TODO LIMIT
-  const q = query( ref, orderBy("modifiedAt"), limit(10));
+  const q = query( ref, orderBy("modifiedAt", "desc"), limit(10));
   const snapshot = await getDocs(q);
   let goalSheets : Array<GoalSheet> = [];
   snapshot.forEach((doc) => {
@@ -122,19 +117,19 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet, transaction?: 
   }
   await (transaction ? transaction.set(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet) : setDoc(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet))
 
-  if (transaction) {
-    if (goalSheet.goals) {
-      goalSheet.goals.forEach(async v => {
-        setGoal( userId, goalSheetId, v, transaction);
-      });
-    }
+  // if (transaction) {
+  //   if (goalSheet.goals) {
+  //     goalSheet.goals.forEach(async v => {
+  //       setGoal( userId, goalSheetId, v, transaction);
+  //     });
+  //   }
 
-    if (goalSheet.results) {
-      goalSheet.results.forEach(async v => {
-        setGoalResult( userId, goalSheetId, v, transaction);
-      });
-    }
-  }
+  //   if (goalSheet.results) {
+  //     goalSheet.results.forEach(async v => {
+  //       setGoalResult( userId, goalSheetId, v, transaction);
+  //     });
+  //   }
+  // }
   return new Success(goalSheetId);
 };
 

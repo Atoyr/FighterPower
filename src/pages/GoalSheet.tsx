@@ -15,7 +15,7 @@ import TableRow from '@mui/material/TableRow';
 
 import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider'
-import { useGoalSheet } from 'hook/useGoalSheet';
+import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
 
 
 function createData(name: string, success: number, fail: number, unconscious: number, noOppo: number) {
@@ -47,7 +47,8 @@ export default function GoalSheet() {
 
   let { id } = useParams<"id">();
   const goalSheetId = id ?? "";
-  let goalSheet = useGoalSheet(userContext.id ?? "", goalSheetId);
+  let goalSheet = useGoalSheetAndDtil(userContext.id ?? "", goalSheetId);
+  console.log(goalSheet)
 
   if (goalSheet != null)
   {

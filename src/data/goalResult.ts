@@ -2,12 +2,16 @@ import {
   FirestoreDataConverter, 
   doc,
   getDoc,
+  getDocs,
   setDoc,
   collection,
   serverTimestamp,
   Transaction,
+  query,
+  orderBy,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
+import { Result, Success, Failure } from './result'
 
 export type GoalResult = {
   __type : 'goal_result';
@@ -29,7 +33,7 @@ export const newGoalResult : (title: string, no: number, note: string) => GoalRe
   } as GoalResult;
 }
 
-export const ResultConverter: FirestoreDataConverter<GoalResult> = {
+export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
   toFirestore: (result) => {
     return {
       __type : 'result',
@@ -54,6 +58,26 @@ export const ResultConverter: FirestoreDataConverter<GoalResult> = {
   },
 };
 
+export const getGoalResults : (userId: string, goalSheetId: string) => Promise<Result<Array<GoalResult>, Error>> 
+  = async (userId, goalSheetId) => {
+  if (userId == "") {
+    return new Failure(new RangeError("userId is empty."));
+  }
+  if (goalSheetId == "") {
+    return new Failure(new RangeError("goalSheetId is empty."));
+  }
+
+  const ref = collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`).withConverter(GoalResultConverter);
+  const q = query( ref, orderBy("no", "desc"));
+  const snapshot = await getDocs(q);
+  let goalResults : Array<GoalResult> = [];
+  snapshot.forEach((doc) => {
+    goalResults.push(doc.data());
+  });
+
+  return new Success(goalResults);
+};
+
 export const getGoalResult: (userId: string, goalSheetId: string, resultId: string, transaction?: Transaction) => { result: (GoalResult | null), exists: boolean } = (userId, goalSheetId, resultId, transaction?) => {
   if (resultId == "") {
     return {
@@ -61,7 +85,7 @@ export const getGoalResult: (userId: string, goalSheetId: string, resultId: stri
       exists : false,
     }
   }
-  const ref = doc(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(ResultConverter);
+  const ref = doc(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(GoalResultConverter);
   let exists : boolean;
   let result : (GoalResult | null);
   exists = false;
@@ -87,9 +111,6 @@ export const setGoalResult: (userId: string, goalSheetId: string, goalResult: Go
   } else {
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, goalResult.id as string));
   }
-  transaction ? transaction.set( newGoalResultRef.withConverter(ResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(ResultConverter), goalResult)
+  transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult)
   return goalResult.id as string;
 };
-
-
-

@@ -20,11 +20,11 @@ export default function Index() {
   const handleSubmit = () => {
     let id =userContext.id as string;
     let gs = newGoalSheet("title!", "note");
-    let g1 = newGoal("goal1", 1);
-    let g2 = newGoal("goal2", 2);
-    let r1 = newGoalResult("result1", 1, "note");
-    gs.goals = [g1, g2];
-    gs.results = [r1];
+    // let g1 = newGoal("goal1", 1);
+    // let g2 = newGoal("goal2", 2);
+    // let r1 = newGoalResult("result1", 1, "note");
+    // gs.goals = [g1, g2];
+    // gs.results = [r1];
 
     let result = setGoalSheet(id, gs);
     console.log(result);
