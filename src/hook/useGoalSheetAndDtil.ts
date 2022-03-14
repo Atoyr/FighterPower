@@ -7,10 +7,16 @@ export interface GoalSheetAndDtil {
   goalSheet: GoalSheet | null;
   goals: Array<Goal>;
   goalResults: Array<GoalResult>;
+  isLoading: boolean;
 }
 
-export const useGoalSheetAndDtil = (userId: string, goalSheetId: string): GoalSheetAndDtil | null => {
-  const [ goalSheetAndDtil, setGoalSheetAndDtil ] = useState<GoalSheetAndDtil>(null!);
+export const useGoalSheetAndDtil = (userId: string, goalSheetId: string): GoalSheetAndDtil => {
+  const [ goalSheetAndDtil, setGoalSheetAndDtil ] = useState<GoalSheetAndDtil>({
+    goalSheet: null,
+    goals: [],
+    goalResults: [],
+    isLoading: true
+  });
 
   useEffect(() => {
     let goalSheet : GoalSheet | null = null;
@@ -31,13 +37,22 @@ export const useGoalSheetAndDtil = (userId: string, goalSheetId: string): GoalSh
         setGoalSheetAndDtil({ 
           goalSheet: goalSheet,
           goals: goals,
-          goalResults: goalResults});
+          goalResults: goalResults,
+          isLoading: false});
       } else {
         setGoalSheetAndDtil({ 
           goalSheet: goalSheet,
           goals: [],
-          goalResults: []});
+          goalResults: [],
+          isLoading: false});
       }
+    })
+    .catch((e) => {
+        setGoalSheetAndDtil({ 
+          goalSheet: goalSheet,
+          goals: [],
+          goalResults: [],
+          isLoading: false});
     });
   }, [userId, goalSheetId]);
 
