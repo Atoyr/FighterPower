@@ -17,7 +17,7 @@ export type GoalResult = {
   __type : 'goal_result';
   id? : string;
   title : string;
-  no : number;
+  order : number;
   type? : string;
   note : string;
   goalAchives? : string[];
@@ -25,10 +25,10 @@ export type GoalResult = {
   modifiedAt? : Date;
 };
 
-export const newGoalResult : (title: string, no: number, note: string) => GoalResult = (title, no, note ) => {
+export const newGoalResult : (title: string, order: number, note: string) => GoalResult = (title, order, note ) => {
   return {
     title : title,
-    no : no,
+    order : order,
     note : note,
   } as GoalResult;
 }
@@ -39,7 +39,7 @@ export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
       __type : 'result',
       id : result.id ?? "",
       title : result.title,
-      no : result.no,
+      order : result.order,
       note : result.note,
       createdAt : result.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
@@ -68,7 +68,7 @@ export const getGoalResults : (userId: string, goalSheetId: string) => Promise<R
   }
 
   const ref = collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`).withConverter(GoalResultConverter);
-  const q = query( ref, orderBy("no"));
+  const q = query( ref, orderBy("order"));
   const snapshot = await getDocs(q);
   let goalResults : Array<GoalResult> = [];
   snapshot.forEach((doc) => {
