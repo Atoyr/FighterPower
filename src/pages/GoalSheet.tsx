@@ -15,16 +15,103 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import { useParams } from 'react-router-dom';
-import { useUserContext } from 'context/UserProvider'
+import { useUserContext } from 'context/UserProvider';
 import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
+import { newGoal, setGoal } from 'data/goal';
+
+export interface InputDialogProps {
+  title: string;
+  open: boolean;
+  label: string;
+  selectedValue: string;
+  onClose: (value: string, isCancel: boolean) => void;
+}
+
+function InputDialog(props: InputDialogProps) {
+  const { onClose, selectedValue, open, title, label } = props;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    let formData = new FormData(event.currentTarget);
+    let v = formData.get('value') as string;
+    await onClose(v, false);
+  };
+
+  const handleCancel = async () => {
+    await onClose("", true);
+  };
+
+  return (
+    <Dialog open={open} onClose={handleCancel} >
+      <DialogTitle>{title}</DialogTitle>
+      <form onSubmit={handleSubmit}>
+      <DialogContent>
+        <DialogContentText>
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          name="value"
+          id="value"
+          label={label}
+          type="text"
+          fullWidth
+          variant="standard"
+          defaultValue={selectedValue}
+          />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancel}>キャンセル</Button>
+        <Button type="submit">決定</Button>
+      </DialogActions>
+      </form>
+    </Dialog> 
+  );
+}
 
 export default function GoalSheet() {
-  const [isOpenDialog, setIsOpenDialog] = React.useState(false);
+  const [isOpenDialog, setIsOpenDialog] = React.useState<boolean>(false);
+  const [dialogProp, setDialogProp] = React.useState<{type:string, index: number, title: string, label: string, selectedValue: string }>({type:"", index: 0, title: "", label: "", selectedValue:""});
   let userContext = useUserContext();
 
   let { id } = useParams<"id">();
   const goalSheetId = id ?? "";
   let goalSheetAndDtil = useGoalSheetAndDtil(userContext.id ?? "", goalSheetId);
+
+  const onClose = async (value:string, isCancel: boolean) => {
+    if (!isCancel)
+    {
+      switch(dialogProp.type) {
+        case "addgoal" :
+          let g = newGoal(value, goalSheetAndDtil.goals.length+1);
+          await setGoal(userContext.id!, goalSheetId, g);
+          goalSheetAndDtil.goals.push(g);
+          break;
+        case "goal" :
+          goalSheetAndDtil.goals[dialogProp.index].title = value;
+          await setGoal(userContext.id!, goalSheetId, goalSheetAndDtil.goals[dialogProp.index]);
+          break;
+      }
+
+    }
+    setIsOpenDialog(false);
+  }
+  
+  const addGoal = () => {
+    const index = goalSheetAndDtil.goals.length + 1;
+    let dialogTitle = `目標 ${index}`;
+    let selectedValue = "";
+    setDialogProp({ type: "addgoal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
+    setIsOpenDialog(true);
+  }
+
+  const editGoal = (index: number) => {
+    let dialogTitle = `目標 ${index + 1}`
+    let selectedValue = goalSheetAndDtil.goals[index].title;
+    setDialogProp({ type: "goal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
+    setIsOpenDialog(true);
+  }
 
   if (goalSheetAndDtil.isLoading) {
       return (<Container maxWidth="xl" 
@@ -72,7 +159,7 @@ export default function GoalSheet() {
                 <Typography variant="h6" noWrap component="h6" sx={{ flexGrow: 1}}>
                 {goal.title}
                 </Typography>
-                <IconButton aria-label="edit" size="small" sx={{mx: 1, flexGrow : 0}}>
+                <IconButton aria-label="edit" size="small" sx={{mx: 1, flexGrow : 0}} onClick={() => editGoal(index)}>
                   <EditIcon fontSize="inherit" />
                 </IconButton>
               </Box>
@@ -80,7 +167,7 @@ export default function GoalSheet() {
         </Box>
         <Box>
           <Button variant="outlined"
-            onClick={() => setIsOpenDialog(true)}
+            onClick={addGoal}
             sx={{
               m:1,
               p:1,
@@ -106,26 +193,13 @@ export default function GoalSheet() {
             );
           })}
         </Box>
-        <Dialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
-          <DialogTitle>mo</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label=""
-              type="text"
-              fullWidth
-              variant="standard"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setIsOpenDialog(false)}>Cancel</Button>
-            <Button onClick={() => setIsOpenDialog(false)}>Subscribe</Button>
-          </DialogActions>
-        </Dialog> 
+        <InputDialog
+          title={dialogProp.title}
+          open={isOpenDialog}
+          label={dialogProp.label}
+          selectedValue={dialogProp.selectedValue}
+          onClose={onClose}
+        />
       </Container>
     );
   } else {
