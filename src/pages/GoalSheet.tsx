@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider';
 import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
 import { newGoal, setGoal } from 'data/goal';
+import { setGoalSheet } from 'data/goalSheet';
 
 export interface InputDialogProps {
   title: string;
@@ -88,12 +89,16 @@ export default function GoalSheet() {
           await setGoal(userContext.id!, goalSheetId, g);
           goalSheetAndDtil.goals.push(g);
           break;
-        case "goal" :
+        case "editgoal" :
           goalSheetAndDtil.goals[dialogProp.index].title = value;
           await setGoal(userContext.id!, goalSheetId, goalSheetAndDtil.goals[dialogProp.index]);
           break;
+        case "edittitle" :
+          goalSheetAndDtil.goalSheet!.title = value;
+          await setGoalSheet(userContext.id!, goalSheetAndDtil.goalSheet!);
+          goalSheetAndDtil.goalSheet!.version = goalSheetAndDtil.goalSheet!.version + 1;
+          break;
       }
-
     }
     setIsOpenDialog(false);
   }
@@ -109,7 +114,14 @@ export default function GoalSheet() {
   const editGoal = (index: number) => {
     let dialogTitle = `目標 ${index + 1}`
     let selectedValue = goalSheetAndDtil.goals[index].title;
-    setDialogProp({ type: "goal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
+    setDialogProp({ type: "editgoal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
+    setIsOpenDialog(true);
+  }
+
+  const editTitle = () => {
+    let dialogTitle = "タイトル";
+    let selectedValue = goalSheetAndDtil.goalSheet?.title ?? "";
+    setDialogProp({ type: "edittitle", index:0, title: dialogTitle, selectedValue: selectedValue, label: ""})
     setIsOpenDialog(true);
   }
 
@@ -137,7 +149,7 @@ export default function GoalSheet() {
           <Typography variant="h3" noWrap component="h3" sx={{ flexGrow: 1}}>
           {goalSheetAndDtil.goalSheet.title}
           </Typography>
-          <IconButton aria-label="edit" size="large" sx={{mx: 1, flexGrow:0 }}>
+          <IconButton aria-label="edit" size="large" sx={{mx: 1, flexGrow:0 }} onClick={editTitle}>
             <EditIcon fontSize="inherit" />
           </IconButton>
         </Box>

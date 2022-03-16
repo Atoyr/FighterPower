@@ -9,6 +9,7 @@ import {
   Transaction,
   query,
   orderBy,
+  increment,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
 import { Result, Success, Failure } from './result'
@@ -23,6 +24,7 @@ export type GoalResult = {
   goalAchives? : string[];
   createdAt? : Date;
   modifiedAt? : Date;
+  version: number;
 };
 
 export const newGoalResult : (title: string, order: number, note: string) => GoalResult = (title, order, note ) => {
@@ -43,6 +45,7 @@ export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
       note : result.note,
       createdAt : result.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
+      version : increment(1.0),
     };
   },
   fromFirestore: (snapshot) => {
@@ -78,39 +81,34 @@ export const getGoalResults : (userId: string, goalSheetId: string) => Promise<R
   return new Success(goalResults);
 };
 
-export const getGoalResult: (userId: string, goalSheetId: string, resultId: string, transaction?: Transaction) => { result: (GoalResult | null), exists: boolean } = (userId, goalSheetId, resultId, transaction?) => {
+export const getGoalResult: (userId: string, goalSheetId: string, resultId: string, transaction?: Transaction) => Promise<Result<GoalResult | null, Error>>
+  = async (userId, goalSheetId, resultId, transaction?) => {
+  if (userId == "") {
+    return new Failure(new RangeError("userId is empty."));
+  }
+  if (goalSheetId == "") {
+    return new Failure(new RangeError("goalSheetId is empty."));
+  }
   if (resultId == "") {
-    return {
-      result : null,
-      exists : false,
-    }
+    return new Failure(new RangeError("result is empty."));
   }
   const ref = doc(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, resultId).withConverter(GoalResultConverter);
-  let exists : boolean;
-  let result : (GoalResult | null);
-  exists = false;
-  result = null;
-
-  (transaction ? transaction.get(ref) : getDoc(ref))
-  .then( tx => {
-    exists = tx.exists();
-    result = tx.exists() ? tx.data() : null;
-  });
-  return {
-    result : result,
-    exists : exists,
-  }
+  const snapshot = await (transaction ? transaction.get(ref) : getDoc(ref))
+  return new Success(snapshot.exists() ? snapshot.data() : null);
 };
 
-export const setGoalResult: (userId: string, goalSheetId: string, goalResult: GoalResult, transaction?: Transaction) => string = (userId, goalSheetId, goalResult, transaction?) => {
-  const ref = getGoalResult( userId, goalSheetId, goalResult.id ?? "", transaction);
+export const setGoalResult: (userId: string, goalSheetId: string, goalResult: GoalResult, transaction?: Transaction) => Promise<Result<string, Error>>
+  = async (userId, goalSheetId, goalResult, transaction?) => {
+  let result = await getGoalResult( userId, goalSheetId, goalResult.id ?? "", transaction);
   let newGoalResultRef;
-  if (!ref.exists) {
+  if (result.isFailure()) {
+    return new Failure(result.value);
+  } else if (result.value != null) {
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`));
     goalResult.id = newGoalResultRef.id;
   } else {
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, goalResult.id as string));
   }
-  transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult)
-  return goalResult.id as string;
+  await (transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult));
+  return new Success(goalResult.id as string);
 };

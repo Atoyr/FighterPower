@@ -10,6 +10,7 @@ import {
   orderBy,
   limit,
   setDoc,
+  increment,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
 import { Result, Success, Failure } from './result'
@@ -25,6 +26,7 @@ export type GoalSheet = {
   tags? : string[];
   goalCount : number;
   resultCount : number;
+  version : number;
 };
 
 export const newGoalSheet : (title: string, note: string) => GoalSheet = (title, note) => {
@@ -34,6 +36,7 @@ export const newGoalSheet : (title: string, note: string) => GoalSheet = (title,
     valid : true,
     goalCount : 0,
     resultCount : 0,
+    version : 0,
   } as GoalSheet;
 }
 
@@ -48,6 +51,7 @@ export const GoalSheetConverter: FirestoreDataConverter<GoalSheet> = {
       tags : goalSheet.tags ?? [],
       createdAt : goalSheet.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
+      version : increment(1.0),
     };
   },
   fromFirestore: (snapshot) => {
@@ -106,10 +110,10 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet, transaction?: 
   const refGoalSheet = refGoalSheetResult.value;
   let newGoalSheetRef;
   if (refGoalSheet != null) {
-    if ((refGoalSheet as GoalSheet).modifiedAt && (refGoalSheet as GoalSheet).modifiedAt != goalSheet.modifiedAt) {
+    if ((refGoalSheet as GoalSheet).version != goalSheet.version) {
       return new Failure(new Error("goalSheet update error"));
     }
-    newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`, goalSheet.id as string));
+    newGoalSheetRef = doc(firebaseFirestore, `users/${userId}/goalSheets`, goalSheet.id as string);
   } else {
     newGoalSheetRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets`));
     goalSheet.id = newGoalSheetRef.id;
