@@ -38,8 +38,6 @@ export default function Index() {
       <Button variant="contained" href="home" sx={{width: 250, mt: 2, mb: 1}}>HOME</Button>
     </Box> 
     }
-    
-
   </Container>
   );
 }

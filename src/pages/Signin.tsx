@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+import { sendEmailVerification } from 'firebase/auth';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,19 +16,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright (c) '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { Copyright } from 'components/Copyright'
 
 const theme = createTheme();
 
@@ -49,9 +38,17 @@ export default function SignIn() {
       password : password,
     } as AuthParameter;
 
-    auth.signin(authParam, () => {
-      navigate(from, { replace: true });
-    });
+    auth.signin(authParam,
+      (user) => {
+        if (user.user.emailVerified) {
+          navigate(from, { replace: true });
+        } else {
+          sendEmailVerification(user.user);
+        }
+      },
+      (e) => {
+        console.log(e);
+      });
   };
 
   return (
@@ -119,7 +116,7 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright />
       </Container>
     </ThemeProvider>
   );

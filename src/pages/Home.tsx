@@ -2,6 +2,8 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Skeleton from '@mui/material/Skeleton';
 import { useAuthContext } from 'context/AuthProvider'
 import { useUserContext } from 'context/UserProvider'
 import SiteLogo from 'components/SiteLogo';
@@ -10,8 +12,7 @@ import { newGoal } from 'data/goal';
 import { newGoalResult } from 'data/goalResult';
 import { useGoalSheets } from 'hook/useGoalSheets';
 
-
-export default function Index() {
+export default function Home() {
   let authContext = useAuthContext();
   let userContext = useUserContext();
   let goalSheets = useGoalSheets(userContext?.id ?? "");
@@ -46,7 +47,8 @@ export default function Index() {
         目標シートを追加
       </Button>
 
-      { goalSheets.map((goalSheet) => {
+      { goalSheets ? 
+      goalSheets.map((goalSheet) => {
         const href = `goalsheet/${goalSheet.id}`;
         return (
         <Button variant="outlined" fullWidth 
@@ -61,19 +63,15 @@ export default function Index() {
           {goalSheet.title}
         </Button>
         );
-      })}
+      })
+      : 
+      <Stack spacing={1}>
+        <Skeleton variant="text" />
+        <Skeleton variant="circular" width={40} height={40} />
+        <Skeleton variant="rectangular" width={210} height={118} />
+      </Stack>
+      }
     </Box>
-    Home Page. <br />
-    name is {displayName }
-
-    <Box sx={{m: 1, p: 1}}>
-      <Button variant="outlined" fullWidth onClick={handleSubmit}>
-        目標シートを追加
-      </Button>
-    </Box>
-    <SiteLogo />
-
-    <Button onClick={() => {authContext.signout(() => {})}}>signout</Button>
   </Container>
   );
 }

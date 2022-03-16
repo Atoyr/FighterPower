@@ -4,7 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword, 
   signOut,
-  updateProfile
+  updateProfile,
+  UserCredential,
 } from "firebase/auth"
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,9 +15,9 @@ import { useAuthState, AuthState } from "hook/useAuthState"
 
 export interface AuthContextType {
   authState: AuthState;
-  signup: (param: AuthParameter, callback: VoidFunction) => void;
-  signin: (param: AuthParameter, callback: VoidFunction) => void;
-  signout: (callback: VoidFunction) => void;
+  signup: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
+  signin: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
+  signout: (callback: VoidFunction, errorCallback: (e : Error) => void) => void;
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
@@ -24,26 +25,50 @@ let AuthContext = React.createContext<AuthContextType>(null!);
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let authState = useAuthState();
 
-  let signup = (param: AuthParameter, callback: VoidFunction) => {
-      createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+  let signup = (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => {
+    let promise : Promise<UserCredential> | null = null;
+    switch (param.AuthType) {
+      case "EmailAndPassword":
+        promise = createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
+        break
+    }
+
+    if (promise == null ) {
+      const e = new Error("AuthType Not Found");
+      errorCallback(e);
+    } else {
+      promise
       .then(user => {
         updateProfile(user.user, { displayName: param.displayName ?? "" })
+        return user;
       })
-      .then(user => callback());
+      .then(user => callback(user))
+      .catch(e => errorCallback(e));
+    }
   };
 
-  let signin = (param: AuthParameter, callback: VoidFunction) => {
-      switch (param.AuthType) {
+  let signin = (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => {
+    let promise : Promise<UserCredential> | null = null;
+    
+    switch (param.AuthType) {
         case "EmailAndPassword":
-          signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
-          .then(user => callback());
+          promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
           break;
-      }
+    }
+    if (promise == null ) {
+      const e = new Error("AuthType Not Found");
+      errorCallback(e);
+    } else {
+      promise
+      .then(user => callback(user))
+      .catch(e => errorCallback(e));
+    }
   };
 
-  let signout = (callback: VoidFunction) => {
+  let signout = (callback: VoidFunction, errorCallback: (e : Error) => void) => {
       signOut(firebaseAuth)
-      .then(() => callback());
+      .then(() => callback())
+      .catch(e => errorCallback(e));
   };
 
   let value = { authState, signup, signin, signout };

@@ -41,6 +41,11 @@ const ResponsiveAppBar = () => {
     setOpenUserMenu(false);
   };
 
+  const handleSignOut = () => {
+    auth.signout(() => { navigate('/', { replace: true })}
+    , (e) => {console.log(e)});
+  };
+
   let navigate = useNavigate();
   let auth = useAuthContext();
   let user = useUserContext();
@@ -126,6 +131,7 @@ const ResponsiveAppBar = () => {
             flexDirection: 'row',
             borderRadius: 1,
             }}>
+          {/*
           <Button
             key='signin'
             onClick={() => navigate('/signin')}
@@ -138,6 +144,7 @@ const ResponsiveAppBar = () => {
             sx={{ my: 2, color: 'white', display: 'block', border:1, m: 2 }}>
             SIGN UP
           </Button>
+          */}
         </Box>
         );
     } else {
@@ -163,38 +170,33 @@ const ResponsiveAppBar = () => {
             open={openUserMenu}
             onClose={handleCloseUserMenu}
           > 
-            <MenuItem onClick={() => { auth.signout(() => { navigate('/', { replace: true })});
-
-              }}>Sign out</MenuItem>
+            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
           </Menu>
         </Box>
         );
     }
   };
 
-  if ( auth.authState.user != null)
-  {
-  }
-    return (
-      <Box>
-        <AppBar position="static" 
-          sx={{
-            minHeight: 56,
-            height: 56
-          }}>
-            <Toolbar disableGutters
-              sx={{
-                minHeight: { xs:56, sm:56 },
-                height: { xs:56, sm: 56 }
-              }}>
-              <LeftArea />
-              <CenterArea />
-              <RightArea />
-            </Toolbar>
-        </AppBar>
-        <Outlet />
-      </Box>
-    );
+  return (
+    <Box>
+      <AppBar position="static" 
+        sx={{
+          minHeight: 56,
+          height: 56
+        }}>
+          <Toolbar disableGutters
+            sx={{
+              minHeight: { xs:56, sm:56 },
+              height: { xs:56, sm: 56 }
+            }}>
+            <LeftArea />
+            <CenterArea />
+            <RightArea />
+          </Toolbar>
+      </AppBar>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default ResponsiveAppBar;

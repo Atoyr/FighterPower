@@ -1,6 +1,7 @@
 import { 
   FirestoreDataConverter, 
   serverTimestamp,
+  Timestamp,
   doc,
   getDoc,
   getDocs,
@@ -10,6 +11,7 @@ import {
   orderBy,
   limit,
   setDoc,
+  updateDoc,
   increment,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
@@ -137,3 +139,20 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet, transaction?: 
   return new Success(goalSheetId);
 };
 
+export const updateGoalSheetModifiedAt: (userId: string, goalSheetId: string, at? : Date) => Promise<Result<Date, Error>>
+  = async (userId, goalSheetId, at?) => {
+  const refGoalSheetResult = await getGoalSheet( userId, goalSheetId);
+  if ( refGoalSheetResult.isFailure()) {
+    return new Failure(refGoalSheetResult.value)
+  }
+
+  if ( refGoalSheetResult.value == null) {
+      return new Failure(new Error("goalSheet not found"));
+  } else {
+    const ref = doc(firebaseFirestore, `users/${userId}/goalSheets`, goalSheetId);
+    const modifiedAt = at ?? serverTimestamp();
+    await updateDoc(ref, { modifiedAt: modifiedAt});
+    console.log(modifiedAt);
+    return new Success(new Date());
+  }
+};

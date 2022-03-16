@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { GoalSheet, getGoalSheets } from 'data/goalSheet';
 
-export const useGoalSheets = (userId: string): Array<GoalSheet> => {
-  const [ goalSheets, setGoalSheets ] = useState<Array<GoalSheet>>([]);
+export const useGoalSheets = (userId: string): Array<GoalSheet> | null => {
+  const [ goalSheets, setGoalSheets ] = useState<Array<GoalSheet> | null>(null);
+
 
   useEffect(() => {
     getGoalSheets(userId)

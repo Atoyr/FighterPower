@@ -12,7 +12,8 @@ import {
   increment,
 } from 'firebase/firestore'
 import { firebaseFirestore } from '../firebase';
-import { Result, Success, Failure } from './result'
+import { Result, Success, Failure } from './result';
+import { updateGoalSheetModifiedAt } from 'data/goalSheet';
 
 export type GoalResult = {
   __type : 'goal_result';
@@ -110,5 +111,6 @@ export const setGoalResult: (userId: string, goalSheetId: string, goalResult: Go
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, goalResult.id as string));
   }
   await (transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult));
+  await updateGoalSheetModifiedAt(userId, goalSheetId);
   return new Success(goalResult.id as string);
 };
