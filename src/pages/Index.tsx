@@ -18,7 +18,7 @@ export default function Index() {
         mt: 10,
         mb: 2,
       }}>
-      ゲーマーの成長をサポート
+      格闘ゲーマーの成長をサポート
     </Typography>
     <Typography variant="h5" component="div" gutterBottom
       sx={{
