@@ -128,3 +128,6 @@ yarn-error.log*
 
 # build module
 /public
+
+# firebase 
+/.firebase
