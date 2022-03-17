@@ -10,7 +10,7 @@ import {
   query,
   orderBy,
 } from 'firebase/firestore'
-import { firebaseFirestore } from '../firebase';
+import { firebaseFirestore } from 'lib/firebase';
 import { Result, Success, Failure } from './result'
 import { updateGoalSheetModifiedAt } from 'data/goalSheet';
 

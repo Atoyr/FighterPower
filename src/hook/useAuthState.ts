@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, User as AuthUser } from 'firebase/auth';
-import { firebaseAuth } from '../firebase';
+import { firebaseAuth } from 'lib/firebase';
 
 export interface AuthState {
   user: AuthUser | null;

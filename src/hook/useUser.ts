@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { firebaseFirestore } from '../firebase';
+import { firebaseFirestore } from 'lib/firebase';
 import { useAuthContext } from "context/AuthProvider";
 import { User, UserConverter} from 'data/user';
 
