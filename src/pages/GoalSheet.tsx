@@ -19,6 +19,7 @@ import { useUserContext } from 'context/UserProvider';
 import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
 import { newGoal, setGoal } from 'data/goal';
 import { setGoalSheet } from 'data/goalSheet';
+import { useDocumentTitle } from 'hook/useDocumentTitle'
 
 export interface InputDialogProps {
   title: string;
@@ -72,6 +73,7 @@ function InputDialog(props: InputDialogProps) {
 }
 
 export default function GoalSheet() {
+  useDocumentTitle("GoalSheet");
   const [isOpenDialog, setIsOpenDialog] = React.useState<boolean>(false);
   const [dialogProp, setDialogProp] = React.useState<{type:string, index: number, title: string, label: string, selectedValue: string }>({type:"", index: 0, title: "", label: "", selectedValue:""});
   let userContext = useUserContext();

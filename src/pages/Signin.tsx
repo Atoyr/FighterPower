@@ -17,6 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { Copyright } from 'components/Copyright'
+import { useDocumentTitle } from 'hook/useDocumentTitle'
 
 const theme = createTheme();
 
@@ -25,6 +26,8 @@ export default function SignIn() {
   let navigate = useNavigate();
   let auth = useAuthContext();
   let from = "/home";
+  useDocumentTitle("SignIn");
+  const mode: string = (import.meta.env.MODE ?? "") as string;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,7 +46,9 @@ export default function SignIn() {
         if (user.user.emailVerified) {
           navigate(from, { replace: true });
         } else {
-          sendEmailVerification(user.user);
+          if(mode != "dev") {
+            sendEmailVerification(user.user);
+          }
         }
       },
       (e) => {

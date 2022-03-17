@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
+import { useDocumentTitle } from 'hook/useDocumentTitle'
 
 function Copyright(props: any) {
   return (
@@ -33,6 +34,9 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+  useDocumentTitle("SignUp");
+  const mode: string = (import.meta.env.MODE ?? "") as string;
+
   let navigate = useNavigate();
   let auth = useAuthContext();
   let from = "/home";
@@ -51,7 +55,9 @@ export default function SignUp() {
 
     auth.signup(authParam,
       (user) => {
-        sendEmailVerification(user.user);
+        if(mode != "dev") {
+          sendEmailVerification(user.user);
+        }
       },
       (e) => {
         console.log(e);

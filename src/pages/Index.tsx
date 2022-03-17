@@ -5,10 +5,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { useAuthContext } from 'context/AuthProvider'
-
+import { useDocumentTitle } from 'hook/useDocumentTitle'
   
 export default function Index() {
   let authContext = useAuthContext();
+  useDocumentTitle("");
   return (
   <Container>
     <Typography variant="h2" component="div" gutterBottom

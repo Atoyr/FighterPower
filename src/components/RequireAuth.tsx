@@ -9,7 +9,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
   let authContext = useAuthContext();
   let location = useLocation();
 
-  if (authContext.authState.user == null || !authContext.authState.user.emailVerified) {
+  if (!isAuth()) {
     return <Navigate to='/signin' state={{ from: location }} replace />;
   }
   return children;
@@ -19,10 +19,16 @@ function NotRequireAuth({ children }: { children: JSX.Element }) {
   let authContext = useAuthContext();
   let location = useLocation();
 
-  if (authContext.authState.user != null && authContext.authState.user.emailVerified) {
+  if (isAuth()) {
     return <Navigate to='/home' state={{ from: location }} replace />;
   }
   return children;
+}
+
+function isAuth() {
+  let authContext = useAuthContext();
+  const mode: string = (import.meta.env.MODE ?? "") as string;
+  return authContext.authState.user != null && (authContext.authState.user.emailVerified || mode == "dev");
 }
 
 export { RequireAuth, NotRequireAuth }
