@@ -118,7 +118,7 @@ export default function Home() {
           m:1,
           p:1,
           width: { sm: 250 },
-          height : { xs : 50, sm: 200 }
+          height : { xs : 50, sm: 150 }
         }}>
         目標シートを追加
       </Button>
@@ -127,28 +127,37 @@ export default function Home() {
       goalSheets.map((goalSheet) => {
         const href = `../goalsheet/${goalSheet.id}`;
         return (
-        <Button variant="outlined" fullWidth onClick={() => navigate(href)}
+        <Button variant="outlined" fullWidth onClick={() => navigate(href)} key={goalSheet.id}
           sx={{
             m:1,
             p:1,
             width: { sm: 250 },
-            height : { xs : 200 },
+            height : { xs : 150 },
           }}>
           <Box
           sx={{
             p:1,
             width: { xs: "100%", sm: 250 },
-            height : { xs : 200 },
+            height : { xs : "100%" },
+            display: 'flex',
+            flexDirection: 'column',
           }}>
-          <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left"}}>
-            {goalSheet.title}
-          </Typography>
-          <Typography variant="subtitle2" noWrap component="div" sx={{ textAlign: "left"}}>
-            {goalSheet.note}
-          </Typography>
-          <Typography variant="caption" noWrap display="block" sx={{ textAlign: "left"}}>
-            {goalSheet.createdAt?.toLocaleString("ja-JP") ?? ""}
-          </Typography>
+            <Box sx={{ flexGrow: 1}}>
+              <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left"}}>
+                {goalSheet.title}
+              </Typography>
+              <Typography variant="subtitle2" noWrap component="div" sx={{ textAlign: "left"}}>
+                {goalSheet.note}
+              </Typography>
+            </Box>
+            <Box sx={{ flexGrow: 0}}>
+              <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
+                {"作成日:"}{goalSheet.createdAt?.toLocaleString("ja-JP") ?? ""}
+              </Typography>
+              <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
+                {"最終更新日:"}{goalSheet.modifiedAt?.toLocaleString("ja-JP") ?? ""}
+              </Typography>
+            </Box>
           </Box>
         </Button>
         );
