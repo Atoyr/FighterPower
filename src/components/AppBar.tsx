@@ -51,6 +51,11 @@ const ResponsiveAppBar = () => {
   let user = useUserContext();
 
   const LeftArea = () => {
+    const list = () => {
+      if ( auth.authState.user == null) {
+      } else {
+      }
+    }
     return (
         <Box sx={{ flexGrow: 0, px: 0.5 }}>
           <IconButton
@@ -96,11 +101,24 @@ const ResponsiveAppBar = () => {
                 <SiteLogo size={36} isTitle />
               </Box>
               <List>
+                { auth.authState.user == null ?
+                (
+                <ListItem disablePadding>
+                  <ListItemButton component="a" href="signin">
+                    <ListItemText primary="SignIn" />
+                  </ListItemButton>
+                  <ListItemButton component="a" href="signup">
+                    <ListItemText primary="SignUp" />
+                  </ListItemButton>
+                </ListItem>)
+                :
+                (
                 <ListItem disablePadding>
                   <ListItemButton component="a" href="home">
                     <ListItemText primary="Home" />
                   </ListItemButton>
-                </ListItem>
+                </ListItem>)
+                }
               </List>
             </Box>
           </SwipeableDrawer>
