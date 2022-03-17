@@ -131,7 +131,7 @@ const ResponsiveAppBar = () => {
     return (
       <Box sx={{flexGrow: 1, px: 0.5, display: 'flex', flexDirection: 'row' }}>
         <Link to={to} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <SiteLogo size={36} isTitle />
+          <SiteLogo size={36} />
         </Link>
       </Box>
     );
