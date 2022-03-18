@@ -51,6 +51,11 @@ export default function AccountLink() {
       });
   };
 
+  const handleSignOut = () => {
+    auth.signout(() => { navigate('/', { replace: true })}
+    , (e) => {console.log(e)});
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -123,6 +128,14 @@ export default function AccountLink() {
             >
               Account Link
             </Button>
+
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link onClick={handleSignOut} variant="body2">
+                  お試しデータを破棄
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Container>

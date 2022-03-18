@@ -58,6 +58,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     switch (param.AuthType) {
       case "Anonymously":
         promise = signInAnonymously(firebaseAuth);
+        break;
       case "EmailAndPassword":
         promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
         break;

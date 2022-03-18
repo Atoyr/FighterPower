@@ -96,26 +96,28 @@ const ResponsiveAppBar = () => {
                 </IconButton>
                 <SiteLogo size={36} isTitle />
               </Box>
-              <List>
                 { auth.authState.user == null ?
-                (
+                ( <List>
                 <ListItem disablePadding>
                   <ListItemButton component="a" href="/signin">
                     <ListItemText primary="SignIn" />
                   </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
                   <ListItemButton component="a" href="/signup">
                     <ListItemText primary="SignUp" />
                   </ListItemButton>
-                </ListItem>)
+                </ListItem>
+              </List>)
                 :
-                (
-                <ListItem disablePadding>
-                  <ListItemButton component="a" href="/home">
-                    <ListItemText primary="Home" />
-                  </ListItemButton>
-                </ListItem>)
+                (<List>
+                  <ListItem disablePadding>
+                    <ListItemButton component="a" href="/home">
+                      <ListItemText primary="Home" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>)
                 }
-              </List>
             </Box>
           </SwipeableDrawer>
         </Box>
@@ -184,38 +186,12 @@ const ResponsiveAppBar = () => {
             open={openUserMenu}
             onClose={handleCloseUserMenu}
           > 
-            <MenuItem onClick={() => navigate('/account_link', { replace: true })}>Account Link</MenuItem>
+            <MenuItem key="account_link" onClick={() => navigate('/account_link', { replace: true })}>Account Link</MenuItem>
           </Menu>
         </Box>
         );
 
     } else {
-      return(
-        <Box sx={{ flexGrow: 0 , px: 0.5}}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mx: 0.5 }}>
-              <Avatar alt={user?.displayName ?? "user"} />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={openUserMenu}
-            onClose={handleCloseUserMenu}
-          > 
-            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
-          </Menu>
-        </Box>
-        );
       return(
         <Box sx={{ flexGrow: 0 , px: 0.5}}>
           <Tooltip title="Open settings">
