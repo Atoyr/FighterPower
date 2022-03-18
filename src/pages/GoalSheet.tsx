@@ -229,9 +229,23 @@ export default function GoalSheet() {
     );
   } else {
     return (
-    <Box>
-      id not found.
-    </Box>
+    <Container>
+      <Typography variant="h1" component="div" gutterBottom
+        sx={{
+          textAlign: "center",
+          mt: 10,
+          mb: 2,
+        }}>
+        Error
+      </Typography>
+      <Typography variant="h2" component="div" gutterBottom
+        sx={{
+          textAlign: "center",
+          my: 2,
+        }}>
+        目標のアクセス権限がないか存在しません
+      </Typography>
+    </Container>
     );
   }
 }
