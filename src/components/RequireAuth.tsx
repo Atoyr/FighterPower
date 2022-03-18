@@ -25,10 +25,20 @@ function NotRequireAuth({ children }: { children: JSX.Element }) {
   return children;
 }
 
+function RequireAnonymous({ children }: { children: JSX.Element }) {
+  let authContext = useAuthContext();
+  let location = useLocation();
+
+  if (authContext.authState.user == null || !authContext.authState.user.isAnonymous){
+    return <Navigate to='/' state={{ from: location }} replace />;
+  }
+  return children;
+}
+
 function isAuth() {
   let authContext = useAuthContext();
   const mode: string = (import.meta.env.MODE ?? "") as string;
   return authContext.authState.user != null && (authContext.authState.user.emailVerified || mode == "dev");
 }
 
-export { RequireAuth, NotRequireAuth }
+export { RequireAuth, NotRequireAuth, RequireAnonymous }

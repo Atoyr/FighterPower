@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore'
 import { firebaseFirestore } from 'lib/firebase';
 import { Result, Success, Failure } from './result';
-import { updateGoalSheetModifiedAt } from 'data/goalSheet';
+import { updateGoalSheetModifiedAt, inccermentGoalSheetGoalResultCount } from 'data/goalSheet';
 
 export type GoalResult = {
   __type : 'goal_result';
@@ -22,7 +22,7 @@ export type GoalResult = {
   order : number;
   type? : string;
   note : string;
-  goalAchives? : string[];
+  goalAchives : string[];
   createdAt? : Date;
   modifiedAt? : Date;
   version: number;
@@ -46,6 +46,7 @@ export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
       note : result.note,
       createdAt : result.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
+      goalAchives: result.goalAchives,
       version : increment(1.0),
     };
   },
@@ -111,6 +112,9 @@ export const setGoalResult: (userId: string, goalSheetId: string, goalResult: Go
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`, goalResult.id as string));
   }
   await (transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult));
+  if (result.value == null) {
+    await inccermentGoalSheetGoalResultCount(userId, goalSheetId);
+  }
   await updateGoalSheetModifiedAt(userId, goalSheetId);
   return new Success(goalResult.id as string);
 };

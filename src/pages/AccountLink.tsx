@@ -18,23 +18,10 @@ import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright (c) '}
-      <Link color="inherit" href="/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
-export default function SignUp() {
-  useDocumentTitle("SignUp");
+export default function AccountLink() {
+  useDocumentTitle("アカウント連携");
   const mode: string = (import.meta.env.MODE ?? "") as string;
 
   let navigate = useNavigate();
@@ -47,6 +34,7 @@ export default function SignUp() {
     let email = String(data.get('email'));
     let password = String(data.get('password'));
     let confirmpassword = String(data.get('confirmpassword'));
+
     let authParam = {
       AuthType: "EmailAndPassword",
       displayName: name,
@@ -54,11 +42,9 @@ export default function SignUp() {
       password : password,
     } as AuthParameter;
 
-    auth.signup(authParam,
+    auth.accountlink(authParam,
       (user) => {
-        if(mode != "dev") {
-          sendEmailVerification(user.user);
-        }
+        navigate('/home', { replace: true });
       },
       (e) => {
         console.log(e);
@@ -81,7 +67,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Account Link
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -135,19 +121,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Account Link
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="signin" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
 }
+

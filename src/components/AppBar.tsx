@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useNavigate, Outlet, Link } from "react-router-dom";
 import { useAuthContext } from 'context/AuthProvider';
 import { useUserContext } from 'context/UserProvider';
@@ -51,11 +52,6 @@ const ResponsiveAppBar = () => {
   let user = useUserContext();
 
   const LeftArea = () => {
-    const list = () => {
-      if ( auth.authState.user == null) {
-      } else {
-      }
-    }
     return (
         <Box sx={{ flexGrow: 0, px: 0.5 }}>
           <IconButton
@@ -104,17 +100,17 @@ const ResponsiveAppBar = () => {
                 { auth.authState.user == null ?
                 (
                 <ListItem disablePadding>
-                  <ListItemButton component="a" href="signin">
+                  <ListItemButton component="a" href="/signin">
                     <ListItemText primary="SignIn" />
                   </ListItemButton>
-                  <ListItemButton component="a" href="signup">
+                  <ListItemButton component="a" href="/signup">
                     <ListItemText primary="SignUp" />
                   </ListItemButton>
                 </ListItem>)
                 :
                 (
                 <ListItem disablePadding>
-                  <ListItemButton component="a" href="home">
+                  <ListItemButton component="a" href="/home">
                     <ListItemText primary="Home" />
                   </ListItemButton>
                 </ListItem>)
@@ -165,7 +161,61 @@ const ResponsiveAppBar = () => {
           */}
         </Box>
         );
+    } else if ( auth.authState.user.isAnonymous) {
+      return(
+        <Box sx={{ flexGrow: 0 , px: 0.5}}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mx: 0.5 }}>
+              <PersonAddAltIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={openUserMenu}
+            onClose={handleCloseUserMenu}
+          > 
+            <MenuItem onClick={() => navigate('/account_link', { replace: true })}>Account Link</MenuItem>
+          </Menu>
+        </Box>
+        );
+
     } else {
+      return(
+        <Box sx={{ flexGrow: 0 , px: 0.5}}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mx: 0.5 }}>
+              <Avatar alt={user?.displayName ?? "user"} />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={openUserMenu}
+            onClose={handleCloseUserMenu}
+          > 
+            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+          </Menu>
+        </Box>
+        );
       return(
         <Box sx={{ flexGrow: 0 , px: 0.5}}>
           <Tooltip title="Open settings">

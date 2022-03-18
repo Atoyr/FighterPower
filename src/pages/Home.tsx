@@ -100,7 +100,7 @@ export default function Home() {
     setIsOpenDialog(false);
   }
   const addGoalSheet = () => {
-    let dialogTitle = "目標";
+    let dialogTitle = "目標タイトル";
     let selectedValue = "";
     setDialogProp({ title: dialogTitle, selectedValue: selectedValue, label: ""})
     setIsOpenDialog(true);
@@ -115,9 +115,10 @@ export default function Home() {
     <Box>
       <Button variant="outlined" fullWidth onClick={addGoalSheet}
         sx={{
-          m:1,
+          m:0,
+          mt:1,
           p:1,
-          width: { sm: 250 },
+          width: { xs: "100%", sm: 250 },
           height : { xs : 50, sm: 150 }
         }}>
         目標シートを追加
@@ -125,11 +126,12 @@ export default function Home() {
 
       { goalSheets ? 
       goalSheets.map((goalSheet) => {
-        const href = `../goalsheet/${goalSheet.id}`;
+        const href = `/goalsheet/${goalSheet.id}`;
         return (
         <Button variant="outlined" fullWidth onClick={() => navigate(href)} key={goalSheet.id}
           sx={{
-            m:1,
+            m:0,
+            mt:1,
             p:1,
             width: { sm: 250 },
             height : { xs : 150 },

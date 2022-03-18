@@ -122,20 +122,6 @@ export const setGoalSheet: (userId: string, goalSheet: GoalSheet, transaction?: 
     goalSheetId = newGoalSheetRef.id!;
   }
   await (transaction ? transaction.set(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet) : setDoc(newGoalSheetRef.withConverter(GoalSheetConverter), goalSheet))
-
-  // if (transaction) {
-  //   if (goalSheet.goals) {
-  //     goalSheet.goals.forEach(async v => {
-  //       setGoal( userId, goalSheetId, v, transaction);
-  //     });
-  //   }
-
-  //   if (goalSheet.results) {
-  //     goalSheet.results.forEach(async v => {
-  //       setGoalResult( userId, goalSheetId, v, transaction);
-  //     });
-  //   }
-  // }
   return new Success(goalSheetId);
 };
 
@@ -152,7 +138,39 @@ export const updateGoalSheetModifiedAt: (userId: string, goalSheetId: string, at
     const ref = doc(firebaseFirestore, `users/${userId}/goalSheets`, goalSheetId);
     const modifiedAt = at ?? serverTimestamp();
     await updateDoc(ref, { modifiedAt: modifiedAt});
-    console.log(modifiedAt);
     return new Success(new Date());
+  }
+};
+
+export const inccermentGoalSheetGoalCount: (userId: string, goalSheetId: string, count? : number) => Promise<Result<number, Error>> 
+  = (userId, goalSheetId, count?) => {
+    return updateGoalSheetIncrementCount(userId, goalSheetId, "goal", count);
+}
+
+export const inccermentGoalSheetGoalResultCount: (userId: string, goalSheetId: string, count? : number) => Promise<Result<number, Error>> 
+  = (userId, goalSheetId, count?) => {
+    return updateGoalSheetIncrementCount(userId, goalSheetId, "goalresult", count);
+}
+
+export const updateGoalSheetIncrementCount: (userId: string, goalSheetId: string, type: string, count? : number) => Promise<Result<number, Error>>
+  = async (userId, goalSheetId, type, count?) => {
+  const refGoalSheetResult = await getGoalSheet( userId, goalSheetId);
+  if ( refGoalSheetResult.isFailure()) {
+    return new Failure(refGoalSheetResult.value)
+  }
+
+  if ( refGoalSheetResult.value == null) {
+      return new Failure(new Error("goalSheet not found"));
+  } else {
+    const ref = doc(firebaseFirestore, `users/${userId}/goalSheets`, goalSheetId);
+    switch ( type ) {
+      case "goal": 
+        await updateDoc(ref, { goalCount: increment(count ?? 1)});
+        break;
+      case "goalresult": 
+        await updateDoc(ref, { goalResultCount: increment(count ?? 1)});
+        break;
+    }
+    return new Success(count ?? 1);
   }
 };

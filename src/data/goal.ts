@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore'
 import { firebaseFirestore } from 'lib/firebase';
 import { Result, Success, Failure } from './result'
-import { updateGoalSheetModifiedAt } from 'data/goalSheet';
+import { updateGoalSheetModifiedAt, inccermentGoalSheetGoalCount } from 'data/goalSheet';
 
 export type Goal = {
   __type : 'goal';
@@ -103,6 +103,9 @@ export const setGoal: (userId: string, goalSheetId: string, goal: Goal, transact
     newGoalRef = doc(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/goals`, goal.id as string);
   }
   await (transaction ? transaction.set( newGoalRef.withConverter(GoalConverter), goal) : setDoc(newGoalRef.withConverter(GoalConverter), goal))
+  if (ref.value == null) {
+    await inccermentGoalSheetGoalCount(userId, goalSheetId);
+  }
   await updateGoalSheetModifiedAt(userId, goalSheetId);
   return new Success(goal.id as string);
 };

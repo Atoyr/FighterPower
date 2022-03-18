@@ -3,9 +3,13 @@ import { firebaseAuth } from "lib/firebase";
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword, 
+  signInAnonymously,
   signOut,
+  linkWithCredential,
+  EmailAuthProvider,
   updateProfile,
   UserCredential,
+  User,
 } from "firebase/auth"
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,6 +22,7 @@ export interface AuthContextType {
   signup: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
   signin: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
   signout: (callback: VoidFunction, errorCallback: (e : Error) => void) => void;
+  accountlink: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
@@ -51,9 +56,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     let promise : Promise<UserCredential> | null = null;
     
     switch (param.AuthType) {
-        case "EmailAndPassword":
-          promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
-          break;
+      case "Anonymously":
+        promise = signInAnonymously(firebaseAuth);
+      case "EmailAndPassword":
+        promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+        break;
     }
     if (promise == null ) {
       const e = new Error("AuthType Not Found");
@@ -71,7 +78,32 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       .catch(e => errorCallback(e));
   };
 
-  let value = { authState, signup, signin, signout };
+  let accountlink = (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => {
+    if (!authState.user) {
+      const e = new Error("user not found");
+      errorCallback(e);
+    }
+
+    let promise : Promise<UserCredential> | null = null;
+    
+    switch (param.AuthType) {
+      case "EmailAndPassword":
+        const c = EmailAuthProvider.credential(param.email as string, param.password as string);
+        promise = linkWithCredential(authState.user as User, c);
+        break;
+    }
+    if (promise == null ) {
+      const e = new Error("AuthType Not Found");
+      errorCallback(e);
+    } else {
+      promise
+      .then(user => callback(user))
+      .catch(e => errorCallback(e));
+    }
+  };
+
+
+  let value = { authState, signup, signin, signout, accountlink };
 
   return( 
     <AuthContext.Provider value={value}>
