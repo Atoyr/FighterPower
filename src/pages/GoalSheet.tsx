@@ -203,17 +203,37 @@ export default function GoalSheet() {
         </Box>
         <Box>
           { goalSheetAndDtil.goalResults.map((goalResult, index) => {
-
             return (
-            <Button variant="outlined" fullWidth 
-              key={goalResult.id}
+            <Button variant="outlined" fullWidth onClick={() => {}} key={goalResult.id}
               sx={{
-                m:1,
+                m:0,
+                mt:1,
                 p:1,
                 width: { sm: 250 },
-                height : { xs : 200 },
+                height : { xs : 150 },
               }}>
-              {goalResult.title}
+              <Box
+              sx={{
+                p:1,
+                width: { xs: "100%", sm: 250 },
+                height : { xs : "100%" },
+                display: 'flex',
+                flexDirection: 'column',
+              }}>
+                <Box sx={{ flexGrow: 1}}>
+                  <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left"}}>
+                    {goalResult.title}
+                  </Typography>
+                </Box>
+                <Box sx={{ flexGrow: 0}}>
+                  <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
+                    {"作成日:"}{goalResult.createdAt?.toLocaleString("ja-JP") ?? ""}
+                  </Typography>
+                  <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
+                    {"最終更新日:"}{goalResult.modifiedAt?.toLocaleString("ja-JP") ?? ""}
+                  </Typography>
+                </Box>
+              </Box>
             </Button>
             );
           })}
