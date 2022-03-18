@@ -31,16 +31,24 @@ export interface InputDialogProps {
 
 function InputDialog(props: InputDialogProps) {
   const { onClose, selectedValue, open, title, label } = props;
+  const [isDialogTextError, setIsDialogTextError] = React.useState<{error:boolean, errorLabel: string}>({error: false, errorLabel: ""});
+  isDialogTextError 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     let formData = new FormData(event.currentTarget);
     let v = formData.get('value') as string;
+    if ( v == "") {
+      setIsDialogTextError({ error: true, errorLabel: "入力値が空です"})
+      return;
+    }
+    setIsDialogTextError({ error: false, errorLabel: ""})
     await onClose(v, false);
   };
 
   const handleCancel = async () => {
+    setIsDialogTextError({ error: false, errorLabel: ""})
     await onClose("", true);
   };
 
@@ -53,6 +61,8 @@ function InputDialog(props: InputDialogProps) {
         </DialogContentText>
         <TextField
           autoFocus
+          error={isDialogTextError.error}
+          helperText={isDialogTextError.errorLabel}
           margin="dense"
           name="value"
           id="value"
@@ -64,8 +74,8 @@ function InputDialog(props: InputDialogProps) {
           />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel}>キャンセル</Button>
-        <Button type="submit">決定</Button>
+        <Button variant="outlined" fullWidth onClick={handleCancel}>キャンセル</Button>
+        <Button variant="contained" fullWidth type="submit">決定</Button>
       </DialogActions>
       </form>
     </Dialog> 
@@ -181,9 +191,10 @@ export default function GoalSheet() {
         </Box>
         <Box>
           <Button variant="outlined"
+            fullWidth
             onClick={addGoal}
             sx={{
-              m:1,
+              my:1,
               p:1,
               height : { xs : 50 }
             }}>
