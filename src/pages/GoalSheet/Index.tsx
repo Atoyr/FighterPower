@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +14,18 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import CloseIcon from '@mui/icons-material/Close';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider';
@@ -20,6 +33,8 @@ import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
 import { newGoal, setGoal } from 'data/goal';
 import { setGoalSheet } from 'data/goalSheet';
 import { useDocumentTitle } from 'hook/useDocumentTitle'
+import { InputGoalResultDialog} from './GoalResultDialog';
+import { useGoalResultDialogOpen } from './useGoalResultDialogOpen';
 
 export interface InputDialogProps {
   title: string;
@@ -32,7 +47,6 @@ export interface InputDialogProps {
 function InputDialog(props: InputDialogProps) {
   const { onClose, selectedValue, open, title, label } = props;
   const [isDialogTextError, setIsDialogTextError] = React.useState<{error:boolean, errorLabel: string}>({error: false, errorLabel: ""});
-  isDialogTextError 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -85,8 +99,10 @@ function InputDialog(props: InputDialogProps) {
 export default function GoalSheet() {
   useDocumentTitle("GoalSheet");
   const [isOpenDialog, setIsOpenDialog] = React.useState<boolean>(false);
+  const [isOpenGoalSheetDialog, setIsOpenGoalSheetDialog] = React.useState<boolean>(false);
   const [dialogProp, setDialogProp] = React.useState<{type:string, index: number, title: string, label: string, selectedValue: string }>({type:"", index: 0, title: "", label: "", selectedValue:""});
   let userContext = useUserContext();
+    const useOpen = useGoalResultDialogOpen(false);
 
   let { id } = useParams<"id">();
   const goalSheetId = id ?? "";
@@ -114,6 +130,11 @@ export default function GoalSheet() {
     }
     setIsOpenDialog(false);
   }
+
+  const onCloseResultDialog = async (value:string, isCancel: boolean) => {
+    //setIsOpenGoalSheetDialog(false);
+    console.log("close");
+  };
   
   const addGoal = () => {
     const index = goalSheetAndDtil.goals.length + 1;
@@ -135,6 +156,13 @@ export default function GoalSheet() {
     let selectedValue = goalSheetAndDtil.goalSheet?.title ?? "";
     setDialogProp({ type: "edittitle", index:0, title: dialogTitle, selectedValue: selectedValue, label: ""})
     setIsOpenDialog(true);
+  }
+
+  const addGoalResult = () => {
+    let dialogTitle = "タイトル";
+    let selectedValue = goalSheetAndDtil.goalSheet?.title ?? "";
+    setDialogProp({ type: "edittitle", index:0, title: dialogTitle, selectedValue: selectedValue, label: ""})
+    useOpen.open();
   }
 
   if (goalSheetAndDtil.isLoading) {
@@ -238,12 +266,31 @@ export default function GoalSheet() {
             );
           })}
         </Box>
+        <Box>
+          <Button variant="outlined"
+            fullWidth
+            onClick={addGoalResult}
+            sx={{
+              my:1,
+              p:1,
+              height : { xs : 50 }
+            }}>
+            結果を追加
+          </Button>
+        </Box>
         <InputDialog
           title={dialogProp.title}
           open={isOpenDialog}
           label={dialogProp.label}
           selectedValue={dialogProp.selectedValue}
           onClose={onClose}
+        />
+        <InputGoalResultDialog
+          title={dialogProp.title}
+          open={useOpen.isOpen}
+          label={dialogProp.label}
+          selectedValue={dialogProp.selectedValue}
+          onClose={onCloseResultDialog}
         />
       </Container>
     );
