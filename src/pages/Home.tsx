@@ -115,8 +115,8 @@ export default function Home() {
     <Box>
       <Button variant="outlined" fullWidth onClick={addGoalSheet}
         sx={{
-          m:0,
-          mt:1,
+          m: { xs: 0, sm: 1 },
+          mt: { xs: 1 },
           p:1,
           width: { xs: "100%", sm: 250 },
           height : { xs : 50, sm: 150 }
@@ -130,8 +130,8 @@ export default function Home() {
         return (
         <Button variant="outlined" fullWidth onClick={() => navigate(href)} key={goalSheet.id}
           sx={{
-            m:0,
-            mt:1,
+            m: { xs: 0, sm: 1 },
+            mt: { xs: 1 },
             p:1,
             width: { sm: 250 },
             height : { xs : 150 },
