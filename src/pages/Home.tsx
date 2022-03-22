@@ -145,10 +145,10 @@ export default function Home() {
             flexDirection: 'column',
           }}>
             <Box sx={{ flexGrow: 1}}>
-              <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left"}}>
+              <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left", textTransform: "none"}}>
                 {goalSheet.title}
               </Typography>
-              <Typography variant="subtitle2" noWrap component="div" sx={{ textAlign: "left"}}>
+              <Typography variant="subtitle2" noWrap component="div" sx={{ textAlign: "left", textTransform: "none"}}>
                 {goalSheet.note}
               </Typography>
             </Box>
