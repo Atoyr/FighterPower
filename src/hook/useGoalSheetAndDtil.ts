@@ -10,7 +10,7 @@ export interface GoalSheetAndDtil {
   isLoading: boolean;
 }
 
-export const useGoalSheetAndDtil = (userId: string, goalSheetId: string): GoalSheetAndDtil => {
+export const useGoalSheetAndDtil = (userId: string, goalSheetId: string, version: number): GoalSheetAndDtil => {
   const [ goalSheetAndDtil, setGoalSheetAndDtil ] = useState<GoalSheetAndDtil>({
     goalSheet: null,
     goals: [],
@@ -54,7 +54,7 @@ export const useGoalSheetAndDtil = (userId: string, goalSheetId: string): GoalSh
           goalResults: [],
           isLoading: false});
     });
-  }, [userId, goalSheetId]);
+  }, [userId, goalSheetId, version]);
 
   return goalSheetAndDtil;
 };

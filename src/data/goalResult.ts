@@ -33,6 +33,7 @@ export const newGoalResult : (title: string, order: number, note: string) => Goa
     title : title,
     order : order,
     note : note,
+    version : 0,
   } as GoalResult;
 }
 
@@ -64,7 +65,6 @@ export const goalTypeValue: (key: string) => string = (key) => {
 
 export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
   toFirestore: (result) => {
-    console.log(result);
     return {
       __type : 'result',
       id : result.id ?? "",
@@ -75,7 +75,7 @@ export const GoalResultConverter: FirestoreDataConverter<GoalResult> = {
       createdAt : result.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       goalAchives: result.goalAchives,
-      version : increment(1.0),
+      version : result.version ,
     };
   },
   fromFirestore: (snapshot) => {
@@ -139,6 +139,7 @@ export const setGoalResult: (userId: string, goalSheetId: string, goalResult: Go
     newGoalResultRef = doc(collection(firebaseFirestore, `users/${userId}/goalSheets/${goalSheetId}/results`));
     goalResult.id = newGoalResultRef.id;
   }
+  goalResult.version = goalResult.version + 1;
   await (transaction ? transaction.set( newGoalResultRef.withConverter(GoalResultConverter), goalResult) : setDoc(newGoalResultRef.withConverter(GoalResultConverter), goalResult));
   if (result.value == null) {
     await inccermentGoalSheetGoalResultCount(userId, goalSheetId);

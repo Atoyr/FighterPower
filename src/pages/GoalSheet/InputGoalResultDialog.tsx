@@ -26,7 +26,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { GoalResult, newGoalResult } from 'data/goalResult';
 
 const Transition = React.forwardRef(function Transition(
@@ -68,6 +69,7 @@ export function InputGoalResultDialog(props: InputGoalResultDialogProps) {
   const [type, setType] = React.useState<string>(inputGoalResult?.type ?? "");
   const [goalAchives, setGoalAchives] = React.useState<string[]>([]);
   const [note, setNote] = React.useState<string>(inputGoalResult?.note ?? "");
+  const [errorParam, setErrorParam] = React.useState<{error: boolean, message: string}>({error: false, message: ""});
   
 
   useEffect(() => {
@@ -87,24 +89,36 @@ export function InputGoalResultDialog(props: InputGoalResultDialogProps) {
 
   const changeTitle = (value: string) => {
     setResultTitle(value);
+    setErrorParam({error: false, message: ""});
   };
 
   const changeType = (value: string)  => {
     setType(value);
+    setErrorParam({error: false, message: ""});
   };
 
   const changeGoalAchive = (value: string, index: number) => {
     let tempGoalAchives: string[] = [...goalAchives];
     tempGoalAchives[index] = value;
     setGoalAchives(tempGoalAchives);
+    setErrorParam({error: false, message: ""});
   };
 
   const changeNote = (value: string)  => {
     setNote(value);
+    setErrorParam({error: false, message: ""});
   };
 
 
   const handleSave = async () => {
+    if ( resultTitle == "" ) {
+      setErrorParam({error: true, message: "タイトルが空白です"});
+      return;
+    }
+    if ( type == "" ) {
+      setErrorParam({error: true, message: "実戦かトレモを設定してください"});
+      return;
+    }
     const goalResult = (inputGoalResult == null) ?
     { 
       ...newGoalResult("",0,""),
@@ -130,6 +144,14 @@ export function InputGoalResultDialog(props: InputGoalResultDialogProps) {
     setResultTitle("");
     setNote("");
   };
+
+  const alateSx = () => {
+    const disp = errorParam.error ? "flex" : "none";
+    return {
+      my : 1,
+      display: disp,
+    };
+  }
 
   return (
     <Dialog
@@ -161,6 +183,12 @@ export function InputGoalResultDialog(props: InputGoalResultDialogProps) {
         textAlign: "left",
         mx: 2,
       }}>
+        
+        
+        <Alert severity="error" sx={alateSx()}>
+          <AlertTitle>Error</AlertTitle>
+          {errorParam.message}
+        </Alert>
         <Box
           sx={{
             display: "flex",

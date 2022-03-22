@@ -28,6 +28,7 @@ import { GoalAchives} from './GoalAchives';
 
 export default function GoalSheet() {
   useDocumentTitle("GoalSheet");
+  const [version, setVersion] = React.useState<number>(0);
   const [isOpenGoalSheetDialog, setIsOpenGoalSheetDialog] = React.useState<boolean>(false);
   const [titleDialogProps, setTitleDialogProps] = React.useState<{type: string, index: number, props: InputTitleDialogProps}>({type:"", index:0, props: newInputTitleDialogProps()});
   const [goalResultDialogProps, setGoalResultDialogProps] = React.useState<{index:number, props: InputGoalResultDialogProps}>({index: -1, props: newInputGoalResultDialogProps()});
@@ -35,7 +36,7 @@ export default function GoalSheet() {
 
   const { id } = useParams<"id">();
   const goalSheetId = id ?? "";
-  let goalSheetAndDtil = useGoalSheetAndDtil(userContext.id ?? "", goalSheetId);
+  let goalSheetAndDtil = useGoalSheetAndDtil(userContext.id ?? "", goalSheetId, version);
 
   const onClose = async (value:string, isCancel: boolean) => {
     console.log(value, isCancel);
@@ -82,11 +83,7 @@ export default function GoalSheet() {
         value.order =  goalResultDialogProps.index < 0 ? goalSheetAndDtil.goalResults.length + 1 : goalResultDialogProps.index;
         const r = await setGoalResult(userContext.id!, goalSheetId, value);
         if (r.isSuccess()) {
-          if ( goalResultDialogProps.index < 0) {
-            goalSheetAndDtil.goalResults.push(value);
-          } else {
-            goalSheetAndDtil.goalResults[goalResultDialogProps.index] = value;
-          }
+          setVersion(version + 1);
         }
       }
     }
