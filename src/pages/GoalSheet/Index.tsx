@@ -9,117 +9,61 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import CloseIcon from '@mui/icons-material/Close';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import Chip from '@mui/material/Chip';
 
 import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider';
 import { useGoalSheetAndDtil } from 'hook/useGoalSheetAndDtil';
 import { newGoal, setGoal } from 'data/goal';
 import { setGoalSheet } from 'data/goalSheet';
-import { useDocumentTitle } from 'hook/useDocumentTitle'
-import { InputGoalResultDialog} from './GoalResultDialog';
-import { useGoalResultDialogOpen } from './useGoalResultDialogOpen';
-
-export interface InputDialogProps {
-  title: string;
-  open: boolean;
-  label: string;
-  selectedValue: string;
-  onClose: (value: string, isCancel: boolean) => void;
-}
-
-function InputDialog(props: InputDialogProps) {
-  const { onClose, selectedValue, open, title, label } = props;
-  const [isDialogTextError, setIsDialogTextError] = React.useState<{error:boolean, errorLabel: string}>({error: false, errorLabel: ""});
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    let formData = new FormData(event.currentTarget);
-    let v = formData.get('value') as string;
-    if ( v == "") {
-      setIsDialogTextError({ error: true, errorLabel: "入力値が空です"})
-      return;
-    }
-    setIsDialogTextError({ error: false, errorLabel: ""})
-    await onClose(v, false);
-  };
-
-  const handleCancel = async () => {
-    setIsDialogTextError({ error: false, errorLabel: ""})
-    await onClose("", true);
-  };
-
-  return (
-    <Dialog open={open} onClose={handleCancel} >
-      <DialogTitle>{title}</DialogTitle>
-      <form onSubmit={handleSubmit}>
-      <DialogContent>
-        <DialogContentText>
-        </DialogContentText>
-        <TextField
-          autoFocus
-          error={isDialogTextError.error}
-          helperText={isDialogTextError.errorLabel}
-          margin="dense"
-          name="value"
-          id="value"
-          label={label}
-          type="text"
-          fullWidth
-          variant="standard"
-          defaultValue={selectedValue}
-          />
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" fullWidth onClick={handleCancel}>キャンセル</Button>
-        <Button variant="contained" fullWidth type="submit">決定</Button>
-      </DialogActions>
-      </form>
-    </Dialog> 
-  );
-}
+import { GoalResult, setGoalResult, goalTypeValue } from 'data/goalResult';
+import { useDocumentTitle } from 'hook/useDocumentTitle';
+import { InputGoalResultDialog, InputGoalResultDialogProps, newInputGoalResultDialogProps} from './InputGoalResultDialog';
+import { InputTitleDialog, InputTitleDialogProps, newInputTitleDialogProps } from './InputTitleDialog';
+import { GoalAchives} from './GoalAchives';
 
 export default function GoalSheet() {
   useDocumentTitle("GoalSheet");
-  const [isOpenDialog, setIsOpenDialog] = React.useState<boolean>(false);
   const [isOpenGoalSheetDialog, setIsOpenGoalSheetDialog] = React.useState<boolean>(false);
-  const [dialogProp, setDialogProp] = React.useState<{type:string, index: number, title: string, label: string, selectedValue: string }>({type:"", index: 0, title: "", label: "", selectedValue:""});
-  let userContext = useUserContext();
-    const useOpen = useGoalResultDialogOpen(false);
+  const [titleDialogProps, setTitleDialogProps] = React.useState<{type: string, index: number, props: InputTitleDialogProps}>({type:"", index:0, props: newInputTitleDialogProps()});
+  const [goalResultDialogProps, setGoalResultDialogProps] = React.useState<{index:number, props: InputGoalResultDialogProps}>({index: -1, props: newInputGoalResultDialogProps()});
+  const userContext = useUserContext();
 
-  let { id } = useParams<"id">();
+  const { id } = useParams<"id">();
   const goalSheetId = id ?? "";
   let goalSheetAndDtil = useGoalSheetAndDtil(userContext.id ?? "", goalSheetId);
 
   const onClose = async (value:string, isCancel: boolean) => {
+    console.log(value, isCancel);
     if (!isCancel)
     {
-      switch(dialogProp.type) {
+      // validate
+      if ( value == "" ) {
+        setTitleDialogProps(
+          {
+            type: titleDialogProps.type,
+            index: titleDialogProps.index,
+            props: {
+              ...titleDialogProps.props,
+              error: true,
+              message: "空白です",
+            }});
+        return;
+      }
+
+      switch(titleDialogProps.type) {
         case "addgoal" :
-          let g = newGoal(value, goalSheetAndDtil.goals.length+1);
+          const g = newGoal(value, goalSheetAndDtil.goals.length+1);
           await setGoal(userContext.id!, goalSheetId, g);
           goalSheetAndDtil.goals.push(g);
           break;
         case "editgoal" :
-          goalSheetAndDtil.goals[dialogProp.index].title = value;
-          await setGoal(userContext.id!, goalSheetId, goalSheetAndDtil.goals[dialogProp.index]);
+          goalSheetAndDtil.goals[titleDialogProps.index].title = value;
+          await setGoal(userContext.id!, goalSheetId, goalSheetAndDtil.goals[titleDialogProps.index]);
           break;
         case "edittitle" :
           goalSheetAndDtil.goalSheet!.title = value;
@@ -128,41 +72,93 @@ export default function GoalSheet() {
           break;
       }
     }
-    setIsOpenDialog(false);
+    setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
   }
 
-  const onCloseResultDialog = async (value:string, isCancel: boolean) => {
-    //setIsOpenGoalSheetDialog(false);
-    console.log("close");
+  const onCloseResultDialog = async (value : GoalResult | null, isCancel : boolean) => {
+    if (!isCancel)
+    {
+      if ( value != null ) {
+        value.order =  goalResultDialogProps.index < 0 ? goalSheetAndDtil.goalResults.length + 1 : goalResultDialogProps.index;
+        const r = await setGoalResult(userContext.id!, goalSheetId, value);
+        if (r.isSuccess()) {
+          if ( goalResultDialogProps.index < 0) {
+            goalSheetAndDtil.goalResults.push(value);
+          } else {
+            goalSheetAndDtil.goalResults[goalResultDialogProps.index] = value;
+          }
+        }
+      }
+    }
+    setGoalResultDialogProps({index: -1, props: newInputGoalResultDialogProps()});
   };
+
+  const editTitle = () => {
+    const dialogTitle = "タイトル";
+    const defaultValue = goalSheetAndDtil.goalSheet?.title ?? "";
+    const props = newInputTitleDialogProps()
+    setTitleDialogProps(
+      {
+        type: "edittitle", 
+        index: 0, 
+        props: {
+          ...props,
+          title: dialogTitle,
+          defaultValue: defaultValue,
+          open: true,
+        }
+      });
+  }
   
   const addGoal = () => {
     const index = goalSheetAndDtil.goals.length + 1;
-    let dialogTitle = `目標 ${index}`;
-    let selectedValue = "";
-    setDialogProp({ type: "addgoal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
-    setIsOpenDialog(true);
+    const dialogTitle = `目標 ${index}`;
+    const props = newInputTitleDialogProps()
+    setTitleDialogProps(
+      {
+        type: "addgoal", 
+        index: index, 
+        props: {
+          ...props,
+          title: dialogTitle,
+          open: true,
+        }
+      });
   }
 
   const editGoal = (index: number) => {
-    let dialogTitle = `目標 ${index + 1}`
-    let selectedValue = goalSheetAndDtil.goals[index].title;
-    setDialogProp({ type: "editgoal", index:index, title: dialogTitle, selectedValue: selectedValue, label: ""})
-    setIsOpenDialog(true);
-  }
-
-  const editTitle = () => {
-    let dialogTitle = "タイトル";
-    let selectedValue = goalSheetAndDtil.goalSheet?.title ?? "";
-    setDialogProp({ type: "edittitle", index:0, title: dialogTitle, selectedValue: selectedValue, label: ""})
-    setIsOpenDialog(true);
+    const dialogTitle = `目標 ${index + 1}`;
+    const defaultValue = goalSheetAndDtil.goals[index].title;
+    const props = newInputTitleDialogProps();
+    setTitleDialogProps(
+      {
+        type: "editgoal", 
+        index: index, 
+        props: {
+          ...props,
+          title: dialogTitle,
+          defaultValue: defaultValue,
+          open: true,
+        }
+      });
   }
 
   const addGoalResult = () => {
-    let dialogTitle = "タイトル";
-    let selectedValue = goalSheetAndDtil.goalSheet?.title ?? "";
-    setDialogProp({ type: "edittitle", index:0, title: dialogTitle, selectedValue: selectedValue, label: ""})
-    useOpen.open();
+    const props = newInputGoalResultDialogProps();
+    props.title = "結果を入力";
+    props.open = true;
+    props.goalCount = goalSheetAndDtil.goals.length;
+    setGoalResultDialogProps({index: -1, props: props});
+  }
+
+  const editGoalResult = (index: number) => {
+    const props = newInputGoalResultDialogProps();
+    props.inputGoalResult = goalSheetAndDtil.goalResults[index];
+    props.title = `結果${index + 1}を編集`;
+    props.open = true;
+    props.goalCount = goalSheetAndDtil.goals.length;
+    
+    setGoalResultDialogProps({index, props});
   }
 
   if (goalSheetAndDtil.isLoading) {
@@ -232,32 +228,41 @@ export default function GoalSheet() {
         <Box>
           { goalSheetAndDtil.goalResults.map((goalResult, index) => {
             return (
-            <Button variant="outlined" fullWidth onClick={() => {}} key={goalResult.id}
+            <Button variant="outlined" fullWidth onClick={() => editGoalResult(index)} key={goalResult.id}
               sx={{
-                m:0,
-                mt:1,
+                m: { xs: 0, sm: 1 },
+                mt: { xs: 1 },
                 p:1,
-                width: { sm: 250 },
-                height : { xs : 150 },
+                width: { sm: 280 },
+                minHeight: {xs: 150},
+                height: {xs: "100%"}
               }}>
               <Box
               sx={{
-                p:1,
+                p:0,
                 width: { xs: "100%", sm: 250 },
                 height : { xs : "100%" },
                 display: 'flex',
                 flexDirection: 'column',
               }}>
                 <Box sx={{ flexGrow: 1}}>
-                  <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left"}}>
-                    {goalResult.title}
+                  <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-end',
+                    }}>
+                    <Typography variant="h6" noWrap component="h6" sx={{ flexGrow:1, textAlign: "left", textTransform: "none"}}>
+                      {goalResult.title}
+                    </Typography>
+                    <Chip label={goalTypeValue(goalResult.type ?? "")} />
+                  </Box>
+                  <Typography variant="subtitle2" noWrap component="div" sx={{ textAlign: "left", textTransform: "none", height: 20}}>
+                    {` ${goalResult.note}`}
                   </Typography>
+                  <GoalAchives goalResultId={goalResult.id!} goalAchives={goalResult?.goalAchives} goalCount={goalSheetAndDtil.goals.length} />
                 </Box>
                 <Box sx={{ flexGrow: 0}}>
-                  <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
-                    {"作成日:"}{goalResult.createdAt?.toLocaleString("ja-JP") ?? ""}
-                  </Typography>
-                  <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
+                  <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right", textTransform: "none"}}>
                     {"最終更新日:"}{goalResult.modifiedAt?.toLocaleString("ja-JP") ?? ""}
                   </Typography>
                 </Box>
@@ -278,18 +283,20 @@ export default function GoalSheet() {
             結果を追加
           </Button>
         </Box>
-        <InputDialog
-          title={dialogProp.title}
-          open={isOpenDialog}
-          label={dialogProp.label}
-          selectedValue={dialogProp.selectedValue}
+        <InputTitleDialog
+          title={titleDialogProps.props.title}
+          open={titleDialogProps.props.open}
+          label={titleDialogProps.props.label}
+          defaultValue={titleDialogProps.props.defaultValue}
+          error={titleDialogProps.props.error}
+          message={titleDialogProps.props.message}
           onClose={onClose}
         />
         <InputGoalResultDialog
-          title={dialogProp.title}
-          open={useOpen.isOpen}
-          label={dialogProp.label}
-          selectedValue={dialogProp.selectedValue}
+          title={goalResultDialogProps.props.title}
+          open={goalResultDialogProps.props.open}
+          inputGoalResult={goalResultDialogProps.props.inputGoalResult}
+          goalCount={goalResultDialogProps.props.goalCount}
           onClose={onCloseResultDialog}
         />
       </Container>
