@@ -14,6 +14,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Chip from '@mui/material/Chip';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider';
@@ -158,6 +160,13 @@ export default function GoalSheet() {
     setGoalResultDialogProps({index, props});
   }
 
+  const fabStyle = {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    display: { xs: 'grid', sm: 'none' },
+  };
+
   if (goalSheetAndDtil.isLoading) {
       return (<Container maxWidth="xl" 
       sx={{
@@ -275,7 +284,8 @@ export default function GoalSheet() {
             sx={{
               my:1,
               p:1,
-              height : { xs : 50 }
+              height : { xs : 50 },
+              display: { xs: 'none', sm: 'flex' },
             }}>
             結果を追加
           </Button>
@@ -296,6 +306,9 @@ export default function GoalSheet() {
           goalCount={goalResultDialogProps.props.goalCount}
           onClose={onCloseResultDialog}
         />
+        <Fab color="primary" aria-label="add" sx={fabStyle} onClick={addGoalResult} >
+          <AddIcon />
+        </Fab>
       </Container>
     );
   } else {
