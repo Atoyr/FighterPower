@@ -28,18 +28,21 @@ export default function StickyFooter({ children }: { children: React.ReactNode }
         }}
       >
         <Container maxWidth="sm">
-          <Typography variant="body1">
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            display: 'flex',
+            flexDirection: {xs: 'column', sm: 'row' }
+            }}>
+          <Typography variant="body2" color="text.secondary" sx={{mx: 1}}>
             {'Copyright (c) UCHIYAMA Ryota'}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" sx={{mx: 1}}>
             <Link color="inherit" href="/">
                FighterPower
             </Link>{' '}
             {2022}
             {'.'}
           </Typography>
+          </Box>
         </Container>
       </Box>
     </Box>
