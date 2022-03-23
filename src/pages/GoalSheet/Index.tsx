@@ -57,6 +57,8 @@ export default function GoalSheet() {
             }});
         return;
       }
+      const index = titleDialogProps.index;
+      setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
 
       switch(titleDialogProps.type) {
         case "addgoal" :
@@ -74,8 +76,10 @@ export default function GoalSheet() {
           goalSheetAndDtil.goalSheet!.version = goalSheetAndDtil.goalSheet!.version + 1;
           break;
       }
+          setVersion(version + 1);
+    } else {
+      setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
     }
-    setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
   }
 
   const onCloseResultDialog = async (value : GoalResult | null, isCancel : boolean) => {
@@ -220,7 +224,7 @@ export default function GoalSheet() {
             );})}
         </Box>
         <Box>
-          <Button variant="outlined"
+          <Button variant="contained"
             fullWidth
             onClick={addGoal}
             sx={{

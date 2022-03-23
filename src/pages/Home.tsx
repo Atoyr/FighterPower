@@ -94,11 +94,12 @@ export default function Home() {
       let result = await setGoalSheet(id, gs);
       if (result.isSuccess())
       {
-        navigate(`../goalsheet/${result.value}`);
+        navigate(`/goalsheet/${result.value}`);
       }
     }
     setIsOpenDialog(false);
   }
+
   const addGoalSheet = () => {
     let dialogTitle = "目標タイトル";
     let selectedValue = "";
@@ -112,7 +113,7 @@ export default function Home() {
       mt: { xs: 1, sm: 10 }
     }}>
     <h2>目標シート</h2>
-    <Box>
+    <Box sx={{mb: 1}}>
       <Button variant="outlined" fullWidth onClick={addGoalSheet}
         sx={{
           m: { xs: 0, sm: 1 },
