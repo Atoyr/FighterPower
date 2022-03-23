@@ -9,13 +9,12 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 
 import { useParams } from 'react-router-dom';
 import { useUserContext } from 'context/UserProvider';
@@ -34,6 +33,9 @@ export default function GoalSheet() {
   const [isOpenGoalSheetDialog, setIsOpenGoalSheetDialog] = React.useState<boolean>(false);
   const [titleDialogProps, setTitleDialogProps] = React.useState<{type: string, index: number, props: InputTitleDialogProps}>({type:"", index:0, props: newInputTitleDialogProps()});
   const [goalResultDialogProps, setGoalResultDialogProps] = React.useState<{index:number, props: InputGoalResultDialogProps}>({index: -1, props: newInputGoalResultDialogProps()});
+  const [speedDialogOpen, setSpeedDialogOpen] = React.useState<boolean>(false);
+  const handleSpeedDialogOpen = () => setSpeedDialogOpen(true);
+  const handleSpeedDialogClose = () => setSpeedDialogOpen(false);
   const userContext = useUserContext();
 
   const { id } = useParams<"id">();
@@ -114,6 +116,7 @@ export default function GoalSheet() {
   }
   
   const addGoal = () => {
+    setSpeedDialogOpen(false);
     const index = goalSheetAndDtil.goals.length + 1;
     const dialogTitle = `目標 ${index}`;
     const props = newInputTitleDialogProps()
@@ -147,6 +150,7 @@ export default function GoalSheet() {
   }
 
   const addGoalResult = () => {
+    setSpeedDialogOpen(false);
     const props = newInputGoalResultDialogProps();
     props.title = "結果を入力";
     props.open = true;
@@ -224,13 +228,14 @@ export default function GoalSheet() {
             );})}
         </Box>
         <Box>
-          <Button variant="contained"
+          <Button variant="outlined"
             fullWidth
             onClick={addGoal}
             sx={{
               my:1,
               p:1,
-              height : { xs : 50 }
+              height : { xs : 50 },
+              display: { xs: 'none', sm: 'flex' },
             }}>
             目標を追加
           </Button>
@@ -282,11 +287,11 @@ export default function GoalSheet() {
           })}
         </Box>
         <Box>
-          <Button variant="outlined"
+          <Button variant="contained"
             fullWidth
             onClick={addGoalResult}
             sx={{
-              my:1,
+              my:2,
               p:1,
               height : { xs : 50 },
               display: { xs: 'none', sm: 'flex' },
@@ -310,9 +315,30 @@ export default function GoalSheet() {
           goalCount={goalResultDialogProps.props.goalCount}
           onClose={onCloseResultDialog}
         />
-        <Fab color="primary" aria-label="add" sx={fabStyle} onClick={addGoalResult} >
-          <AddIcon />
-        </Fab>
+        <SpeedDial
+          ariaLabel="追加"
+          sx={{ position: 'absolute', bottom: 16, right: 16, display:{xs: "flex", sm: "none"} }}
+          onClose={handleSpeedDialogClose}
+          onOpen={handleSpeedDialogOpen}
+          open={speedDialogOpen}
+          icon={<SpeedDialIcon />}
+          direction="up"
+        >
+          <SpeedDialAction
+            key="goal_add"
+            icon={<EditIcon />}
+            onClick={addGoalResult}
+            tooltipTitle={"結果を追加"}
+            tooltipOpen
+          />
+          <SpeedDialAction
+            key="result_add"
+            icon={<EditIcon />}
+            onClick={addGoal}
+            tooltipTitle={"目標を追加"}
+            tooltipOpen
+          />
+      </SpeedDial>
       </Container>
     );
   } else {
