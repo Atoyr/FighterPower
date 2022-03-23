@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+        return request.auth != null;
+    }
+
+    function isUserAuthenticated(userId) {
+        return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+        allow get, list, create, update : if isUserAuthenticated(userId);
+    }
+    match /users/{userId}/goalSheets/{goalSheetId=**} {
+        allow get, list, create, update : if isUserAuthenticated(userId);
+    }
+    match /users/{userId}/activities/{activityId=**} {
+        allow get, list, create, update : if isUserAuthenticated(userId);
+    }
+  }
+}
