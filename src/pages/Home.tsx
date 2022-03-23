@@ -29,18 +29,38 @@ export interface InputGoalSheetDialogProps {
 }
 
 function InputGoalSheetDialog(props: InputGoalSheetDialogProps) {
+  const [ errorProps, setErrorProps] = React.useState<{sheetTitleError: boolean, goalTitleError: boolean, sheetMessage: string, goalMessage: string }>({sheetTitleError: false, goalTitleError: false, sheetMessage: "", goalMessage: ""} );
   const { onClose, open} = props;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrorProps({sheetTitleError: false, goalTitleError: false, sheetMessage: "", goalMessage: ""} );
 
     const formData = new FormData(event.currentTarget);
     const goalSheetTitle = formData.get('goal_sheet_title') as string;
     const goalTitle = formData.get('goal_title') as string;
+    let ste = false;
+    let sm = "";
+    let gte = false;
+    let gm = "";
+
+    if ( goalSheetTitle == "") {
+      ste = true;
+      sm = "空白です";
+    }
+    if ( goalTitle == "") {
+      gte = true;
+      gm = "空白です";
+    }
+    setErrorProps({sheetTitleError: ste, goalTitleError: gte, sheetMessage: sm, goalMessage: gm} );
+    if ( ste || gte ) {
+      return;
+    }
     await onClose(goalSheetTitle, goalTitle, false);
   };
 
   const handleCancel = async () => {
+    setErrorProps({sheetTitleError: false, goalTitleError: false, sheetMessage: "", goalMessage: ""} );
     await onClose("", "", true);
   };
 
@@ -55,6 +75,8 @@ function InputGoalSheetDialog(props: InputGoalSheetDialogProps) {
           name="goal_sheet_title"
           id="goal_sheet_title"
           label="目標シート タイトル"
+          error={errorProps.sheetTitleError}
+          helperText={errorProps.sheetMessage}
           type="text"
           fullWidth
           variant="standard"
@@ -64,6 +86,8 @@ function InputGoalSheetDialog(props: InputGoalSheetDialogProps) {
           name="goal_title"
           id="goal_title"
           label="目標1"
+          error={errorProps.goalTitleError}
+          helperText={errorProps.goalMessage}
           type="text"
           fullWidth
           variant="standard"
