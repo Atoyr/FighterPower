@@ -5,6 +5,7 @@ import { RequireAuth, NotRequireAuth, RequireAnonymous } from 'components/Requir
 import { CssBaseline } from '@mui/material';
 
 import AppBar from 'components/AppBar';
+import StickyFooter from 'components/StickyFooter';
 import Index from 'pages/Index';
 import Signin from 'pages/Signin';
 import Signup from 'pages/Signup';
@@ -15,6 +16,7 @@ import NotFound from 'pages/NotFound';
 
 const App = () => {
   return (
+  <StickyFooter>
     <AuthProvider>
       <UserProvider>
         <CssBaseline />
@@ -56,6 +58,7 @@ const App = () => {
         </Routes>
       </UserProvider>
     </AuthProvider>
+  </StickyFooter>
   );
 }
 

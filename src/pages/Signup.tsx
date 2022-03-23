@@ -18,19 +18,6 @@ import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright (c) '}
-      <Link color="inherit" href="/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
 export default function SignUp() {
@@ -146,7 +133,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

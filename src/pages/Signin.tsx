@@ -117,7 +117,6 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright />
       </Container>
     </ThemeProvider>
   );
