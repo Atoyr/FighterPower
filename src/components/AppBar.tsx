@@ -22,6 +22,9 @@ import { useNavigate, Outlet, Link } from "react-router-dom";
 import { useAuthContext } from 'context/AuthProvider';
 import { useUserContext } from 'context/UserProvider';
 import SiteLogo from './SiteLogo';
+import { ReactComponent as Logo } from 'assets/logo.svg';
+import SvgIcon from '@mui/material/SvgIcon';
+
 
 const ResponsiveAppBar = () => {
   const [openMenu, setOpenMenu] = React.useState<boolean>(false);
@@ -127,9 +130,9 @@ const ResponsiveAppBar = () => {
   const CenterArea = () => {
     const to = auth.authState.user == null ? "/" : "home";
     return (
-      <Box sx={{flexGrow: 1, px: 0.5, display: 'flex', flexDirection: 'row' }}>
-        <Link to={to} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <SiteLogo size={36} />
+      <Box sx={{flexGrow: 1, px: 0.5, display: 'block', flexDirection: 'row', textAlign: 'center', justifyContent: 'center'}}>
+        <Link to={to} style={{ display: 'block', alignItems: 'center', justifyContent: 'center'}}>
+          <SvgIcon component={Logo} inheritViewBox sx={{width: "48px" , height: "48px", verticalAlign:"middle"}}/>
         </Link>
       </Box>
     );

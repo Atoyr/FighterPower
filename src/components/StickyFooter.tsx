@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 
-export default function StickyFooter({ children }: { children: React.ReactNode }) {
+export default function StickyFooter({ children, dtil }: { children: React.ReactNode, dtil: boolean }) {
   return (
     <Box
       sx={{
@@ -28,6 +28,10 @@ export default function StickyFooter({ children }: { children: React.ReactNode }
         }}
       >
         <Container maxWidth="sm">
+          { dtil &&
+          <Box>
+          </Box>
+          }
           <Box sx={{
             display: 'flex',
             flexDirection: {xs: 'column', sm: 'row' }
