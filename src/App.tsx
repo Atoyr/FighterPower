@@ -4,7 +4,7 @@ import { UserProvider } from 'context/UserProvider';
 import { RequireAuth, NotRequireAuth, RequireAnonymous } from 'components/RequireAuth';
 import { CssBaseline } from '@mui/material';
 
-import AppBar from 'components/AppBar';
+import AppWindow from 'components/AppWindow';
 import StickyFooter from 'components/StickyFooter';
 import Index from 'pages/Index';
 import Signin from 'pages/Signin';
@@ -16,12 +16,11 @@ import NotFound from 'pages/NotFound';
 
 const App = () => {
   return (
-  <StickyFooter>
     <AuthProvider>
       <UserProvider>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<AppBar />}>
+          <Route path="/" element={<AppWindow />}>
             <Route index element={<Index />} />
             <Route path="index" element={<Index />} />
             <Route path="home" element={
@@ -42,23 +41,28 @@ const App = () => {
           </Route>
           <Route path="/signin" element={
             <NotRequireAuth>
-              <Signin />
+              <StickyFooter dtil={true}>
+                <Signin />
+              </StickyFooter>
             </NotRequireAuth>
             } />
           <Route path="/signup" element={
             <NotRequireAuth>
-              <Signup />
+              <StickyFooter dtil={true}>
+                <Signup />
+              </StickyFooter>
             </NotRequireAuth>
             } />
           <Route path="/account_link" element={
             <RequireAnonymous>
-              <AccountLink />
+              <StickyFooter dtil={true}>
+                <AccountLink />
+              </StickyFooter>
             </RequireAnonymous>
             } />
         </Routes>
       </UserProvider>
     </AuthProvider>
-  </StickyFooter>
   );
 }
 
