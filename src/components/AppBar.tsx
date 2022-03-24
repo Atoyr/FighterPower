@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate, Outlet, Link } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,12 +19,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { useNavigate, Outlet, Link } from "react-router-dom";
+import SvgIcon from '@mui/material/SvgIcon';
+
 import { useAuthContext } from 'context/AuthProvider';
 import { useUserContext } from 'context/UserProvider';
-import SiteLogo from './SiteLogo';
 import { ReactComponent as Logo } from 'assets/logo.svg';
-import SvgIcon from '@mui/material/SvgIcon';
 
 
 const ResponsiveAppBar = () => {

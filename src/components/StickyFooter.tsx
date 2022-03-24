@@ -1,9 +1,13 @@
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
+import Divider from '@mui/material/Divider';
+import SvgIcon from '@mui/material/SvgIcon';
+import { ReactComponent as Logo } from 'assets/logo.svg';
 
 export default function StickyFooter({ children, dtil }: { children: React.ReactNode, dtil: boolean }) {
   return (
@@ -27,25 +31,37 @@ export default function StickyFooter({ children, dtil }: { children: React.React
               : theme.palette.grey[800],
         }}
       >
-        <Container maxWidth="sm">
+        <Container maxWidth="lg">
           { dtil &&
           <Box>
+            <Box>
+            </Box>
+            <Divider />
+            <Box sx={{display: "flex"}}>
+                <SvgIcon component={Logo} inheritViewBox sx={{width: "48px" , height: "48px", verticalAlign:"middle", flexGrow: 0}}/>
+                <Typography variant="h6" component="div" color="text.secondary" align="center" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0}}>
+                  FighterPower
+                </Typography>
+                <Box sx={{flexGrow: 1}}>
+                </Box>
+            </Box>
           </Box>
           }
           <Box sx={{
             display: 'flex',
-            flexDirection: {xs: 'column', sm: 'row' }
+            flexDirection: {xs: 'column', sm: 'row' },
+            justifyContent: 'center'
             }}>
-          <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 0 }}>
-            {'Copyright (c) UCHIYAMA Ryota'}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 1 }}>
-            <Link color="inherit" href="/">
-               FighterPower
-            </Link>{' '}
-            {2022}
-            {'.'}
-          </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 1, textAlign:{ xs: 'left', sm: 'right'} }}>
+              {'Copyright (c) UCHIYAMA Ryota'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 1 }}>
+              <Link color="inherit" href="/">
+                 FighterPower
+              </Link>{' '}
+              {2022}
+              {'.'}
+            </Typography>
           </Box>
         </Container>
       </Box>
