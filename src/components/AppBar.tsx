@@ -97,7 +97,12 @@ const ResponsiveAppBar = () => {
                 >
                   <CloseIcon />
                 </IconButton>
-                <SiteLogo size={36} isTitle />
+                <Box sx={{display: "flex"}}>
+                    <SvgIcon component={Logo} inheritViewBox sx={{width: "48px" , height: "48px", verticalAlign:"middle"}}/>
+                    <Typography variant="h6" component="div" color="text.secondary" align="center" sx={{verticalAlign:"middle", my: "auto", mx: 1}}>
+                      FighterPower
+                    </Typography>
+                </Box>
               </Box>
                 { auth.authState.user == null ?
                 ( <List>

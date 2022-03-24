@@ -36,10 +36,10 @@ export default function StickyFooter({ children, dtil }: { children: React.React
             display: 'flex',
             flexDirection: {xs: 'column', sm: 'row' }
             }}>
-          <Typography variant="body2" color="text.secondary" sx={{mx: 1}}>
+          <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 0 }}>
             {'Copyright (c) UCHIYAMA Ryota'}
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{mx: 1}}>
+          <Typography variant="body2" color="text.secondary" sx={{mx: 1 ,flexGrow : 1 }}>
             <Link color="inherit" href="/">
                FighterPower
             </Link>{' '}
