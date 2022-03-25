@@ -7,6 +7,7 @@ import { CssBaseline } from '@mui/material';
 import AppWindow from 'components/AppWindow';
 import StickyFooter from 'components/StickyFooter';
 import Index from 'pages/Index';
+import Terms from 'pages/Terms';
 import Signin from 'pages/Signin';
 import Signup from 'pages/Signup';
 import AccountLink from 'pages/AccountLink';
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/" element={<AppWindow />}>
             <Route index element={<Index />} />
             <Route path="index" element={<Index />} />
+            <Route path="terms" element={<Terms />} />
             <Route path="home" element={
               <RequireAuth>
                 <Home />
