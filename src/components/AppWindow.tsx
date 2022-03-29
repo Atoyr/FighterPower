@@ -9,6 +9,7 @@ const AppWindow = () => {
 
   showDtilList.push("/");
   showDtilList.push("/index");
+  showDtilList.push("/terms");
 
   const dtil = showDtilList.some((element) => element == location.pathname);
   console.log(location.pathname, dtil);
