@@ -16,7 +16,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
-import { Copyright } from 'components/Copyright'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
 
 const theme = createTheme();
