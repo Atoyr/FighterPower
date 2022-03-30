@@ -8,6 +8,7 @@ import AppWindow from 'components/AppWindow';
 import StickyFooter from 'components/StickyFooter';
 import Index from 'pages/Index';
 import Terms from 'pages/Terms';
+import Privacy from 'pages/Privacy';
 import Signin from 'pages/Signin';
 import Signup from 'pages/Signup';
 import AccountLink from 'pages/AccountLink';
@@ -25,6 +26,7 @@ const App = () => {
             <Route index element={<Index />} />
             <Route path="index" element={<Index />} />
             <Route path="terms" element={<Terms />} />
+            <Route path="privacy" element={<Privacy />} />
             <Route path="home" element={
               <RequireAuth>
                 <Home />

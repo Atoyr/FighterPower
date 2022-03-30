@@ -75,6 +75,16 @@ export default function StickyFooter({ children, dtil }: { children: React.React
                         {"利用規約"}
                       </Link>
                     </Typography>
+                    <Typography variant="subtitle2" component="div" color="text.secondary" align="left" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0}}>
+                      <Link component={RouterLink} to="/privacy">
+                        {"プライバシーポリシー"}
+                      </Link>
+                    </Typography>
+                    <Typography variant="subtitle2" component="div" color="text.secondary" align="left" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0}}>
+                      <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform">
+                        {"お問い合わせ"}
+                      </Link>
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>

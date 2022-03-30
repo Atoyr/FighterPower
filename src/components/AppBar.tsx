@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate, Outlet, Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,6 +14,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -107,25 +109,64 @@ const ResponsiveAppBar = () => {
                 { auth.authState.user == null ?
                 ( <List>
                 <ListItem disablePadding>
-                  <ListItemButton component="a" href="/signin">
+                  <ListItemButton component={RouterLink} to="/signin">
                     <ListItemText primary="SignIn" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton component="a" href="/signup">
+                  <ListItemButton component={RouterLink} to="/signup">
                     <ListItemText primary="SignUp" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                  <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform">
+                    <ListItemText primary="お問い合わせ" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton component={RouterLink} to="/terms">
+                    <ListItemText primary="利用規約" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton component={RouterLink} to="/privacy">
+                    <ListItemText primary="プライバシーポリシー" />
                   </ListItemButton>
                 </ListItem>
               </List>)
                 :
                 (<List>
                   <ListItem disablePadding>
-                    <ListItemButton component="a" href="/home">
+                    <ListItemButton component={RouterLink} to="/home">
                       <ListItemText primary="Home" />
                     </ListItemButton>
                   </ListItem>
-                </List>)
-                }
+                  <Divider />
+                  { auth.authState.user.isAnonymous && 
+                  <ListItem disablePadding>
+                    <ListItemButton component={RouterLink} to="/account_link">
+                      <ListItemText primary="アカウント連携" />
+                    </ListItemButton>
+                  </ListItem>
+                  }
+                  <ListItem disablePadding>
+                    <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform">
+                      <ListItemText primary="お問い合わせ" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton component={RouterLink} to="/terms">
+                      <ListItemText primary="利用規約" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton component={RouterLink} to="/privacy">
+                      <ListItemText primary="プライバシーポリシー" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+                )}
             </Box>
           </SwipeableDrawer>
         </Box>
