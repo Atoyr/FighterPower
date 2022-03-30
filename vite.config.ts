@@ -4,10 +4,11 @@ const svgrPlugin = require('vite-plugin-svgr')
 import * as path from "path"
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({command, mode}) => {
+ return { 
   root: './src',
   build: {
-    outDir: '../public',
+    outDir: mode == 'prod' ? '../public' : `../public_${mode}`,
     emptyOutDir: true,
   },
   plugins: [
@@ -17,7 +18,6 @@ export default defineConfig({
         icon: true,
       }
     })
-
   ],
   resolve: {
     alias: {
@@ -30,4 +30,5 @@ export default defineConfig({
       "pages": path.resolve(__dirname, "src/pages"),
     }
   }
+ }
 })
