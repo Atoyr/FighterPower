@@ -109,28 +109,28 @@ const ResponsiveAppBar = () => {
                 { auth.authState.user == null ?
                 ( <List>
                 <ListItem disablePadding>
-                  <ListItemButton component={RouterLink} to="/signin">
+                  <ListItemButton component={RouterLink} to="/signin" onClick={handleCloseNavMenu} >
                     <ListItemText primary="SignIn" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton component={RouterLink} to="/signup">
+                  <ListItemButton component={RouterLink} to="/signup" onClick={handleCloseNavMenu} >
                     <ListItemText primary="SignUp" />
                   </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
-                  <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform">
+                  <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" onClick={handleCloseNavMenu} >
                     <ListItemText primary="お問い合わせ" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton component={RouterLink} to="/terms">
+                  <ListItemButton component={RouterLink} to="/terms" onClick={handleCloseNavMenu} >
                     <ListItemText primary="利用規約" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton component={RouterLink} to="/privacy">
+                  <ListItemButton component={RouterLink} to="/privacy" onClick={handleCloseNavMenu} >
                     <ListItemText primary="プライバシーポリシー" />
                   </ListItemButton>
                 </ListItem>
@@ -138,30 +138,33 @@ const ResponsiveAppBar = () => {
                 :
                 (<List>
                   <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="/home">
+                    <ListItemButton component={RouterLink} to="/home" onClick={handleCloseNavMenu} >
                       <ListItemText primary="Home" />
                     </ListItemButton>
                   </ListItem>
                   <Divider />
                   { auth.authState.user.isAnonymous && 
                   <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="/account_link">
+                    <ListItemButton component={RouterLink} to="/account_link" onClick={handleCloseNavMenu} >
                       <ListItemText primary="アカウント連携" />
                     </ListItemButton>
                   </ListItem>
                   }
+                  { auth.authState.user.isAnonymous && 
+                    <Divider />
+                  }
                   <ListItem disablePadding>
-                    <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform">
+                    <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" onClick={handleCloseNavMenu} >
                       <ListItemText primary="お問い合わせ" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="/terms">
+                    <ListItemButton component={RouterLink} to="/terms" onClick={handleCloseNavMenu} >
                       <ListItemText primary="利用規約" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="/privacy">
+                    <ListItemButton component={RouterLink} to="/privacy" onClick={handleCloseNavMenu} >
                       <ListItemText primary="プライバシーポリシー" />
                     </ListItemButton>
                   </ListItem>
@@ -235,7 +238,7 @@ const ResponsiveAppBar = () => {
             open={openUserMenu}
             onClose={handleCloseUserMenu}
           > 
-            <MenuItem key="account_link" onClick={() => navigate('/account_link', { replace: true })}>Account Link</MenuItem>
+            <MenuItem key="account_link" onClick={() => navigate('/account_link', { replace: true })}>{"アカウント連携"}</MenuItem>
           </Menu>
         </Box>
         );
