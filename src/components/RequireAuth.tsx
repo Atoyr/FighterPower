@@ -38,7 +38,7 @@ function RequireAnonymous({ children }: { children: JSX.Element }) {
 function isAuth() {
   let authContext = useAuthContext();
   const mode: string = (import.meta.env.MODE ?? "") as string;
-  return authContext.authState.user != null && (authContext.authState.user.emailVerified || mode == "dev");
+  return authContext.authState.user != null && (authContext.authState.user.emailVerified || mode == "dev" || mode == "prod");
 }
 
 export { RequireAuth, NotRequireAuth, RequireAnonymous }
