@@ -57,9 +57,9 @@ export default function SignIn() {
         if (user.user.emailVerified) {
           navigate(from, { replace: true });
         } else {
-          if(mode != "dev") {
-            sendEmailVerification(user.user);
-          }
+          // if(mode != "dev") {
+          //   sendEmailVerification(user.user);
+          // }
         }
       },
       (e) => {
