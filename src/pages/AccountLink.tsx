@@ -13,16 +13,24 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
+import { AuthError } from "firebase/auth";
 
 const theme = createTheme();
+
+function implementsAuthError(arg: any): arg is AuthError {
+  return arg !== null &&
+    typeof arg === "object"
+}
 
 export default function AccountLink() {
   useDocumentTitle("アカウント連携");
   const mode: string = (import.meta.env.MODE ?? "") as string;
+  const [errormessage, setErrormessage] = React.useState<string>("");
 
   let navigate = useNavigate();
   let auth = useAuthContext();
@@ -30,10 +38,14 @@ export default function AccountLink() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let name = String(data.get('name'));
-    let email = String(data.get('email'));
-    let password = String(data.get('password'));
-    let confirmpassword = String(data.get('confirmpassword'));
+    const name = String(data.get('name'));
+    const email = String(data.get('email'));
+    const password = String(data.get('password'));
+
+    if (password.length < 6 ) {
+      setErrormessage("パスワードは6文字以上で設定してください");
+      return;
+    }
 
     let authParam = {
       AuthType: "EmailAndPassword",
@@ -47,7 +59,13 @@ export default function AccountLink() {
         navigate('/home', { replace: true });
       },
       (e) => {
-        console.log(e);
+        if (implementsAuthError(e) && (e as AuthError).code == "auth/wrong-password") {
+          setErrormessage("メールアドレス または パスワードが異なります");
+        } else if (implementsAuthError(e) && (e as AuthError).code == "auth/invalid-email") {
+          setErrormessage("メールアドレスが有効ではありません");
+        } else {
+          setErrormessage(e.message);
+        }
       });
   };
 
@@ -72,9 +90,10 @@ export default function AccountLink() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Account Link
+            {"アカウント連携"}
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            { errormessage != "" && <Alert severity="error">{errormessage}</Alert> }
             <Grid container spacing={2}>
               <Grid item xs={12} >
                 <TextField
@@ -83,7 +102,7 @@ export default function AccountLink() {
                   required
                   fullWidth
                   id="name"
-                  label="Name"
+                  label="ユーザ名"
                   autoFocus
                 />
               </Grid>
@@ -92,7 +111,7 @@ export default function AccountLink() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="メールアドレス"
                   name="email"
                   autoComplete="email"
                 />
@@ -102,20 +121,9 @@ export default function AccountLink() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="パスワード"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="confirmpassword"
-                  label="ConfirmPassword"
-                  type="password"
-                  id="confirmpassword"
                   autoComplete="new-password"
                 />
               </Grid>
@@ -126,7 +134,7 @@ export default function AccountLink() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Account Link
+              {"アカウント連携"}
             </Button>
 
             <Grid container justifyContent="flex-end">

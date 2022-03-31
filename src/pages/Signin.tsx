@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { sendEmailVerification } from 'firebase/auth';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,23 +14,34 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import Alert from '@mui/material/Alert';
+import GoogleIcon from '@mui/icons-material/Google';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
+import { red } from '@mui/material/colors';
+import { AuthError } from "firebase/auth";
 
 const theme = createTheme();
 
+function implementsAuthError(arg: any): arg is AuthError {
+  return arg !== null &&
+    typeof arg === "object"
+}
+
 export default function SignIn() {
-  // let location = useLocation();
   let navigate = useNavigate();
   let auth = useAuthContext();
   let from = "/home";
-  useDocumentTitle("SignIn");
+  useDocumentTitle("ログイン");
   const mode: string = (import.meta.env.MODE ?? "") as string;
 
+  const [errormessage, setErrormessage] = React.useState<string>("");
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrormessage("");
 
     let formData = new FormData(event.currentTarget);
     let email = formData.get('email') as string;
@@ -51,7 +63,11 @@ export default function SignIn() {
         }
       },
       (e) => {
-        console.log(e);
+        if (implementsAuthError(e) && (e as AuthError).code == "auth/wrong-password") {
+          setErrormessage("メールアドレス または パスワードが異なります");
+        } else {
+          setErrormessage(e.message);
+        }
       });
   };
 
@@ -71,15 +87,27 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            {"FighterPower にログイン"}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            { errormessage != "" && <Alert severity="error">{errormessage}</Alert> }
+            {/**
+            <Button
+              onClick={() => {}}
+              fullWidth
+              variant="contained"
+              startIcon={<GoogleIcon />}
+              sx={{ mt: 3, mb: 2 , textTransform: "none", backgroundColor: red[800]}} >
+              {"Google アカウントでログイン"}
+            </Button>
+            <Divider />
+            **/}
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="メールアドレス"
               name="email"
               autoComplete="email"
               autoFocus
@@ -89,7 +117,7 @@ export default function SignIn() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="パスワード"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -100,17 +128,17 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {"ログイン"}
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" variant="body2">
+                  {"パスワードを忘れた場合"}
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link component={RouterLink} to="/signup" variant="body2">
+                  {"新規登録"}
                 </Link>
               </Grid>
             </Grid>
