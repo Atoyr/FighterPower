@@ -1,5 +1,22 @@
 {
   "projects": {
-    "default": "fighter-power-dev"
+    "dev": "fighter-power-dev",
+    "prod": "fighter-power"
+  },
+  "targets": {
+    "fighter-power-dev": {
+      "hosting": {
+        "fighter-power-dev": [
+          "fighter-power-dev"
+        ]
+      }
+    },
+    "fighter-power": {
+      "hosting": {
+        "fighter-power": [
+          "fighter-power"
+        ]
+      }
+    }
   }
 }
