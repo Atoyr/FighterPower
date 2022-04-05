@@ -1,38 +1,45 @@
-# This is a basic workflow to help you get started with Actions
+name: Develop CI
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ develop ]
+    branches: [ "develop" ]
+    paths-ignore:
+      - "*.md"
   pull_request:
-    branches: [ develop ]
+    branches: [ "develop" ]
+    paths-ignore:
+      - "*.md"
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env:
+  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+    name: Build & Test
     runs-on: ubuntu-latest
-    
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+        with:
+          token: ${{ env.GITHUB_TOKEN }}
+
       - name: use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build-dev
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-
+      - name: Install and Build
+        run: |
+          npm vi
+          npm run build-dev
 
