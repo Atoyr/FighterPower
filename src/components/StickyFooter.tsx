@@ -65,6 +65,11 @@ export default function StickyFooter({ children, dtil }: { children: React.React
                         {"Index"}
                       </Link>
                     </Typography>
+                    <Typography variant="subtitle2" component="div" color="text.secondary" align="left" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0}}>
+                      <Link component={RouterLink} to="/changelog">
+                        {"変更履歴"}
+                      </Link>
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="h6" component="div" color="text.secondary" align="left" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0}}>
