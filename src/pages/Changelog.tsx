@@ -1,27 +1,44 @@
 import React from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { useAuthContext } from 'context/AuthProvider'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
-import { AuthParameter } from 'data/authParameter'
+import Divider from '@mui/material/Divider';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';  
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 export default function Changelog() {
-  let authContext = useAuthContext();
-  let navigate = useNavigate();
   useDocumentTitle("Changelog");
 
+  const Item = ({date, version, children}: { date: string, version: string, children: JSX.Element}) => {
+    return (
+      <TimelineItem>
+        <TimelineOppositeContent sx={{flex:"0"}}>
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent>
+          <Typography variant="h4" component="div" gutterBottom>
+          {date}
+          </Typography>
+          <Typography variant="h6" component="div" gutterBottom>
+          {version}
+          </Typography>
+          {children}
+        </TimelineContent>
+      </TimelineItem>
+      );
+  };
+
   return (
-  <Container>
+  <Container maxWidth="md">
     <Typography variant="h2" component="div" gutterBottom
       sx={{
         textAlign: "left",
@@ -30,22 +47,23 @@ export default function Changelog() {
       }}>
       Change Log
     </Typography>
+    <Divider />
     <Timeline>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>
-          <Typography variant="h4" component="div" gutterBottom>
-          {"2022/04/01"}
-          </Typography>
-          <Typography variant="body1" component="div" gutterBottom>
-          {"Foo content"}
-          </Typography>
-
-        </TimelineContent>
-      </TimelineItem>
+      <Item date="2022/04/10" version="Version 0.2.0">
+        <Typography variant="body1" component="div" gutterBottom>
+        {"機能追加"}
+        </Typography>
+      </Item>
+      <Item date="2022/04/02" version="Version 0.1.1">
+        <Typography variant="body1" component="div" gutterBottom>
+        {"軽微な不具合修正"}
+        </Typography>
+      </Item>
+      <Item date="2022/04/01" version="Version 0.1.0">
+        <Typography variant="body1" component="div" gutterBottom>
+        {"初期リリース"}
+        </Typography>
+      </Item>
     </Timeline>
   </Container>
   );
