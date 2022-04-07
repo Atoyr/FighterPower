@@ -9,6 +9,7 @@ import StickyFooter from 'components/StickyFooter';
 import Index from 'pages/Index';
 import Terms from 'pages/Terms';
 import Privacy from 'pages/Privacy';
+import Changelog from 'pages/Changelog';
 import Signin from 'pages/Signin';
 import Signup from 'pages/Signup';
 import AccountLink from 'pages/AccountLink';
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="index" element={<Index />} />
             <Route path="terms" element={<Terms />} />
             <Route path="privacy" element={<Privacy />} />
+            <Route path="changelog" element={<Changelog />} />
             <Route path="home" element={
               <RequireAuth>
                 <Home />
