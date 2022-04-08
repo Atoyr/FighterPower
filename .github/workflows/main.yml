@@ -1,14 +1,18 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Main CI
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+    paths-ignore:
+      - "*.md"
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - "*.md"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -18,7 +22,11 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
+    name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,12 +35,18 @@ jobs:
         with:
           token: ${{ env.GITHUB_TOKEN }}
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-
+      - name: Install and Build
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          npm ci
+          npm run build
