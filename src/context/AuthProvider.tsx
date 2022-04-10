@@ -3,8 +3,11 @@ import { firebaseAuth } from "lib/firebase";
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword, 
+  signInWithPopup,
   signInAnonymously,
   signOut,
+  GoogleAuthProvider,
+  TwitterAuthProvider,
   linkWithCredential,
   EmailAuthProvider,
   updateProfile,
@@ -36,16 +39,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       case "EmailAndPassword":
         promise = createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
         break
+      case "GoogleAuth":
+        const googleAuthProvider = new GoogleAuthProvider();
+        googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        promise = signInWithPopup(firebaseAuth, googleAuthProvider);
+        break;
+      case "TwitterAuth":
+        const twitterAuthProvider = new TwitterAuthProvider();
+        promise = signInWithPopup(firebaseAuth, twitterAuthProvider);
+        break;
     }
-
     if (promise == null ) {
       const e = new Error("AuthType Not Found");
       errorCallback(e);
     } else {
       promise
-      .then(user => {
-        updateProfile(user.user, { displayName: param.displayName ?? "" })
-        return user;
+      .then(result => {
+        updateProfile(result.user, { displayName: param.displayName ?? "" })
+        return result;
       })
       .then(user => callback(user))
       .catch(e => errorCallback(e));
@@ -61,6 +72,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         break;
       case "EmailAndPassword":
         promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
+        break;
+      case "GoogleAuth":
+        const googleAuthProvider = new GoogleAuthProvider();
+        googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        promise = signInWithPopup(firebaseAuth, googleAuthProvider);
+        break;
+      case "TwitterAuth":
+        const twitterAuthProvider = new TwitterAuthProvider();
+        promise = signInWithPopup(firebaseAuth, twitterAuthProvider);
         break;
     }
     if (promise == null ) {
@@ -102,7 +122,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       .catch(e => errorCallback(e));
     }
   };
-
 
   let value = { authState, signup, signin, signout, accountlink };
 
