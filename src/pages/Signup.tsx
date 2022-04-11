@@ -12,10 +12,12 @@ import Container from '@mui/material/Container';
 import Alert from '@mui/material/Alert';
 import GoogleIcon from '@mui/icons-material/Google';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import SvgIcon from '@mui/material/SvgIcon';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
+import { ReactComponent as Logo } from 'assets/logo.svg';
 
 const theme = createTheme();
 
@@ -63,13 +65,19 @@ export default function SignUp() {
           elevation={3}
           sx={{
             marginTop: 8,
-            px: 1,
-            py: 1,
+            px: 2,
+            py: 3,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
+          <Box sx={{display: "flex", cursor: "default"}} >
+            <SvgIcon component={Logo} inheritViewBox sx={{width: "48px" , height: "48px", verticalAlign:"middle", flexGrow: 0}}/>
+            <Typography variant="h6" component="div" color="text.secondary" align="center" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0, userSelect: "none"}}>
+              {"FighterPower"}
+            </Typography>
+          </Box>
           <Typography component="h1" variant="h5">
             {"FighterPowerへようこそ"}
           </Typography>
@@ -78,6 +86,7 @@ export default function SignUp() {
             variant="contained"
             onClick={googleSignup}
             startIcon={<GoogleIcon />}
+            color="secondary"
             sx={{ mt: 3, mb: 2, textTransform: 'none' }} >
             {"Googleで登録"}
           </Button>

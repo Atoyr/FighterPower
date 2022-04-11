@@ -4,6 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { sendEmailVerification } from 'firebase/auth';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,12 +18,15 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Alert from '@mui/material/Alert';
 import GoogleIcon from '@mui/icons-material/Google';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import SvgIcon from '@mui/material/SvgIcon';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuthContext } from 'context/AuthProvider'
 import { AuthParameter } from 'data/authParameter'
 import { useDocumentTitle } from 'hook/useDocumentTitle'
 import { red } from '@mui/material/colors';
 import { AuthError } from "firebase/auth";
+import { ReactComponent as Logo } from 'assets/logo.svg';
 
 const theme = createTheme();
 
@@ -39,111 +43,77 @@ export default function SignIn() {
   const mode: string = (import.meta.env.MODE ?? "") as string;
 
   const [errormessage, setErrormessage] = React.useState<string>("");
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setErrormessage("");
 
-    let formData = new FormData(event.currentTarget);
-    let email = formData.get('email') as string;
-    let password = formData.get('password') as string;
+  const googleSignin = () => {
     let authParam = {
-      AuthType: "EmailAndPassword",
-      email : email,
-      password : password,
+      AuthType: "GoogleAuth",
     } as AuthParameter;
 
-    auth.signin(authParam,
+    auth.signup(authParam,
       (user) => {
-        if (user.user.emailVerified) {
-          navigate(from, { replace: true });
-        } else {
-          // if(mode != "dev") {
-          //   sendEmailVerification(user.user);
-          // }
-        }
+        navigate("/home", {replace: true} );
       },
       (e) => {
-        if (implementsAuthError(e) && (e as AuthError).code == "auth/wrong-password") {
-          setErrormessage("メールアドレス または パスワードが異なります");
-        } else {
-          setErrormessage(e.message);
-        }
+        setErrormessage(e.message);
       });
-  };
+  }
+
+  const twitterSignin = () => {
+    let authParam = {
+      AuthType: "TwitterAuth",
+    } as AuthParameter;
+
+    auth.signup(authParam,
+      (user) => {
+        navigate("/home", {replace: true} );
+      },
+      (e) => {
+        setErrormessage(e.message);
+      });
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
+        <Paper
+          elevation={3}
           sx={{
             marginTop: 8,
+            px: 2,
+            py: 3,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {"FighterPower にログイン"}
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            { errormessage != "" && <Alert severity="error">{errormessage}</Alert> }
-            {/**
-            <Button
-              onClick={() => {}}
-              fullWidth
-              variant="contained"
-              startIcon={<GoogleIcon />}
-              sx={{ mt: 3, mb: 2 , textTransform: "none", backgroundColor: red[800]}} >
-              {"Google アカウントでログイン"}
-            </Button>
-            <Divider />
-            **/}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="メールアドレス"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="パスワード"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              {"ログイン"}
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" variant="body2">
-                  {"パスワードを忘れた場合"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link component={RouterLink} to="/signup" variant="body2">
-                  {"新規登録"}
-                </Link>
-              </Grid>
-            </Grid>
+          <Box sx={{display: "flex", cursor: "default"}} >
+            <SvgIcon component={Logo} inheritViewBox sx={{width: "48px" , height: "48px", verticalAlign:"middle", flexGrow: 0}}/>
+            <Typography variant="h6" component="div" color="text.secondary" align="center" sx={{verticalAlign:"middle", my: "auto", mx: 1, flexGrow:0, userSelect: "none"}}>
+              {"FighterPower"}
+            </Typography>
           </Box>
-        </Box>
+          <Typography component="h1" variant="h5">
+            {"FighterPowerへようこそ"}
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={googleSignin}
+            startIcon={<GoogleIcon />}
+            color="secondary"
+            sx={{ mt: 3, mb: 2, textTransform: 'none' }} >
+            {"Googleでログイン"}
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={twitterSignin}
+            startIcon={<TwitterIcon />}
+            sx={{ mb: 2, textTransform: 'none'  }} >
+            {"Twitterでログイン"}
+          </Button>
+        </Paper>
       </Container>
     </ThemeProvider>
   );
