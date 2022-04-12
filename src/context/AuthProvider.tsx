@@ -27,7 +27,7 @@ export interface AuthContextType {
   signup: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
   signin: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
   signout: (callback: VoidFunction, errorCallback: (e : Error) => void) => void;
-  accountlink: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
+  accountlink: (param: AuthParameter, user: User, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
 }
 
 const AuthContext = React.createContext<AuthContextType>(null!);
@@ -69,6 +69,11 @@ function signin(param: AuthParameter, callback: (user: UserCredential) => void, 
     case "TwitterAuth":
         authProvider = new TwitterAuthProvider();
         break;
+    case "Anonymously":
+        signInAnonymously(firebaseAuth)
+        .then(resutl => callback(resutl))
+        .catch(e => errorCallback(e));
+        return;
     default:
         errorCallback(new Error("AuthType Not Found"));
         return;
@@ -76,7 +81,6 @@ function signin(param: AuthParameter, callback: (user: UserCredential) => void, 
 
   signInWithPopup(firebaseAuth, authProvider!)
   .then(result => {
-    console.log(result);
     updateProfile(result.user, { displayName: result.user.providerData[0].displayName});
     return result;
       })
@@ -90,12 +94,7 @@ function signout(callback: VoidFunction, errorCallback: (e : Error) => void) {
     .catch(e => errorCallback(e));
 }
 
-function accountlink (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) {
-  const authState = useAuthState();
-  if (!authState.user) {
-    errorCallback(new Error("AuthType Not Found"));
-  }
-
+function accountlink (param: AuthParameter, user: User, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) {
   let authProvider : FirebaseAuthProvider | null = null;
   let credentialFromResult : (userCredential: UserCredential) => (OAuthCredential | null) = (userCredential) => { return null; };
 
@@ -116,7 +115,7 @@ function accountlink (param: AuthParameter, callback: (user: UserCredential) => 
   }
   signInWithPopup(firebaseAuth, authProvider!)
   .then(result => {
-    linkWithCredential(authState.user as User, credentialFromResult(result)!);
+    linkWithCredential(user, credentialFromResult(result)!);
     return result;
   })
   .then(resutl => callback(resutl))
