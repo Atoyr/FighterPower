@@ -9,11 +9,13 @@ import {
   GoogleAuthProvider,
   TwitterAuthProvider,
   linkWithCredential,
+  OAuthCredential,
   EmailAuthProvider,
   updateProfile,
   UserCredential,
   User,
 } from "firebase/auth"
+import { AuthProvider as FirebaseAuthProvider } from "firebase/auth"
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -28,65 +30,58 @@ export interface AuthContextType {
   accountlink: (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) => void;
 }
 
-let AuthContext = React.createContext<AuthContextType>(null!);
+const AuthContext = React.createContext<AuthContextType>(null!);
 
 function signup(param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) {
-  let promise : Promise<UserCredential> | null = null;
+  let authProvider : FirebaseAuthProvider | null = null;
   switch (param.AuthType) {
-    case "EmailAndPassword":
-      promise = createUserWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string);
-      break
     case "GoogleAuth":
         const googleAuthProvider = new GoogleAuthProvider();
         googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-        promise = signInWithPopup(firebaseAuth, googleAuthProvider);
+        authProvider = googleAuthProvider;
         break;
     case "TwitterAuth":
-        const twitterAuthProvider = new TwitterAuthProvider();
-        promise = signInWithPopup(firebaseAuth, twitterAuthProvider);
+        authProvider = new TwitterAuthProvider();
         break;
+    default:
+        errorCallback(new Error("AuthType Not Found"));
+        return;
   }
-  if (promise == null ) {
-    const e = new Error("AuthType Not Found");
-    errorCallback(e);
-  } else {
-    promise
-      .then(result => {
-          updateProfile(result.user, { displayName: param.displayName ?? "" })
-          return result;
-          })
-    .then(user => callback(user))
-      .catch(e => errorCallback(e));
-  }
-}
-function signin(param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void){
-  let promise : Promise<UserCredential> | null = null;
 
+  signInWithPopup(firebaseAuth, authProvider!)
+  .then(result => {
+    console.log(result);
+    updateProfile(result.user, { displayName: result.user.providerData[0].displayName});
+    return result;
+      })
+  .then(resutl => callback(resutl))
+  .catch(e => errorCallback(e));
+}
+
+function signin(param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void){
+  let authProvider : FirebaseAuthProvider | null = null;
   switch (param.AuthType) {
-    case "Anonymously":
-      promise = signInAnonymously(firebaseAuth);
-      break;
-    case "EmailAndPassword":
-      promise = signInWithEmailAndPassword(firebaseAuth, param.email as string, param.password as string)
-        break;
     case "GoogleAuth":
-      const googleAuthProvider = new GoogleAuthProvider();
-      googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-      promise = signInWithPopup(firebaseAuth, googleAuthProvider);
-      break;
+        const googleAuthProvider = new GoogleAuthProvider();
+        googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        authProvider = googleAuthProvider;
+        break;
     case "TwitterAuth":
-      const twitterAuthProvider = new TwitterAuthProvider();
-      promise = signInWithPopup(firebaseAuth, twitterAuthProvider);
-      break;
+        authProvider = new TwitterAuthProvider();
+        break;
+    default:
+        errorCallback(new Error("AuthType Not Found"));
+        return;
   }
-  if (promise == null ) {
-    const e = new Error("AuthType Not Found");
-    errorCallback(e);
-  } else {
-    promise
-      .then(user => callback(user))
-      .catch(e => errorCallback(e));
-  }
+
+  signInWithPopup(firebaseAuth, authProvider!)
+  .then(result => {
+    console.log(result);
+    updateProfile(result.user, { displayName: result.user.providerData[0].displayName});
+    return result;
+      })
+  .then(resutl => callback(resutl))
+  .catch(e => errorCallback(e));
 }
 
 function signout(callback: VoidFunction, errorCallback: (e : Error) => void) {
@@ -98,26 +93,34 @@ function signout(callback: VoidFunction, errorCallback: (e : Error) => void) {
 function accountlink (param: AuthParameter, callback: (user: UserCredential) => void, errorCallback: (e : Error) => void) {
   const authState = useAuthState();
   if (!authState.user) {
-    const e = new Error("user not found");
-    errorCallback(e);
+    errorCallback(new Error("AuthType Not Found"));
   }
 
-  let promise : Promise<UserCredential> | null = null;
+  let authProvider : FirebaseAuthProvider | null = null;
+  let credentialFromResult : (userCredential: UserCredential) => (OAuthCredential | null) = (userCredential) => { return null; };
 
   switch (param.AuthType) {
-    case "EmailAndPassword":
-      const c = EmailAuthProvider.credential(param.email as string, param.password as string);
-      promise = linkWithCredential(authState.user as User, c);
-      break;
+    case "GoogleAuth":
+        const googleAuthProvider = new GoogleAuthProvider();
+        googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        authProvider = googleAuthProvider;
+        credentialFromResult = GoogleAuthProvider.credentialFromResult;
+        break;
+    case "TwitterAuth":
+        authProvider = new TwitterAuthProvider();
+        credentialFromResult = TwitterAuthProvider.credentialFromResult;
+        break;
+    default:
+        errorCallback(new Error("AuthType Not Found"));
+        return;
   }
-  if (promise == null ) {
-    const e = new Error("AuthType Not Found");
-    errorCallback(e);
-  } else {
-    promise
-      .then(user => callback(user))
-      .catch(e => errorCallback(e));
-  }
+  signInWithPopup(firebaseAuth, authProvider!)
+  .then(result => {
+    linkWithCredential(authState.user as User, credentialFromResult(result)!);
+    return result;
+  })
+  .then(resutl => callback(resutl))
+  .catch(e => errorCallback(e));
 }
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
