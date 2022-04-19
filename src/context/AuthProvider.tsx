@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   signInAnonymously,
   signOut,
+  linkWithPopup,
   GoogleAuthProvider,
   TwitterAuthProvider,
   linkWithCredential,
@@ -14,8 +15,8 @@ import {
   updateProfile,
   UserCredential,
   User,
-} from "firebase/auth"
-import { AuthProvider as FirebaseAuthProvider } from "firebase/auth"
+} from "firebase/auth";
+import { AuthProvider as FirebaseAuthProvider } from "firebase/auth";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -113,11 +114,7 @@ function accountlink (param: AuthParameter, user: User, callback: (user: UserCre
         errorCallback(new Error("AuthType Not Found"));
         return;
   }
-  signInWithPopup(firebaseAuth, authProvider!)
-  .then(result => {
-    linkWithCredential(user, credentialFromResult(result)!);
-    return result;
-  })
+  linkWithPopup(user, authProvider!)
   .then(resutl => callback(resutl))
   .catch(e => errorCallback(e));
 }
