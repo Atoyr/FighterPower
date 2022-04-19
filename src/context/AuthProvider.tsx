@@ -72,7 +72,7 @@ function signin(param: AuthParameter, callback: (user: UserCredential) => void, 
         break;
     case "Anonymously":
         signInAnonymously(firebaseAuth)
-        .then(resutl => callback(resutl))
+        .then(result => callback(result))
         .catch(e => errorCallback(e));
         return;
     default:
@@ -85,7 +85,7 @@ function signin(param: AuthParameter, callback: (user: UserCredential) => void, 
     updateProfile(result.user, { displayName: result.user.providerData[0].displayName});
     return result;
       })
-  .then(resutl => callback(resutl))
+  .then(result => callback(result))
   .catch(e => errorCallback(e));
 }
 
@@ -115,7 +115,11 @@ function accountlink (param: AuthParameter, user: User, callback: (user: UserCre
         return;
   }
   linkWithPopup(user, authProvider!)
-  .then(resutl => callback(resutl))
+  .then(result => {
+    updateProfile(result.user, { displayName: result.user.providerData[0].displayName});
+    return result;
+      })
+  .then(result => callback(result))
   .catch(e => errorCallback(e));
 }
 

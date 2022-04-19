@@ -81,6 +81,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             {"FighterPowerへようこそ"}
           </Typography>
+         { errormessage != "" && <Alert severity="error">{errormessage}</Alert> }
           <Button
             fullWidth
             variant="contained"
