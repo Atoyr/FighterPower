@@ -49,10 +49,17 @@ export default function Changelog() {
     </Typography>
     <Divider />
     <Timeline>
-      <Item date="2022/04/10" version="Version 0.2.0">
-        <Typography variant="body1" component="div" gutterBottom>
-        {"機能追加"}
-        </Typography>
+      <Item date="2022/05/02" version="Version 0.2.0">
+        <div>
+          <Typography variant="body1" component="div" gutterBottom>
+          {"機能追加"}
+          </Typography>
+          <Typography variant="body2" component="div" gutterBottom>
+          {"認証方法にTwitterとGoogleを追加しました。"}
+          <br />
+          {"メール認証を廃止しました。"}
+          </Typography>
+        </div>
       </Item>
       <Item date="2022/04/02" version="Version 0.1.1">
         <Typography variant="body1" component="div" gutterBottom>
