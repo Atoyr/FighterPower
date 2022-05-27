@@ -1,4 +1,4 @@
-# [logo](/src/favicon.svg) FighterPower
+# ![logo](/src/favicon.svg) FighterPower
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
