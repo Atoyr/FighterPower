@@ -1,4 +1,4 @@
-# <img src="/src/favicon.svg" width="20px" height="20px"/>FighterPower
+# <img src="/src/favicon.svg" width="38px" height="38px"/>FighterPower
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
