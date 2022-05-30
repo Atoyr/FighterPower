@@ -1,4 +1,7 @@
-<img src="/src/favicon.svg" width="200px" height="200px"/>
+<div align="center">
+  <img src="/src/favicon.svg" width="200px" height="200px"/>
+</div>
+
 # FighterPower
 
 This project is a WEB app for fighting game players.
