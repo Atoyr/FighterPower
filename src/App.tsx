@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material';
 
 import AppWindow from 'components/AppWindow';
 import StickyFooter from 'components/StickyFooter';
+
 import Index from 'pages/Index';
 import Terms from 'pages/Terms';
 import Privacy from 'pages/Privacy';
