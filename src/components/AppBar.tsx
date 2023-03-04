@@ -1,6 +1,8 @@
 import * as React from 'react';
+
 import { useNavigate, Outlet, Link } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -35,6 +37,7 @@ const ResponsiveAppBar = () => {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenu(true);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenUserMenu(true);
   };
@@ -65,16 +68,14 @@ const ResponsiveAppBar = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleOpenNavMenu}
-            color="inherit"
-          >
+            color="inherit" >
             <MenuIcon />
           </IconButton>
           <SwipeableDrawer
             anchor="left"
             open={openMenu}
             onOpen={handleOpenNavMenu}
-            onClose={handleCloseNavMenu}
-          >
+            onClose={handleCloseNavMenu} >
             <Box
               sx={{ width: 250}}
               role="presentation">
@@ -95,8 +96,7 @@ const ResponsiveAppBar = () => {
                   color="inherit"
                   sx={{
                     mx:0.5
-                  }}
-                >
+                  }} >
                   <CloseIcon />
                 </IconButton>
                 <Box sx={{display: "flex"}}>
@@ -198,7 +198,6 @@ const ResponsiveAppBar = () => {
   };
 
   const RightArea = () => {
-
     if ( auth.authState.user == null)
     {
       return(
@@ -209,20 +208,6 @@ const ResponsiveAppBar = () => {
             flexDirection: 'row',
             borderRadius: 1,
             }}>
-          {/*
-          <Button
-            key='signin'
-            onClick={() => navigate('/signin')}
-            sx={{ my: 2, color: 'white', display: 'block', border:0 }}>
-            SIGN IN
-          </Button>
-          <Button
-            key='signup'
-            onClick={() => navigate('/signup')}
-            sx={{ my: 2, color: 'white', display: 'block', border:1, m: 2 }}>
-            SIGN UP
-          </Button>
-          */}
         </Box>
         );
     } else if ( auth.authState.user.isAnonymous) {

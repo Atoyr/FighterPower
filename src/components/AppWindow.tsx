@@ -12,7 +12,6 @@ const AppWindow = () => {
   showDtilList.push("/terms");
 
   const dtil = showDtilList.some((element) => element == location.pathname);
-  console.log(location.pathname, dtil);
 
   return (
     <StickyFooter dtil={dtil}>
