@@ -120,6 +120,11 @@ const ResponsiveAppBar = () => {
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
+                  <ListItemButton component={RouterLink} to="/changelog" onClick={handleCloseNavMenu} >
+                    <ListItemText primary="変更履歴" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
                   <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" onClick={handleCloseNavMenu} >
                     <ListItemText primary="お問い合わせ" />
                   </ListItemButton>
@@ -153,6 +158,11 @@ const ResponsiveAppBar = () => {
                   { auth.authState.user.isAnonymous && 
                     <Divider />
                   }
+                  <ListItem disablePadding>
+                    <ListItemButton component={RouterLink} to="/changelog" onClick={handleCloseNavMenu} >
+                      <ListItemText primary="変更履歴" />
+                    </ListItemButton>
+                  </ListItem>
                   <ListItem disablePadding>
                     <ListItemButton component="a" href="https://docs.google.com/forms/d/e/1FAIpQLSfUgGqGGmL179veX-TBtRG7eVw-6YUm56hfO3MjX1kAGa81Iw/viewform" onClick={handleCloseNavMenu} >
                       <ListItemText primary="お問い合わせ" />
