@@ -29,7 +29,7 @@ export const getArchive = async (
     return new Failure(new RangeError("archiveId is empty."));
   }
 
-  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives/${archiveId}`, objectiveId).withConverter(KeyResultConverter);
+  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, archiveId).withConverter(ArchiveConverter);
   const snapshot = await (transaction ? transaction.get(ref) : getDoc(ref));
   return new Success(snapshot.exists() ? snapshot.data() : null);
 };

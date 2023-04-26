@@ -27,6 +27,8 @@ export const setArchive = async (
   if (keyResultId === "") {
     return new Failure(new RangeError("keyResultId is empty."));
   }
+
+  let archiveId : string = archive.id ?? "";
   const refArchiveResult = await getArchive(
     userId, 
     objectiveId, 
@@ -51,7 +53,7 @@ export const setArchive = async (
     if (refArchive.version != archive.version) {
       return new Failure(new Error("archive update error"));
     }
-    newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, objectives.id as string);
+    newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, archiveId);
   }
 
   // FIXME catch exception

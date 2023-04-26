@@ -23,10 +23,12 @@ export const setKeyResult = async (
   if (objectiveId === "") {
     return new Failure(new RangeError("objectiveId is empty."));
   }
+
+  let keyResultId : string = keyResult.id ?? "";
   const refKeyResultResult = await getKeyResult(
     userId, 
     objectiveId, 
-    keyResult.id, 
+    keyResultId, 
     transaction);
 
   // FIXME
@@ -39,19 +41,19 @@ export const setKeyResult = async (
 
   if(refKeyResult == null) {
     newKeyResult = doc(collection(store, `users/${userId}/objectives/${objectiveId}/keyResults`));
-    archive.id = newKeyResult.id;
-    archiveId = newKeyResult.id!;
+    keyResult.id = newKeyResult.id;
+    keyResultId = newKeyResult.id!;
   } else {
     // 楽観ロック
     if (refKeyResult.version != archive.version) {
       return new Failure(new Error("archive update error"));
     }
-    newKeyResult = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResult.id as string);
+    newKeyResult = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResult.id);
   }
 
   // FIXME catch exception
   await (transaction ? 
-          transaction.set(newKeyResult.withConverter(KeyResultConverter), archive) 
-          : setDoc(newKeyResult.withConverter(KeyResultConverter), archive));
-  return new Success(archiveId);
+          transaction.set(newKeyResult.withConverter(KeyResultConverter), keyResult) 
+          : setDoc(newKeyResult.withConverter(KeyResultConverter), keyResult));
+  return new Success(keyResultId);
 };

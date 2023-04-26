@@ -25,7 +25,7 @@ export const getKeyResult = async (
     return new Failure(new RangeError("keyResultId is empty."));
   }
 
-  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, objectiveId).withConverter(KeyResultConverter);
+  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResultId).withConverter(KeyResultConverter);
   const snapshot = await (transaction ? transaction.get(ref) : getDoc(ref));
   return new Success(snapshot.exists() ? snapshot.data() : null);
 };
