@@ -6,6 +6,7 @@ import { ProtectedLayout } from '@/components/Layout';
 import { ApplicationBar } from '@/components/ApplicationBar';
 
 const { Landing } = lazyImport(() => import('@/features/misc'), 'Landing');
+const { Dashboard } = lazyImport(() => import('@/features/misc'), 'Dashboard');
 const { ObjectivesList } = lazyImport(() => import('@/features/objectives'), 'ObjectivesList');
 
 const Check = () => {
@@ -26,6 +27,7 @@ export const protectedRoutes = [
     element: <Check />,
     children: [
       { path: 'home', element: <Landing /> }, 
+      { path: 'dashboard', element: <Dashboard /> }, 
       { path: 'objectives_list', element: <ObjectivesList /> }
     ]
   },
