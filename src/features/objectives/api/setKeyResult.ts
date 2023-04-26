@@ -31,7 +31,6 @@ export const setKeyResult = async (
     keyResultId, 
     transaction);
 
-  // FIXME
   if ( refKeyResultResult.isFailure()) {
     return new Failure(refKeyResultResult.value);
   }
@@ -51,9 +50,12 @@ export const setKeyResult = async (
     newKeyResult = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResult.id);
   }
 
-  // FIXME catch exception
-  await (transaction ? 
-          transaction.set(newKeyResult.withConverter(KeyResultConverter), keyResult) 
-          : setDoc(newKeyResult.withConverter(KeyResultConverter), keyResult));
+  try {
+    await (transaction ? 
+            transaction.set(newKeyResult.withConverter(KeyResultConverter), keyResult) 
+            : setDoc(newKeyResult.withConverter(KeyResultConverter), keyResult));
+  } catch (error) {
+    return new Failure(error);
+  }
   return new Success(keyResultId);
 };

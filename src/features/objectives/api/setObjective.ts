@@ -39,10 +39,13 @@ export const setObjective = async (
     newObjective = doc(store, `users/${userId}/objectives`, objectives.id as string);
   }
 
-  // FIXME catch exception
+  try {
   await (transaction ? 
           transaction.set(newObjective.withConverter(ObjectiveConverter), objective) 
           : setDoc(newObjective.withConverter(ObjectiveConverter), objective));
+  } catch (error) {
+    return new Failure(error);
+  }
   return new Success(objectiveId);
 };
 

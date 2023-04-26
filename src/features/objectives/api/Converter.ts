@@ -1,6 +1,7 @@
 import { 
   FirestoreDataConverter, 
   serverTimestamp,
+  increment,
 } from 'firebase/firestore'
 
 import { Objective, KeyResult, Archive } from '../types';
@@ -13,6 +14,7 @@ export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
       title : objective.title,
       createdAt : objective.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
+      version : increment(1.0),
     };
   },
   fromFirestore: (snapshot) => {

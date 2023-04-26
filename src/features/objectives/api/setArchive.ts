@@ -36,7 +36,6 @@ export const setArchive = async (
     archiveId, 
     transaction);
 
-  // FIXME
   if ( refArchiveResult.isFailure()) {
     return new Failure(refArchiveResult.value);
   }
@@ -56,9 +55,12 @@ export const setArchive = async (
     newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, archiveId);
   }
 
-  // FIXME catch exception
-  await (transaction ? 
-          transaction.set(newArchive.withConverter(ArchiveConverter), archive) 
-          : setDoc(newArchive.withConverter(ArchiveConverter), archive));
+  try {
+    await (transaction ? 
+            transaction.set(newArchive.withConverter(ArchiveConverter), archive) 
+            : setDoc(newArchive.withConverter(ArchiveConverter), archive));
+  } catch (error) {
+    return new Failure(error);
+  }
   return new Success(archiveId);
 };

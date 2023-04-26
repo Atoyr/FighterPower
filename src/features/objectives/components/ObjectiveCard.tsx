@@ -36,5 +36,3 @@ export const ObjectiveCard = ({title, createAt, modifiedAt, onClick} : Objective
     </Card>
   );
 };
-
-
