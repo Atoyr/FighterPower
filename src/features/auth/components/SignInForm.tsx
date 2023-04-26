@@ -1,9 +1,3 @@
-// import * as React from 'react';
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { sendEmailVerification } from 'firebase/auth';
-// import { AuthError } from "firebase/auth";
-// 
-// import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
