@@ -8,5 +8,3 @@ export const createObjective = (title: string, note: string) =>  {
     version : 0,
   } as Objective;
 }
-
-
