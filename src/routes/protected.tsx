@@ -7,7 +7,7 @@ import { ApplicationBar } from '@/components/ApplicationBar';
 
 const { Landing } = lazyImport(() => import('@/features/misc'), 'Landing');
 const { Dashboard } = lazyImport(() => import('@/features/misc'), 'Dashboard');
-const { ObjectivesList } = lazyImport(() => import('@/features/objectives'), 'ObjectivesList');
+const { Objectives } = lazyImport(() => import('@/features/objectives'), 'Objectives');
 
 const Check = () => {
   return(
@@ -28,7 +28,7 @@ export const protectedRoutes = [
     children: [
       { path: 'home', element: <Landing /> }, 
       { path: 'dashboard', element: <Dashboard /> }, 
-      { path: 'objectives_list', element: <ObjectivesList /> }
+      { path: 'objectives', element: <Objectives /> }
     ]
   },
 ];

@@ -1,10 +1,18 @@
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+
 import { InputDialogErrorState } from '../stores';
 
 export type InputObjectiveDialogProps = {
   open: boolean;
-  onClose: (goalSheetTitle: string, goalTitle: string, isCancel: boolean) => void;
+  onClose: (objectiveTitle: string, objectiveMemo: string, isCancel: boolean) => void;
 }
 
 export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
@@ -19,21 +27,15 @@ export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
 
     const formData = new FormData(event.currentTarget);
     const objectiveTitle = formData.get('objective_title') as string;
-    const keyResultTitle = formData.get('key_result_title') as string;
+    const objectiveMemo = formData.get('objective_memo') as string;
 
     if ( objectiveTitle == "") {
-      const objectiveTitleError = "空白です";
-    }
-    if ( keyResultTitle == "") {
-      const keyResultTitleError = "空白です";
-    }
-
-    if (!objectiveTitle || !keyResultTitle)
-    {
-      setErrorProps({ objectiveTitle, keyResultTitle} );
+      const objectiveTitleErrorMessage = "空白です";
+      setErrorProps({ objectiveTitleErrorMessage } );
       return;
     }
-    await onClose(objectiveTitle, keyResultTitle, false);
+
+    await onClose(objectiveTitle, objectiveMemo, false);
   };
 
   const handleCancel = async () => {
@@ -51,7 +53,7 @@ export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
           margin="dense"
           name="objective_title"
           id="objective_title"
-          label="目標シート タイトル"
+          label="目標"
           error={errorProps.objectiveTitleErrorMessage}
           helperText={errorProps.objectiveTitleErrorMessage}
           type="text"
@@ -60,11 +62,9 @@ export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
           />
         <TextField
           margin="dense"
-          name="key_result_title"
-          id="key_result_title"
-          label="目標1"
-          error={errorProps.keyResultTitleErrorMessage}
-          helperText={errorProps.keyResultTitleErrorMessage}
+          name="objective_memo"
+          id="objective_memo"
+          label="メモ"
           type="text"
           fullWidth
           variant="standard"

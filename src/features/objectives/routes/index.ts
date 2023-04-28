@@ -1,1 +1,1 @@
-export * from './ObjectivesList';
+export * from './Objectives';
