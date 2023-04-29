@@ -40,7 +40,7 @@ export const ObjectiveList = () => {
       const result = await setObjective(auth.user.uid!, objective);
       if (result.isSuccess())
       {
-        navigate(`/app/objective/${result.value}`);
+        navigate(`/app/objectives/${result.value}`);
         resetOpenDialog();
         return;
       }
