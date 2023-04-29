@@ -35,7 +35,7 @@ export const Objectives = () => {
       const result = await setObjective(auth.user.uid!, objective);
       if (result.isSuccess())
       {
-        navigate(`/app/objectives/${result.value}`);
+        navigate(`${result.value}`);
         resetOpenDialog();
         return;
       } else {

@@ -1,10 +1,13 @@
-import { ObjectiveList } from '../components/ObjectiveList';
+import { useParams } from 'react-router-dom';
 
-export const Objectives__id = () => {
+export const Objective = () => {
+  const { objectiveId } = useParams<"objectiveId">();
+
   return (
     <>
-      <ObjectiveList title="foo" to="/home" />
+      <h1>{objectiveId}</h1>
     </>
   );
 }
+
 
