@@ -17,8 +17,9 @@ export const getObjectives = async (userId: string): Promise<Result<Array<Object
     return new Failure(new RangeError("userId is empty."));
   }
 
+  console.log(`users/${userId}/objectives`);
   const ref = collection(store, `users/${userId}/objectives`).withConverter(ObjectiveConverter);
-  const snapshot = await getDocs(query( ref, orderBy("order")));
+  const snapshot = await getDocs(query( ref, orderBy("modifiedAt")));
   const objectives : Array<Objective> = [];
   snapshot.forEach((doc) => {
     objectives.push(doc.data());
