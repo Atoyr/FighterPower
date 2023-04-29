@@ -6,5 +6,6 @@ export const createObjective = (title: string, note: string) =>  {
     note : note,
     valid : true,
     version : 0,
-  } as Objective;
+  };
 }
+
