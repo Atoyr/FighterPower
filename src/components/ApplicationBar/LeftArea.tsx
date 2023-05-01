@@ -1,4 +1,4 @@
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { atom, useRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
@@ -21,7 +21,7 @@ import { useAuth } from '@/hooks';
 import { ReactComponent as logo } from '@/assets/logo.svg'
 
 const openLeftMenuState = atom<boolean>({
-  key: 'openLeftMenu',
+  key: 'components_ApplcationBar_openLeftMenu',
   default: false, 
 })
 

@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 
 import { LeftArea } from './LeftArea';
+import { CenterArea } from './CenterArea';
+import { RightArea } from './RightArea';
 
 type ApplicationBarProps = {
   children: React.ReactNode
@@ -22,6 +24,8 @@ export const ApplicationBar = ({ children }: ApplicationBarProps) => {
               height: { xs:56, sm: 56 }
             }}>
             <LeftArea />
+            <CenterArea />
+            <RightArea />
           </Toolbar>
       </AppBar>
       <Toolbar />

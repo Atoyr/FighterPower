@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from 'recoil';
 
 import Button from '@mui/material/Button';
@@ -22,11 +21,6 @@ type AccountLinkProps = {
 
 export const AccountLinkForm = ({ onSuccess, onRemove}: LoginFormProps) => {
   const AuthState = useRecoilValue(authState);
-
-  const handleSignOut = () => {
-    auth.signout(() => { navigate('/', { replace: true })}
-    , (e) => {console.log(e)});
-  };
 
   const googleLink = () => {
     let authParam = {
