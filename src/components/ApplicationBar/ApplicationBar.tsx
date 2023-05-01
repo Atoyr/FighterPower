@@ -11,7 +11,7 @@ type ApplicationBarProps = {
 export const ApplicationBar = ({ children }: ApplicationBarProps) => {
   return (
     <Box>
-      <AppBar position="static" 
+      <AppBar position="fixed" 
         sx={{
           minHeight: 56,
           height: 56
@@ -24,6 +24,7 @@ export const ApplicationBar = ({ children }: ApplicationBarProps) => {
             <LeftArea />
           </Toolbar>
       </AppBar>
+      <Toolbar />
       {children}
     </Box>
   );
