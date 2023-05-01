@@ -49,7 +49,9 @@ export const LeftArea = () => {
     setOpenLeftMenu(true);
   };
   const handleCloseLeftMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setOpenLeftMenu(false);
+    setTimeout(() => {
+      setOpenLeftMenu(false);
+    }, 100);
   };
 
   return (
