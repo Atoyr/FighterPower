@@ -15,7 +15,6 @@ import { getArchive } from './getArchive';
 export const setArchive = async (
   userId: string, 
   objectiveId: string, 
-  keyResultId: string, 
   archive: Archive, 
   transaction?: Transaction ): Promise<Result<string, Error>> => {
   if (userId === "") {
@@ -24,15 +23,11 @@ export const setArchive = async (
   if (objectiveId === "") {
     return new Failure(new RangeError("objectiveId is empty."));
   }
-  if (keyResultId === "") {
-    return new Failure(new RangeError("keyResultId is empty."));
-  }
 
   let archiveId : string = archive.id ?? "";
   const refArchiveResult = await getArchive(
     userId, 
     objectiveId, 
-    keyResultId, 
     archiveId, 
     transaction);
 
@@ -44,7 +39,7 @@ export const setArchive = async (
   let newArchive: Archive;
 
   if(refArchive == null) {
-    newArchive = doc(collection(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`));
+    newArchive = doc(collection(store, `users/${userId}/objectives/${objectiveId}/archives`));
     archive.id = newArchive.id;
     archiveId = newArchive.id!;
   } else {
@@ -52,7 +47,7 @@ export const setArchive = async (
     if (refArchive.version != archive.version) {
       return new Failure(new Error("archive update error"));
     }
-    newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, archiveId);
+    newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/archives`, archiveId);
   }
 
   try {

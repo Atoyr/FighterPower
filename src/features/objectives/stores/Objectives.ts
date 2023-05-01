@@ -1,10 +1,8 @@
 import { atom } from 'recoil';
 
-import { Objectives } from '../types';
+import { Objective } from '../types';
 
-export const  ObjectivesState = atom<Objectives | null>({
+export const  ObjectivesState = atom<Array<Objectives> | null>({
   key: 'objectives__Objectives',
   default: null, 
 })
-
-

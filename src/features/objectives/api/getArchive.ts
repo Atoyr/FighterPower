@@ -13,7 +13,6 @@ import { Archive } from '../types';
 export const getArchive = async (
   userId: string, 
   objectiveId: string, 
-  keyResultId: string, 
   archiveId: string, 
   transaction?: Transaction): Promise<Result<(Archive | null), Error>> => {
   if (userId === "") {
@@ -22,14 +21,11 @@ export const getArchive = async (
   if (objectiveId === "") {
     return new Failure(new RangeError("objectiveId is empty."));
   }
-  if (keyResultId === "") {
-    return new Failure(new RangeError("keyResultId is empty."));
-  }
   if (archiveId === "") {
     return new Failure(new RangeError("archiveId is empty."));
   }
 
-  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults/${keyResultId}/archives`, archiveId).withConverter(ArchiveConverter);
+  const ref = doc(store, `users/${userId}/objectives/${objectiveId}/archives`, archiveId).withConverter(ArchiveConverter);
   const snapshot = await (transaction ? transaction.get(ref) : getDoc(ref));
   return new Success(snapshot.exists() ? snapshot.data() : null);
 };

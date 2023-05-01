@@ -5,8 +5,6 @@ export type Archive = {
   order : number;
   type? : string;
   note : string;
-  // TODO 
-  goalAchives : string[];
   createdAt? : Date;
   modifiedAt? : Date;
   version: number;

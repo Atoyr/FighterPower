@@ -3,9 +3,9 @@ import { useRecoilState } from 'recoil';
 
 import { getObjectives } from '../api';
 import { ObjectivesState } from '../stores';
-import { Objectives } from '../types';
+import { Objective } from '../types';
 
-export const useObjectives = (userId: string): Array<Objectives> | null => {
+export const useObjectives = (userId: string): Array<Objective> | null => {
   const [objectives, setObjectives] = useRecoilState(ObjectivesState);
 
   useEffect(() => {

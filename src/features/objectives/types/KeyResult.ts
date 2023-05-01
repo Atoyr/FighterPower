@@ -3,9 +3,8 @@ export type KeyResult = {
   id? : string;
   title : string;
   order : number;
-  type? : string;
   note : string;
-  achives : string[];
+  rank : string;
   createdAt? : Date;
   modifiedAt? : Date;
   version: number;
