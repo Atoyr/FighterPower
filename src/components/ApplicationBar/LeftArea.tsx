@@ -44,7 +44,7 @@ const Item = ({to, label, onClick}: ItemProps) => {
 export const LeftArea = () => {
   const authState = useAuth();
 
-  const [openLeftMenu, setOpenLeftMenu] = useRecoilState(openLeftMenuState);
+  const [OpenLeftMenu, setOpenLeftMenu] = useRecoilState(openLeftMenuState);
   const handleOpenLeftMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenLeftMenu(true);
   };
@@ -65,7 +65,7 @@ export const LeftArea = () => {
         </IconButton>
         <SwipeableDrawer
           anchor="left"
-          open={openLeftMenu}
+          open={OpenLeftMenu}
           onOpen={handleOpenLeftMenu}
           onClose={handleCloseLeftMenu} >
           <Box
