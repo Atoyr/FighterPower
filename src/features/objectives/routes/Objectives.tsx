@@ -59,13 +59,14 @@ export const Objectives = () => {
     <Typography variant="h3" component="div" gutterBottom >
     目標一覧
     </Typography>
-    <Box sx={{mb: 1}} display="flex" flexDirection="row">
+    <Box sx={{mb: 1}} display="flex" flexDirection="row" flexWrap="wrap">
       <Button variant="contained" fullWidth onClick={openInputDialog}
         sx={{
           m: { xs: 0, sm: 1 },
           mt: { xs: 1 },
           p:1,
           width: CARD_WIDTH, 
+          minWidth: CARD_WIDTH, 
           height : CARD_HEIGHT, 
         }}>
         目標を追加
