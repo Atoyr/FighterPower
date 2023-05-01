@@ -79,7 +79,7 @@ export const RightArea = () => {
           open={openRightMenu}
           onClose={handleCloseRightMenu}
         > 
-          <MenuItem key="account_link" onClick={() => navigate('/account_link', { replace: true })}>{"アカウント連携"}</MenuItem>
+          <MenuItem key="account_link" onClick={() => navigate('/anonymous/account_link', { replace: true })}>{"アカウント連携"}</MenuItem>
         </Menu>
       </Box>
       );
