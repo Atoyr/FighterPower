@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRecoilValue } from 'recoil';
 
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -12,7 +11,7 @@ import { Google, Twitter } from '@mui/icons-material';
 
 import { ReactComponent as logo } from '@/assets/logo.svg'
 import { AccountLink, SignOut } from '@/lib/auth';
-import { authState } from '@/stores';
+import { useAuth } from '@/hooks';
 
 type AccountLinkProps = {
   onSuccess: () => void;
@@ -20,14 +19,14 @@ type AccountLinkProps = {
 }
 
 export const AccountLinkForm = ({ onSuccess, onRemove}: LoginFormProps) => {
-  const AuthState = useRecoilValue(authState);
+  const AuthState = useAuth();
 
   const googleLink = () => {
     let authParam = {
       AuthType: "GoogleAuth",
     } as AuthParameter;
 
-    auth.accountlink(authParam, auth.authState.user!,
+    AccountLink(authParam, AuthState.user!,
       (user) => {
         navigate("/home", {replace: true} );
       },
@@ -41,7 +40,7 @@ export const AccountLinkForm = ({ onSuccess, onRemove}: LoginFormProps) => {
       AuthType: "TwitterAuth",
     } as AuthParameter;
 
-    auth.accountlink(authParam, auth.authState.user!,
+    AccountLink(authParam, AuthState.user!,
       (user) => {
         navigate("/home", {replace: true} );
       },

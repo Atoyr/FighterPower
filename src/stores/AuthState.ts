@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
-import { AuthState } from '@/feature/auth/types';
+import { AuthState as Auth } from '@/feature/auth/types';
 
-export const authState = atom<AuthState>({
-  key: 'authState',
+export const AuthState = atom<Auth>({
+  key: 'AuthState',
   default: {
     user: null, 
     loading: true, 

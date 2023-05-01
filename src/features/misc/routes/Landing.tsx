@@ -8,11 +8,11 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 
 import { SignIn } from '@/lib/auth';
-import { authState } from '@/stores';
+import { useAuth } from '@/hooks';
 
 export const Landing = () => {
   const navigate = useNavigate();
-  const AuthState = useRecoilValue(authState);
+  const AuthState = useAuth();
 
   const handleAnonymous = () => {
     let authParam = {
