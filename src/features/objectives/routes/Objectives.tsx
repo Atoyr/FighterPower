@@ -22,6 +22,7 @@ import { createObjective } from '../functions';
 import { useObjectives } from '../hooks';
 import { Objective } from '../types';
 import { InputDialogOpenState } from '../stores';
+import { CARD_WIDTH, CARD_HEIGHT } from '../styles';
 
 export const Objectives = () => {
   const navigate = useNavigate();
@@ -58,14 +59,14 @@ export const Objectives = () => {
     <Typography variant="h3" component="div" gutterBottom >
     目標一覧
     </Typography>
-    <Box sx={{mb: 1}}>
+    <Box sx={{mb: 1}} display="flex" flexDirection="row">
       <Button variant="contained" fullWidth onClick={openInputDialog}
         sx={{
           m: { xs: 0, sm: 1 },
           mt: { xs: 1 },
           p:1,
-          width: { xs: "100%", sm: 250 },
-          height : { xs : 50, sm: 150 }
+          width: CARD_WIDTH, 
+          height : CARD_HEIGHT, 
         }}>
         目標を追加
       </Button>
@@ -74,9 +75,13 @@ export const Objectives = () => {
         const href = `${objective.id}`;
         return (
           <ObjectiveCard 
+            sx={{
+              m: { xs: 0, sm: 1 },
+              mt: { xs: 1 },
+            }}
             key={objective.id}
             title={objective.title} 
-            createAt={objective.createAt} 
+            createAt={objective.createdAt} 
             modifiedAt={objective.modifiedAt}
             onClick={() => navigate(href)} />
         );
