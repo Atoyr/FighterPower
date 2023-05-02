@@ -89,7 +89,7 @@ export const Objectives = () => {
       })
       : 
       <Stack spacing={1}>
-        <Skeleton variant="rectangular" width={CARD_WIDTH} height={CARD_HEIGHT} />
+        <Skeleton variant="rectangular" width={250} height={150} />
       </Stack>
       }
     </Box>
