@@ -5,7 +5,6 @@ import { RequireAuth } from '@/components/Auth';
 import { ProtectedLayout } from '@/components/Layout';
 import { ApplicationBar } from '@/components/ApplicationBar';
 
-const { Landing } = lazyImport(() => import('@/features/misc'), 'Landing');
 const { Dashboard } = lazyImport(() => import('@/features/misc'), 'Dashboard');
 const { ObjectiveRoutes } = lazyImport(() => import('@/features/objectives'), 'ObjectiveRoutes');
 

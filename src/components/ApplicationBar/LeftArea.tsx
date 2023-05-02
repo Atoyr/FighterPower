@@ -110,7 +110,7 @@ export const LeftArea = () => {
               :
               (
                 <>
-                <Item to="/app/home" label="Home" onClick={handleCloseLeftMenu} />
+                <Item to="/app/dashboard" label="Home" onClick={handleCloseLeftMenu} />
                 <Divider />
                 { authState.user.isAnonymous && (
                   <>

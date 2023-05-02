@@ -22,7 +22,7 @@ import { createObjective } from '../functions';
 import { useObjectives } from '../hooks';
 import { Objective } from '../types';
 import { InputDialogOpenState } from '../stores';
-import { CARD_WIDTH, CARD_HEIGHT } from '../styles';
+import { CARD_WIDTH, CARD_HEIGHT, OBJECTIVE_BUTTON_HEIGHT } from '../styles';
 
 export const Objectives = () => {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export const Objectives = () => {
           p:1,
           width: CARD_WIDTH, 
           minWidth: CARD_WIDTH, 
-          height : CARD_HEIGHT, 
+          height : OBJECTIVE_BUTTON_HEIGHT, 
         }}>
         目標を追加
       </Button>
