@@ -80,7 +80,7 @@ export const Objectives = () => {
             }}
             key={objective.id}
             title={objective.title} 
-            createAt={objective.createdAt} 
+            createdAt={objective.createdAt} 
             modifiedAt={objective.modifiedAt}
             onClick={() => navigate(href)} />
         );
