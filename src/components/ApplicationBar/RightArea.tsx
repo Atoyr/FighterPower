@@ -17,15 +17,10 @@ import { useAuth } from '@/hooks';
 import { SignOut } from '@/lib/auth';
 
 
-const openRightMenuState = atom<boolean>({
-  key: 'components_ApplcationBar_openRightMenu',
-  default: false, 
-})
-
 export const RightArea = () => {
   const authState = useAuth();
   const navigate = useNavigate();
-  const [openRightMenu, setOpenRightMenu] = useState(openRightMenuState);
+  const [openRightMenu, setOpenRightMenu] = useState(false);
 
   const handleOpenRightMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenRightMenu(true);

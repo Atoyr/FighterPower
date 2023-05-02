@@ -59,8 +59,9 @@ export const EditableLabel = ({ label, onSave, allowEmpty = true }: EditableLabe
             onChange={handleChange} 
             variant="standard" 
             sx={{flexGrow: 1}} 
+            inputProps={{style:{fontSize: "3rem"}}}
             error={(error !== null && error !== "")}
-            helperText={error ?? ""}
+            label={error ?? ""}
           />
           <IconButton aria-label="edit" size="large" sx={{mx: 0, flexGrow:0 }} onClick={handleSave}>
             <SaveIcon fontSize="inherit" />
