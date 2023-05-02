@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -13,8 +14,9 @@ import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
+import { setObjective } from '../api';
 import { useObjectiveKeyResults } from '../hooks';
-import { InputTitleDialogState } from '../stores';
+import { InputTitleDialogState, ObjectiveVersionState } from '../stores';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
@@ -24,48 +26,58 @@ export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const authState = useAuth();
 
-  const [ TitleDialogState, setTitleDialogState ] = useRecoilState(InputTitleDialogState);
-  const resetTitleDialogState = useResetRecoilState(InputTitleDialogState);
+  const [ ObjectiveVersion, setObjectiveVersion ] = useRecoilState(ObjectiveVersionState);
+  const [ TitleDialog, setTitleDialog ] = useRecoilState(InputTitleDialogState);
+  const resetTitleDialog = useResetRecoilState(InputTitleDialogState);
 
-  let objectiveKeyResults = useObjectiveKeyResults(authState.user.uid, objectiveId);
+  const objectiveKeyResults = useObjectiveKeyResults(authState.user.uid, objectiveId, ObjectiveVersion);
 
   const onClose = async (value:string, isCancel: boolean) => {
-    if (!isCancel)
-    {
+    if (!isCancel) {
       // validate
       if ( value == "" ) {
-        // setTitleDialogProps(
-        //   {
-        //     type: titleDialogProps.type,
-        //     index: titleDialogProps.index,
-        //     props: {
-        //       ...titleDialogProps.props,
-        //       error: true,
-        //       message: "空白です",
-        //     }});
+        setTitleDialog(
+          {
+            type: TitleDialog.type,
+            index: TitleDialog.index,
+            props: {
+              ...TitleDialog.props,
+              error: true,
+              message: "空白です",
+            }});
         return;
       }
 
       // const index = TitleDialogProps.index;
       //setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
 
-      switch(TitleDialogState.type) {
+      switch(TitleDialog.type) {
         case ADD_KEY_RESULT :
           break;
         case EDIT_KEY_RESULT :
           break;
         case EDIT_OBJECTIVE_TITLE :
+          let objective = {
+            ...objectiveKeyResults.objective, 
+            title: value, 
+            };
+          const result = await setObjective(authState.user.uid, objective);
+          if(result.isSuccess()) {
+            setObjectiveVersion(ObjectiveVersion + 1);
+          } else {
+            // TODO Error
+          }
           break;
       }
     }
-    resetTitleDialogState();
+    resetTitleDialog();
   };
 
   const editObjectiveTitle = () => {
     const dialogTitle = "目標名";
     const defaultValue = objectiveKeyResults.objective.title;
-    const props = TitleDialogState.Props;
-    setTitleDialogState(
+    const props = TitleDialog.Props;
+    setTitleDialog(
       {
         type: EDIT_OBJECTIVE_TITLE, 
         index: 0, 
@@ -100,13 +112,26 @@ export const Objective = () => {
             <EditIcon fontSize="inherit" />
           </IconButton>
         </Box>
+        <Box>
+          <Button variant="outlined"
+            fullWidth
+            onClick={() => {}}
+            sx={{
+              my:1,
+              p:1,
+              height : { xs : 50 },
+              display: { xs: 'none', sm: 'flex' },
+            }}>
+            {"指標を追加"}
+          </Button>
+        </Box>
         <InputSingleTextDialog
-          title={TitleDialogState.props.title}
-          label={TitleDialogState.props.label}
-          open={TitleDialogState.props.open}
-          defaultValue={TitleDialogState.props.defaultValue}
-          error={TitleDialogState.props.error}
-          message={TitleDialogState.props.message}
+          title={TitleDialog.props.title}
+          label={TitleDialog.props.label}
+          open={TitleDialog.props.open}
+          defaultValue={TitleDialog.props.defaultValue}
+          error={TitleDialog.props.error}
+          message={TitleDialog.props.message}
           onClose={onClose}
         />
       </Container>);

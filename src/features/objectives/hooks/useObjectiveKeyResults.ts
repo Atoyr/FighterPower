@@ -5,7 +5,7 @@ import { getObjective, getKeyResults, getArchives } from '../api';
 import { ObjectiveKeyResultsState } from '../stores';
 import { ObjectiveKeyResults } from '../types';
 
-export const useObjectiveKeyResults = (userId: string, objectiveId: string): ObjectiveKeyResults | null => {
+export const useObjectiveKeyResults = (userId: string, objectiveId: string, version: number): ObjectiveKeyResults | null => {
   const [objectiveKeyResults, setObjectiveKeyResults] = useRecoilState(ObjectiveKeyResultsState);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const useObjectiveKeyResults = (userId: string, objectiveId: string): Obj
         });
       }
     })
-  }, [userId, objectiveId])
+  }, [userId, objectiveId, version])
 
   return objectiveKeyResults;
 };

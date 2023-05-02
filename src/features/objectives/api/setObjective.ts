@@ -14,7 +14,7 @@ import { getObjective } from './getObjective';
 
 export const setObjective = async (
   userId: string, 
-  objective: string, 
+  objective: Objective, 
   transaction?: Transaction): Promise<Result<string, Error>> => {
   let objectiveId: string = objective.id ?? "";
   const refObjectiveResult = await getObjective(userId, objectiveId, transaction);
@@ -36,11 +36,11 @@ export const setObjective = async (
     if (refObjective.version != objective.version) {
       return new Failure(new Error("objective update error"));
     }
-    newObjective = doc(store, `users/${userId}/objectives`, objectives.id as string);
+    newObjective = doc(store, `users/${userId}/objectives`, objective.id as string);
   }
 
   try {
-  await (transaction ? 
+    await (transaction ? 
           transaction.set(newObjective.withConverter(ObjectiveConverter), objective) 
           : setDoc(newObjective.withConverter(ObjectiveConverter), objective));
   } catch (error) {
