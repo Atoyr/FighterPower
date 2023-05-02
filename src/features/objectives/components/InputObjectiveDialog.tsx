@@ -1,4 +1,4 @@
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useState } from 'react';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -12,35 +12,34 @@ import { InputDialogErrorState } from '../stores';
 
 export type InputObjectiveDialogProps = {
   open: boolean;
-  onClose: (objectiveTitle: string, objectiveMemo: string, isCancel: boolean) => void;
+  onClose: (objectiveTitle: string, objectiveMemo: string) => void;
+  onCancel: () => void;
 }
 
 export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
 
-  const [ errorProps, setErrorProps] = useRecoilState(InputDialogErrorState);
-  const resetErrorProps = useResetRecoilState(InputDialogErrorState);
+  const [ error, setError] = useState("");
   const { open, onClose } = props;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    resetErrorProps();
+    setError("");
 
     const formData = new FormData(event.currentTarget);
     const objectiveTitle = formData.get('objective_title') as string;
     const objectiveMemo = formData.get('objective_memo') as string;
 
     if ( objectiveTitle == "") {
-      const objectiveTitleErrorMessage = "空白です";
-      setErrorProps({ objectiveTitleErrorMessage } );
+      setError("空白です");
       return;
     }
 
-    await onClose(objectiveTitle, objectiveMemo, false);
+    await onClose(objectiveTitle, objectiveMemo);
   };
 
   const handleCancel = async () => {
-    resetErrorProps();
-    await onClose("", "", true);
+    setError("");
+    await onCancel();
   };
 
   return (
@@ -54,8 +53,8 @@ export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
           name="objective_title"
           id="objective_title"
           label="目標"
-          error={errorProps.objectiveTitleErrorMessage}
-          helperText={errorProps.objectiveTitleErrorMessage}
+          error={error !== null && error !== ""}
+          helperText={error ?? ""}
           type="text"
           fullWidth
           variant="standard"

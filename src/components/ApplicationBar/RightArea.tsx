@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { atom, useRecoilState } from 'recoil';
 
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -25,8 +25,7 @@ const openRightMenuState = atom<boolean>({
 export const RightArea = () => {
   const authState = useAuth();
   const navigate = useNavigate();
-
-  const [openRightMenu, setOpenRightMenu] = useRecoilState(openRightMenuState);
+  const [openRightMenu, setOpenRightMenu] = useState(openRightMenuState);
 
   const handleOpenRightMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenRightMenu(true);

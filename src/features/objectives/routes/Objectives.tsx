@@ -1,4 +1,4 @@
-import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from '@mui/material/Button';
@@ -28,26 +28,23 @@ export const Objectives = () => {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  const [ openDialog, setOpenDialog] = useRecoilState(InputDialogOpenState);
-  const resetOpenDialog = useResetRecoilState(InputDialogOpenState);
+  const [ openDialog, setOpenDialog] = useState(false);
   const objectives = useObjectives(auth.user.uid);
 
-  const onClose = async (objectiveTitle:string, objectiveMemo:string, isCancel: boolean) => {
-    if (!isCancel)
+  const onClose = async (objectiveTitle:string, objectiveMemo:string) => {
+    const objective = createObjective(objectiveTitle, objectiveMemo);
+    const result = await setObjective(auth.user.uid!, objective);
+    if (result.isSuccess())
     {
-      const objective = createObjective(objectiveTitle, objectiveMemo);
-      const result = await setObjective(auth.user.uid!, objective);
-      if (result.isSuccess())
-      {
-        navigate(result.value);
-        resetOpenDialog();
-        return;
-      } else {
-        // TODO Exception 
-        console.log(result.value);
-      }
+      navigate(result.value);
+    } else {
+      // TODO Exception 
+      console.log(result.value);
     }
-    resetOpenDialog();
+    setOpenDialog(false);
+  }
+  const onCancel = async () => {
+    setOpenDialog(false);
   }
 
   const openInputDialog = () => {
@@ -97,6 +94,7 @@ export const Objectives = () => {
     <InputObjectiveDialog
       open={openDialog}
       onClose={onClose}
+      onCancel={onCancel}
     />
   </Container>
   );

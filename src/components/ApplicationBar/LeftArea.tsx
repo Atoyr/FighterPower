@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
-import { atom, useRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -20,11 +20,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/hooks';
 import { ReactComponent as logo } from '@/assets/logo.svg'
 
-const openLeftMenuState = atom<boolean>({
-  key: 'components_ApplcationBar_openLeftMenu',
-  default: false, 
-})
-
 type ItemProps = {
   to: string;
   label: string;
@@ -44,7 +39,7 @@ const Item = ({to, label, onClick}: ItemProps) => {
 export const LeftArea = () => {
   const authState = useAuth();
 
-  const [OpenLeftMenu, setOpenLeftMenu] = useRecoilState(openLeftMenuState);
+  const [openLeftMenu, setOpenLeftMenu] = useState(false);
   const handleOpenLeftMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenLeftMenu(true);
   };
@@ -67,7 +62,7 @@ export const LeftArea = () => {
         </IconButton>
         <SwipeableDrawer
           anchor="left"
-          open={OpenLeftMenu}
+          open={openLeftMenu}
           onOpen={handleOpenLeftMenu}
           onClose={handleCloseLeftMenu} >
           <Box
