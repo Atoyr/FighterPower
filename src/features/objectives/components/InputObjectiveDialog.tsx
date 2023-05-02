@@ -19,7 +19,7 @@ export type InputObjectiveDialogProps = {
 export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
 
   const [ error, setError] = useState("");
-  const { open, onClose } = props;
+  const { open, onClose, onCancel } = props;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

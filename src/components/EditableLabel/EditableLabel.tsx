@@ -39,6 +39,7 @@ export const EditableLabel = ({ label, onSave, allowEmpty = true }: EditableLabe
       return;
     }
     onSave(value)
+    setValue(label);
     setIsEditing(false);
   };
 
