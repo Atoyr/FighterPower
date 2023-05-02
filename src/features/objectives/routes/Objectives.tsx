@@ -14,7 +14,7 @@ import Skeleton from '@mui/material/Skeleton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { authState } from '@/stores';
+import { useAuth } from '@/hooks';
 
 import { getObjectives, setObjective } from '../api';
 import { InputObjectiveDialog, ObjectiveCard } from '../components';
@@ -26,7 +26,7 @@ import { CARD_WIDTH, CARD_HEIGHT } from '../styles';
 
 export const Objectives = () => {
   const navigate = useNavigate();
-  const auth = useRecoilValue(authState);
+  const auth = useAuth();
 
   const [ openDialog, setOpenDialog] = useRecoilState(InputDialogOpenState);
   const resetOpenDialog = useResetRecoilState(InputDialogOpenState);
@@ -55,7 +55,7 @@ export const Objectives = () => {
 
   return (
     <Container maxWidth="xl" 
-    sx={{ mt: { xs: 1, sm: 10 } }}>
+    sx={{ mt: { xs: 1, sm: 1 } }}>
     <Typography variant="h3" component="div" gutterBottom >
     目標一覧
     </Typography>
@@ -89,9 +89,7 @@ export const Objectives = () => {
       })
       : 
       <Stack spacing={1}>
-        <Skeleton variant="text" />
-        <Skeleton variant="circular" width={40} height={40} />
-        <Skeleton variant="rectangular" width={210} height={118} />
+        <Skeleton variant="rectangular" width={CARD_WIDTH} height={CARD_HEIGHT} />
       </Stack>
       }
     </Box>
