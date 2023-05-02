@@ -44,6 +44,7 @@ export const Objectives = () => {
         return;
       } else {
         // TODO Exception 
+        console.log(result.value);
       }
     }
     resetOpenDialog();
