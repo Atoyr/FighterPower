@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 
@@ -9,6 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 
+import { EditableLabel } from '@/components/EditableLabel'
 import { InputSingleTextDialog } from '@/components/InputDialog'
 import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks';
@@ -16,7 +18,7 @@ import { MainContainerStyle } from '@/styles';
 
 import { setObjective } from '../api';
 import { useObjectiveKeyResults } from '../hooks';
-import { InputTitleDialogState, ObjectiveVersionState } from '../stores';
+import { InputTitleDialogState } from '../stores';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
@@ -26,11 +28,12 @@ export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const authState = useAuth();
 
-  const [ ObjectiveVersion, setObjectiveVersion ] = useRecoilState(ObjectiveVersionState);
+  const [ objectiveVersion, setObjectiveVersion ] = useState(0);
   const [ TitleDialog, setTitleDialog ] = useRecoilState(InputTitleDialogState);
+  const [ editObjectiveTitleError, setEditObjectiveTitleError ] = useState("");
   const resetTitleDialog = useResetRecoilState(InputTitleDialogState);
 
-  const objectiveKeyResults = useObjectiveKeyResults(authState.user.uid, objectiveId, ObjectiveVersion);
+  const objectiveKeyResults = useObjectiveKeyResults(authState.user.uid, objectiveId, objectiveVersion);
 
   const onClose = async (value:string, isCancel: boolean) => {
     if (!isCancel) {
@@ -55,15 +58,14 @@ export const Objective = () => {
         case ADD_KEY_RESULT :
           break;
         case EDIT_KEY_RESULT :
-          break;
-        case EDIT_OBJECTIVE_TITLE :
+          break; case EDIT_OBJECTIVE_TITLE :
           let objective = {
             ...objectiveKeyResults.objective, 
             title: value, 
             };
-          const result = await setObjective(authState.user.uid, objective);
-          if(result.isSuccess()) {
-            setObjectiveVersion(ObjectiveVersion + 1);
+          const result = await setObjective(authState.user.uid, objective); 
+          if(result.isSuccess()) { 
+            setObjectiveVersion(objectiveVersion + 1);
           } else {
             // TODO Error
           }
@@ -90,6 +92,24 @@ export const Objective = () => {
       });
   }
 
+  const saveObjectiveTitle = async (newValue) => {
+    setEditObjectiveTitleError("");
+    if (newValue == "") {
+      // TODO ERROR
+      return;
+    }
+    let objective = {
+      ...objectiveKeyResults.objective, 
+      title: newValue, 
+    };
+    const result = await setObjective(authState.user.uid, objective)
+    if(result.isSuccess()) { 
+      setObjectiveVersion(objectiveVersion + 1);
+    } else {
+      // TODO Error
+    }
+  };
+
   if (!objectiveKeyResults) {
     // Loading...
       return (
@@ -100,18 +120,7 @@ export const Objective = () => {
     // Main
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-          }}>
-          <Typography variant="h3" noWrap component="h3" sx={{ flexGrow: 1}}>
-            {objectiveKeyResults.objective.title}
-          </Typography>
-          <IconButton aria-label="edit" size="large" sx={{mx: 1, flexGrow:0 }} onClick={editObjectiveTitle}>
-            <EditIcon fontSize="inherit" />
-          </IconButton>
-        </Box>
+        <EditableLabel label={objectiveKeyResults.objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
         <Box>
           <Button variant="outlined"
             fullWidth

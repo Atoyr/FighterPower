@@ -24,8 +24,3 @@ export const InputTitleDialogState = atom<InputTitleDialogStateProps>({
     }, 
   }, 
 })
-
-export const ObjectiveVersionState = atom<number>({
-  key: 'objectives__Objective__version',
-  default: 0, 
-})
