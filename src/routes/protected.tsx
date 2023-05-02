@@ -26,7 +26,6 @@ export const protectedRoutes = [
     path: '/app',
     element: <Check />,
     children: [
-      { path: 'home', element: <Landing /> }, 
       { path: 'dashboard', element: <Dashboard /> }, 
       { path: 'objectives/*', element: <ObjectiveRoutes /> }
     ]

@@ -7,7 +7,7 @@ export const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state as { from: Location | null};
-  const to = from ? from.pathname : '/home';
+  const to = from ? from.pathname : '/app/dashboard';
   return (
     <Layout title={"signup"}>
       <SignUpForm onSuccess={() => navigate(to, {replace: true} )}/>

@@ -1,16 +1,7 @@
-import Typography from '@mui/material/Typography';
+import { Navigate } from 'react-router-dom';
 
 export const Dashboard = () => {
 return(
-  <>
-    <Typography variant="h2" component="div" gutterBottom
-      sx={{
-        textAlign: "center",
-        mt: 10,
-        mb: 2,
-      }}>
-      {"DASHBOARD"}
-    </Typography>
-  </>
+  <Navigate to={'/app/objectives'} />
   );
 };
