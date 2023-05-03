@@ -5,11 +5,11 @@ import { useRecoilState, useResetRecoilState } from 'recoil';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import { auth } from '@/lib/firebase';
-import { AuthState as AuthStateStore } from '@/stores';
+import { AuthState } from '@/stores';
 
 export const useAuth = () => {
-  const [AuthState, setAuthState] = useRecoilState(AuthStateStore);
-  const resetState = useResetRecoilState(AuthStateStore);
+  const [authState, setAuthState] = useRecoilState(AuthState);
+  const resetState = useResetRecoilState(AuthState);
   
   useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -20,7 +20,7 @@ export const useAuth = () => {
       });
       return unsubscribe;
       }, [setAuthState, resetState]);
-    return AuthState;
+    return authState;
 };
 
 

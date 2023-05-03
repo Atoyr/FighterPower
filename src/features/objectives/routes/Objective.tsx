@@ -17,8 +17,12 @@ import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { setObjective } from '../api';
+import { RankRating } from '../components';
 import { useObjectiveKeyResults } from '../hooks';
 import { InputTitleDialogState } from '../stores';
+
+
+import { useRanks} from '@/hooks';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
@@ -27,6 +31,8 @@ const EDIT_KEY_RESULT = "edit_key_result";
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const authState = useAuth();
+  const rank = useRanks();
+
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
   const [ TitleDialog, setTitleDialog ] = useRecoilState(InputTitleDialogState);
@@ -121,6 +127,7 @@ export const Objective = () => {
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <EditableLabel label={objectiveKeyResults.objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
+        <RankRating />
         <Box>
           <Button variant="outlined"
             fullWidth

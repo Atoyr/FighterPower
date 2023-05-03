@@ -23,6 +23,7 @@ export const EditableLabel = ({ label, onSave, allowEmpty = true }: EditableLabe
 
   const handleEdit = () => {
     setError("");
+    setValue(label);
     setIsEditing(true);
   };
 
