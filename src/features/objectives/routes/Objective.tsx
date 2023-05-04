@@ -17,6 +17,7 @@ import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { setObjective } from '../api';
+import { ObjectiveNotFound } from '../components';
 import { useObjectiveKeyResults } from '../hooks';
 import { InputTitleDialogState } from '../stores';
 
@@ -76,23 +77,6 @@ export const Objective = () => {
     resetTitleDialog();
   };
 
-  const editObjectiveTitle = () => {
-    const dialogTitle = "目標名";
-    const defaultValue = objectiveKeyResults.objective.title;
-    const props = TitleDialog.Props;
-    setTitleDialog(
-      {
-        type: EDIT_OBJECTIVE_TITLE, 
-        index: 0, 
-        props: {
-          ...props,
-          title: dialogTitle,
-          defaultValue: defaultValue,
-          open: true,
-        }
-      });
-  }
-
   const saveObjectiveTitle = async (newValue) => {
     setEditObjectiveTitleError("");
     if (newValue == "") {
@@ -132,7 +116,7 @@ export const Objective = () => {
               height : { xs : 50 },
               display: { xs: 'none', sm: 'flex' },
             }}>
-            {"指標を追加"}
+            {"やること(指標)を追加"}
           </Button>
         </Box>
         <InputSingleTextDialog
@@ -149,21 +133,7 @@ export const Objective = () => {
     // NotAccess
     return (
     <Container>
-      <Typography variant="h1" component="div" gutterBottom
-        sx={{
-          textAlign: "center",
-          mt: 10,
-          mb: 2,
-        }}>
-        Error
-      </Typography>
-      <Typography variant="h2" component="div" gutterBottom
-        sx={{
-          textAlign: "center",
-          my: 2,
-        }}>
-        目標のアクセス権限がないか存在しません
-      </Typography>
+      <ObjectiveNotFound />
     </Container>);
 
   }

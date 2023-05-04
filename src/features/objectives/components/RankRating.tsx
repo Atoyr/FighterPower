@@ -21,7 +21,7 @@ const getLabelText = (value: number) => {
 export type RankRatingProps = {
   defaultValue: number;
   readonly: boolean;
-  onSave: (newValue: number) => void;
+  onChange?: (newValue: number) => void;
   sx: SxProps<Theme>;
 }
 
@@ -43,8 +43,13 @@ export const RankRating = (props: RankRatingProps) => {
         precision={1}
         getLabelText={getLabelText}
         onChange={(event, newValue) => {
-            props.onSave(newValue);
-            setValue(newValue);
+          if(newValue === null) {
+            return;
+          }
+          setValue(newValue);
+          if (props.onChange) {
+            props.onChange(newValue);
+          }
         }}
         onChangeActive={(event, newHover) => {
           setHover(newHover);
