@@ -19,7 +19,6 @@ export type InputKeyResultProps = {
 export const InputKeyResult = (props: InputKeyResultProps) => {
 
   const [ title, setTitle] = useState(props?.title ?? "");
-
   const [ rank, setRank] = useState<number>(props?.rank ?? 3);
   const [ memo, setMemo] = useState(props?.memo ?? "");
 

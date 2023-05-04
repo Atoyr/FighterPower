@@ -17,7 +17,7 @@ import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { setObjective } from '../api';
-import { ObjectiveNotFound } from '../components';
+import { KeyResultCard, ObjectiveNotFound } from '../components';
 import { useObjectiveKeyResults } from '../hooks';
 import { InputTitleDialogState } from '../stores';
 
@@ -118,6 +118,9 @@ export const Objective = () => {
             }}>
             {"やること(指標)を追加"}
           </Button>
+        </Box>
+        <Box>
+          <KeyResultCard title="foofoo" />
         </Box>
         <InputSingleTextDialog
           title={TitleDialog.props.title}

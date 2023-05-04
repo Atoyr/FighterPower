@@ -20,8 +20,9 @@ const getLabelText = (value: number) => {
 
 export type RankRatingProps = {
   defaultValue: number;
-  readonly: boolean;
+  readOnly: boolean;
   onChange?: (newValue: number) => void;
+  size: string;
   sx: SxProps<Theme>;
 }
 
@@ -42,6 +43,8 @@ export const RankRating = (props: RankRatingProps) => {
         value={value}
         precision={1}
         getLabelText={getLabelText}
+        readOnly={props.readOnly}
+        size={props.size ?? "medium"}
         onChange={(event, newValue) => {
           if(newValue === null) {
             return;
