@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 
 import Box from '@mui/material/Box';
@@ -26,6 +26,7 @@ const EDIT_KEY_RESULT = "edit_key_result";
 
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
+  const navigate = useNavigate();
   const authState = useAuth();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
@@ -124,7 +125,7 @@ export const Objective = () => {
         <Box>
           <Button variant="outlined"
             fullWidth
-            onClick={() => {}}
+            onClick={() => navigate(`key-results/new`)}
             sx={{
               my:1,
               p:1,

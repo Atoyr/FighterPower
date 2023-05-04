@@ -17,12 +17,14 @@ export const useObjectiveKeyResults = (userId: string, objectiveId: string, vers
         const archives = archivesResult.isSuccess() ? archivesResult.value : [];
         setObjectiveKeyResults( {
           id: objectiveResult.value.id, 
+          version: version, 
           objective: objectiveResult.value, 
           keyResults: keyResults, 
           archives: archives
         });
       } else {
         setObjectiveKeyResults( {
+          version: version, 
           objective: null, 
           keyResults: [], 
           archives: [], 
