@@ -4,6 +4,7 @@ export type Objective = {
   title : string;
   note : string;
   valid : boolean;
+  status: string;
   createdAt? : Date;
   modifiedAt? : Date;
   tags? : string[];
