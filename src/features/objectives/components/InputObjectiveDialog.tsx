@@ -52,7 +52,7 @@ export const InputObjectiveDialog = (props: InputObjectiveDialogProps) => {
           margin="dense"
           name="objective_title"
           id="objective_title"
-          label="目標"
+          label="目標 (達成したいこと・なりたい姿)"
           error={error !== null && error !== ""}
           helperText={error ?? ""}
           type="text"
