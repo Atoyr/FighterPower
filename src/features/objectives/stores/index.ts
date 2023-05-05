@@ -1,3 +1,4 @@
+export * from './KeyResult';
 export * from './Objective';
-export * from './Objectives';
 export * from './ObjectiveKeyResults';
+export * from './Objectives';

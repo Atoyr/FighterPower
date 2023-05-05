@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 
 import { useAuth } from '@/hooks';
 
-import { getObjectives, setObjective } from '../api';
+import { setObjective } from '../api';
 import { InputObjectiveDialog, ObjectiveCard } from '../components';
 import { createObjective } from '../functions';
 import { useObjectives } from '../hooks';

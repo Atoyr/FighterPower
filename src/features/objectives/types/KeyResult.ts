@@ -3,7 +3,7 @@ export type KeyResult = {
   id? : string;
   title : string;
   order : number;
-  note : string;
+  memo : string;
   rank : string;
   createdAt? : Date;
   modifiedAt? : Date;

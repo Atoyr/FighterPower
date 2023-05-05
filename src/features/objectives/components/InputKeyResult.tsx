@@ -14,6 +14,7 @@ export type InputKeyResultProps = {
   onChangeTitle?: (newValue: string) => void; 
   onChangeRank?: (newValue: number) => void;
   onChangeMemo?: (newValue: string) => void;
+  readOnly: boolean;
 }
 
 export const InputKeyResult = (props: InputKeyResultProps) => {
@@ -34,6 +35,9 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
       type="text"
       fullWidth
       variant="standard"
+      InputProps={{
+            readOnly: props.readOnly ?? false, 
+          }}
       onChange={(event) => { 
         setTitle(event.target.value)
         if (props.onChangeTitle) {
@@ -49,6 +53,7 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
           props.onChangeRank(newValue);
         }
       }}
+      readOnly={props.readOnly ?? false}
       sx={{my: 1}}/>
     <TextField
       name="key_result_memo"
@@ -58,6 +63,9 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
       type="text"
       fullWidth
       multiline
+      InputProps={{
+            readOnly: props.readOnly ?? false, 
+          }}
       maxRows={8}
       onChange={(event) => { 
         setMemo(event.target.value)

@@ -2,6 +2,8 @@ import { atom } from 'recoil';
 
 import { InputSingleTextDialogProps } from '@/components/InputDialog';
 
+import { Objective } from '../types';
+
 type InputTitleDialogStateProps = {
   type: string;
   index: number;
@@ -23,4 +25,17 @@ export const InputTitleDialogState = atom<InputTitleDialogStateProps>({
       onClose: () => {}
     }, 
   }, 
-})
+});
+
+type ObjectiveStateType = {
+  isLoading: boolean;
+  value: Objective | null;
+};
+
+export const ObjectiveState = atom<ObjectiveStateType >({
+  key: 'objectives__Objective',
+  default: {
+    isLoading: false,
+    value: null, 
+  }, 
+});

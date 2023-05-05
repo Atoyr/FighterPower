@@ -25,17 +25,21 @@ export const setKeyResult = async (
   }
 
   let keyResultId : string = keyResult.id ?? "";
-  const refKeyResultResult = await getKeyResult(
-    userId, 
-    objectiveId, 
-    keyResultId, 
-    transaction);
+  let refKeyResult: KeyResult = null;
+  if (keyResultId !== "") {
+    // 存在チェック
+    const refKeyResultResult = await getKeyResult(
+      userId, 
+      objectiveId, 
+      keyResultId, 
+      transaction);
 
-  if ( refKeyResultResult.isFailure()) {
-    return new Failure(refKeyResultResult.value);
+    if ( refKeyResultResult.isFailure()) {
+      return new Failure(refKeyResultResult.value);
+    }
+    refKeyResult = refKeyResultResult.value as KeyResult;
   }
 
-  const refAcrhive: KeyResult = refKeyResultResult.value as KeyResult;
   let newKeyResult: KeyResult;
 
   if(refKeyResult == null) {

@@ -41,7 +41,7 @@ export const KeyResultConverter: FirestoreDataConverter<KeyResult> = {
       id : keyResult.id ?? "",
       title : keyResult.title,
       order : keyResult.order,
-      note : keyResult.note,
+      memo : keyResult.memo,
       rank : keyResult.rank, 
       createdAt : keyResult.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),

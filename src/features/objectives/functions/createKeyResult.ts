@@ -1,8 +1,11 @@
 import { KeyResult } from '../types';
 
-export const createKeyResult = (title: string, order: number) => {
+export const createKeyResult = () => {
   return {
-    title : title,
-    order : order,
+    title : "",
+    order : 0,
+    note : "", 
+    rank : 3, 
+    version : 0, 
   } as KeyResult;
 }
