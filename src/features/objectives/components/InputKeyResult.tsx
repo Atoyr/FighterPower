@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   TextField, 
@@ -46,7 +46,7 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
       }}
       />
     <RankRating 
-      defaultValue={rank} 
+      value={rank} 
       onChange={(newValue) => {
         setRank(newValue);
         if (props.onChangeRank) {

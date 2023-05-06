@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ const getLabelText = (value: number) => {
 }
 
 export type RankRatingProps = {
-  defaultValue: number;
+  value: number;
   readOnly: boolean;
   onChange?: (newValue: number) => void;
   size: string;
@@ -27,8 +27,11 @@ export type RankRatingProps = {
 }
 
 export const RankRating = (props: RankRatingProps) => {
-  const [value, setValue] = useState<number>(props.defaultValue ?? 3);
+  const [value, setValue] = useState<number>(props.value ?? 3);
   const [hover, setHover] = useState(-1);
+
+  useEffect(() => { setValue(props.value); }, [props.value ?? 3]);
+
   const containerStyle = {
     width: 200,
     display: 'flex',
