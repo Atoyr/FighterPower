@@ -3,10 +3,16 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { Loading } from '@/components/Loading';
+import { MODE } from '@/config';
+import { queryClient } from '@/lib/react-query';
+
 import { AuthProvider } from './authProvider';
 
 type AppProviderProps = {
@@ -46,14 +52,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <RecoilRoot>
         <HelmetProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <AuthProvider>
-              <Router>
-                {children}
-              </Router>
-            </AuthProvider>
-          </ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            { MODE === "dev" && <ReactQueryDevtools />}
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <AuthProvider>
+                <Router>
+                  {children}
+                </Router>
+              </AuthProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
         </HelmetProvider>
       </RecoilRoot>
     </ErrorBoundary>
