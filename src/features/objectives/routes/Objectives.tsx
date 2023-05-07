@@ -29,7 +29,7 @@ export const Objectives = () => {
   const authState = useAuth();
 
   const [ openDialog, setOpenDialog] = useState(false);
-  const { data: objectives } = useQuery([ "objective", authState.user.uid], () => getObjectives(authState.user.uid));
+  const { data: objectives } = useQuery([ "objectives", authState.user.uid], () => getObjectives(authState.user.uid));
   const { mutate: createObjectiveMutate } = useMutation(({userId, objective}) => setObjective(userId, objective), {
     onSuccess: (id) => {
       navigate(id);
