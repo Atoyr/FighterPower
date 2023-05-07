@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 import { 
   Button, 
@@ -8,19 +9,12 @@ import {
   Typography, 
   } from '@mui/material';
 
-import { Loading } from '@/components/Loading';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
-import { setKeyResult } from '../api';
-import { 
-  InputKeyResult, 
-  KeyResultNotFound, 
-  ObjectiveNotFound, 
-  } from '../components';
+import { getKeyResult, getObjective, setKeyResult } from '../api';
+import { InputKeyResult, KeyResultNotFound, ObjectiveNotFound } from '../components';
 import { createKeyResult } from '../functions';
-import { useObjective, useKeyResult } from '../hooks';
-import { ObjectiveKeyResultsState } from '../stores';
 
 export const KeyResult = () => {
   const { objectiveId } = useParams<"objectiveId">();
@@ -28,20 +22,20 @@ export const KeyResult = () => {
   const navigate = useNavigate();
   const authState = useAuth();
 
-  const objectiveState = useObjective(authState.user.uid, objectiveId);
-  const keyResultState = keyResultId === "new" ? {isLoading: false, value: null} : useKeyResult(authState.user.uid, objectiveId, keyResultId);
+  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
+  const { data: keyResult } = keyResultId === "new" ? { data: null } : useQuery([ "key-result", authState.user.uid, objectiveId, keyResultId], () => getKeyResult(authState.user.uid, objectiveId, keyResultId));
 
-  const [ keyResultTitle, setKeyResultTitle] = useState(keyResultState.value?.title ?? "");
-  const [ keyResultRank, setKeyResultRank] = useState(keyResultState.value?.rank ?? 3);
-  const [ keyResultMemo, setKeyResultMemo] = useState(keyResultState.value?.memo ?? "");
+  const [ keyResultTitle, setKeyResultTitle] = useState(keyResult?.title ?? "");
+  const [ keyResultRank, setKeyResultRank] = useState(keyResult?.rank ?? 3);
+  const [ keyResultMemo, setKeyResultMemo] = useState(keyResult?.memo ?? "");
   const [ isEdit, setIsEdit] = useState(false);
 
   const onSave = async () => {
-    const keyResult = keyResultState.value ?? createKeyResult();
-    keyResult.title = keyResultTitle;
-    keyResult.rank = keyResultRank;
-    keyResult.memo = keyResultMemo;
-    const result = await setKeyResult(authState.user.uid, objectiveId, keyResult);
+    const kr = KeyResult ?? createKeyResult();
+    kr.title = keyResultTitle;
+    kr.rank = keyResultRank;
+    kr.memo = keyResultMemo;
+    const result = await setKeyResult(authState.user.uid, objectiveId, kr);
     if(result.isSuccess()) { 
       navigate(`../${objectiveId}`);
     } else {
@@ -51,35 +45,29 @@ export const KeyResult = () => {
   };
 
   const onCancel = () => {
-    setKeyResultTitle(keyResultState.value?.title ?? "");
-    setKeyResultRank(keyResultState.value?.rank ?? 3);
-    setKeyResultMemo(keyResultState.value?.memo ?? "")
+    setKeyResultTitle(keyResult?.title ?? "");
+    setKeyResultRank(keyResult?.rank ?? 3);
+    setKeyResultMemo(keyResult?.memo ?? "")
   }
 
-  if (objectiveState.isLoading || keyResultState.isLoading) {
-    // Loading
-      return (
-      <Container maxWidth="xl" sx={MainContainerStyle}>
-        <Loading />
-      </Container>);
-  } else if (objectiveState.value === null) {
+  if (objective === null) {
     // Objectiveが取得できない場合
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <ObjectiveNotFound />
       </Container>);
-  } else if (keyResultId !== "new" && keyResultState.value === null ) {
+  } else if (keyResultId !== "new" && keyResult === null ) {
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <KeyResultNotFound />
       </Container>);
   } else {
-    const readOnly = objectiveState.status ?? "open" !== "open";
+    const readOnly = objective.status ?? "open" !== "open";
 
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <Typography variant="h3" noWrap component="h3">
-        {objectiveState.value.title}
+        {objective.title}
         </Typography>
         <InputKeyResult 
           title={keyResultTitle}

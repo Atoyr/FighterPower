@@ -7,19 +7,18 @@ import {
 } from 'firebase/firestore'
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { Archive } from '../types';
 import { ArchiveConverter } from './Converter';
 
 export const getArchives = async (
   userId: string, 
-  objectiveId: string): Promise<Result<Array<Archive>, Error>> => {
+  objectiveId: string): Promise<Array<Archive>> => {
   if (userId == "") {
-    return new Failure(new RangeError("userId is empty."));
+    throw new RangeError("userId is empty.");
   }
   if (objectiveId == "") {
-    return new Failure(new RangeError("objectiveId is empty."));
+    throw new RangeError("objectiveId is empty.");
   }
 
   const ref = collection(store, `users/${userId}/objectives/${objectiveId}/archives`).withConverter(ArchiveConverter);
@@ -29,6 +28,6 @@ export const getArchives = async (
     archives.push(doc.data());
   });
 
-  return new Success(archives);
+  return archives;
 };
 

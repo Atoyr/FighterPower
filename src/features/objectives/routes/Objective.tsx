@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useMutation, useQuery } from 'react-query';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,12 +12,14 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { EditableLabel } from '@/components/EditableLabel'
-import { InputSingleTextDialog } from '@/components/InputDialog'
-import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
-import { setObjective } from '../api';
+import { 
+  getArchives, 
+  getKeyResults, 
+  getObjective, 
+  setObjective } from '../api';
 import { KeyResultCard, ObjectiveNotFound } from '../components';
 import { useObjectiveKeyResults } from '../hooks';
 import { InputTitleDialogState } from '../stores';
@@ -31,51 +34,17 @@ export const Objective = () => {
   const authState = useAuth();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
-  const [ TitleDialog, setTitleDialog ] = useRecoilState(InputTitleDialogState);
   const [ editObjectiveTitleError, setEditObjectiveTitleError ] = useState("");
-  const resetTitleDialog = useResetRecoilState(InputTitleDialogState);
 
-  const objectiveKeyResults = useObjectiveKeyResults(authState.user.uid, objectiveId, objectiveVersion);
-
-  const onClose = async (value:string, isCancel: boolean) => {
-    if (!isCancel) {
-      // validate
-      if ( value == "" ) {
-        setTitleDialog(
-          {
-            type: TitleDialog.type,
-            index: TitleDialog.index,
-            props: {
-              ...TitleDialog.props,
-              error: true,
-              message: "空白です",
-            }});
-        return;
-      }
-
-      // const index = TitleDialogProps.index;
-      //setTitleDialogProps({type: "", index: 0, props: newInputTitleDialogProps()});
-
-      switch(TitleDialog.type) {
-        case ADD_KEY_RESULT :
-          break;
-        case EDIT_KEY_RESULT :
-          break; case EDIT_OBJECTIVE_TITLE :
-          let objective = {
-            ...objectiveKeyResults.objective, 
-            title: value, 
-            };
-          const result = await setObjective(authState.user.uid, objective); 
-          if(result.isSuccess()) { 
-            setObjectiveVersion(objectiveVersion + 1);
-          } else {
-            // TODO Error
-          }
-          break;
-      }
+  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
+  const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
+  const { data: archives } = useQuery([ "archives", authState.user.uid, objectiveId], () => getArchives(authState.user.uid, objectiveId));
+  const { mutate: updateObjectiveMutate } = useMutation(({userId, objective}) => setObjective(userId, objective), {
+    onSuccess: (id) => {
+      setObjectiveVersion(objectiveVersion + 1);
     }
-    resetTitleDialog();
-  };
+  });
+
 
   const saveObjectiveTitle = async (newValue) => {
     setEditObjectiveTitleError("");
@@ -83,29 +52,18 @@ export const Objective = () => {
       // TODO ERROR
       return;
     }
-    let objective = {
-      ...objectiveKeyResults.objective, 
+    const o = {
+      ...objective, 
       title: newValue, 
     };
-    const result = await setObjective(authState.user.uid, objective)
-    if(result.isSuccess()) { 
-      setObjectiveVersion(objectiveVersion + 1);
-    } else {
-      // TODO Error
-    }
+    updateObjectiveMutate({userId: authState.user.uid, objective: o});
   };
 
-  if (!objectiveKeyResults) {
-    // Loading...
-      return (
-      <Container maxWidth="xl" sx={MainContainerStyle}>
-        <Loading />
-      </Container>);
-  } else if (objectiveKeyResults.objective) {
+  if (objective) {
     // Main
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
-        <EditableLabel label={objectiveKeyResults.objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
+        <EditableLabel label={objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
         <Box>
           <Button variant="outlined"
             fullWidth
@@ -122,15 +80,6 @@ export const Objective = () => {
         <Box>
           <KeyResultCard title="foofoo" />
         </Box>
-        <InputSingleTextDialog
-          title={TitleDialog.props.title}
-          label={TitleDialog.props.label}
-          open={TitleDialog.props.open}
-          defaultValue={TitleDialog.props.defaultValue}
-          error={TitleDialog.props.error}
-          message={TitleDialog.props.message}
-          onClose={onClose}
-        />
       </Container>);
   } else {
     // NotAccess
@@ -138,6 +87,5 @@ export const Objective = () => {
     <Container>
       <ObjectiveNotFound />
     </Container>);
-
   }
 }

@@ -6,7 +6,6 @@ import {
 } from 'firebase/firestore'
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { Archive } from '../types';
 import { ArchiveConverter } from './Converter';
@@ -16,23 +15,23 @@ export const setArchive = async (
   userId: string, 
   objectiveId: string, 
   archive: Archive, 
-  transaction?: Transaction ): Promise<Result<string, Error>> => {
+  transaction?: Transaction ): Promise<string> => {
   if (userId === "") {
-    return new Failure(new RangeError("userId is empty."));
+    throw new RangeError("userId is empty.");
   }
   if (objectiveId === "") {
-    return new Failure(new RangeError("objectiveId is empty."));
+    throw new RangeError("objectiveId is empty.");
   }
 
   let archiveId : string = archive.id ?? "";
-  const refArchiveResult = await getArchive(
-    userId, 
-    objectiveId, 
-    archiveId, 
-    transaction);
-
-  if ( refArchiveResult.isFailure()) {
-    return new Failure(refArchiveResult.value);
+  try {
+    const refArchiveResult = await getArchive(
+      userId, 
+      objectiveId, 
+      archiveId, 
+      transaction);
+  } catch (error) {
+    throw error;
   }
 
   const refArchive: Archive = refAcrhiveResult.value as Archive;
@@ -45,7 +44,7 @@ export const setArchive = async (
   } else {
     // 楽観ロック
     if (refArchive.version != archive.version) {
-      return new Failure(new Error("archive update error"));
+      throw new Error("archive update error");
     }
     newArchive = doc(store, `users/${userId}/objectives/${objectiveId}/archives`, archiveId);
   }
@@ -55,7 +54,7 @@ export const setArchive = async (
             transaction.set(newArchive.withConverter(ArchiveConverter), archive) 
             : setDoc(newArchive.withConverter(ArchiveConverter), archive));
   } catch (error) {
-    return new Failure(error);
+    throw error;
   }
-  return new Success(archiveId);
+  return archiveId;
 };

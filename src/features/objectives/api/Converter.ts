@@ -14,7 +14,7 @@ export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
       title : objective.title,
       note : objective.note,
       valid : objective.valid,
-      status : objective.status,
+      status : objective.status ?? "open",
       createdAt : objective.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       tags : objective.tags ?? [], 

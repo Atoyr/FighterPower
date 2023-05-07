@@ -7,19 +7,18 @@ import {
 } from 'firebase/firestore'
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { KeyResult } from '../types';
 import { KeyResultConverter } from './Converter';
 
 export const getKeyResults = async (
   userId: string, 
-  objectiveId: string): Promise<Result<Array<KeyResult>, Error>> => {
+  objectiveId: string): Array<KeyResult> => {
   if (userId == "") {
-    return new Failure(new RangeError("userId is empty."));
+    throw new RangeError("userId is empty.");
   }
   if (objectiveId == "") {
-    return new Failure(new RangeError("objectiveId is empty."));
+    throw new RangeError("objectiveId is empty.");
   }
 
   const ref = collection(store, `users/${userId}/objectives/${objectiveId}/keyResults`).withConverter(KeyResultConverter);
@@ -29,6 +28,6 @@ export const getKeyResults = async (
     keyResults.push(doc.data());
   });
 
-  return new Success(keyResults);
+  return keyResults;
 };
 

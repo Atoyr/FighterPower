@@ -1,47 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from 'react-query';
 
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import {
+  Button, 
+  Box, 
+  Container, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle, 
+  Stack, 
+  Skeleton, 
+  TextField, 
+  Typography } from '@mui/material';
 
 import { useAuth } from '@/hooks';
 
-import { setObjective } from '../api';
+import { getObjectives, setObjective } from '../api';
 import { InputObjectiveDialog, ObjectiveCard } from '../components';
 import { createObjective } from '../functions';
-import { useObjectives } from '../hooks';
 import { Objective } from '../types';
-import { InputDialogOpenState } from '../stores';
 import { CARD_WIDTH, CARD_HEIGHT, OBJECTIVE_BUTTON_HEIGHT } from '../styles';
 
 export const Objectives = () => {
   const navigate = useNavigate();
-  const auth = useAuth();
+  const authState = useAuth();
 
   const [ openDialog, setOpenDialog] = useState(false);
-  const objectives = useObjectives(auth.user.uid);
+  const { data: objectives } = useQuery([ "objective", authState.user.uid], () => getObjectives(authState.user.uid));
+  const { mutate: createObjectiveMutate } = useMutation(({userId, objective}) => setObjective(userId, objective), {
+    onSuccess: (id) => {
+      navigate(id);
+      setOpenDialog(false);
+    }});
 
-  const onClose = async (objectiveTitle:string, objectiveMemo:string) => {
+  const onClose = (objectiveTitle:string, objectiveMemo:string) => {
     const objective = createObjective(objectiveTitle, objectiveMemo);
-    const result = await setObjective(auth.user.uid!, objective);
-    if (result.isSuccess())
-    {
-      navigate(result.value);
-    } else {
-      // TODO Exception 
-      console.log(result.value);
-    }
-    setOpenDialog(false);
+    createObjectiveMutate({userId: authState.user.uid!, objective: objective})
   }
   const onCancel = async () => {
     setOpenDialog(false);

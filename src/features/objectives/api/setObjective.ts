@@ -6,7 +6,6 @@ import {
 } from 'firebase/firestore'
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { Objective } from '../types';
 import { ObjectiveConverter } from './Converter';
@@ -15,26 +14,22 @@ import { getObjective } from './getObjective';
 export const setObjective = async (
   userId: string, 
   objective: Objective, 
-  transaction?: Transaction): Promise<Result<string, Error>> => {
-  let objectiveId: string = objective.id ?? "";
-  const refObjectiveResult = await getObjective(userId, objectiveId, transaction);
-
-  // FIXME
-  if ( refObjectiveResult.isFailure()) {
-    return new Failure(refObjectiveResult.value);
-  }
-
-  const refObjective: Objective = refObjectiveResult.value as Objective;
+  transaction?: Transaction): Promise<string> => {
   let newObjective: Objective;
 
-  if(refObjective == null) {
+  if((objective.id ?? "") === "") {
     newObjective = doc(collection(store, `users/${userId}/objectives`));
     objective.id = newObjective.id;
-    objectiveId = newObjective.id!;
   } else {
     // 楽観ロック
+    let refObjective: Objective;
+    try {
+      refObjective = await getObjective(userId, objective.id, transaction);
+    } catch(error) {
+      throw error;
+    }
     if (refObjective.version != objective.version) {
-      return new Failure(new Error("objective update error"));
+      return new Error("objective update error");
     }
     newObjective = doc(store, `users/${userId}/objectives`, objective.id as string);
   }
@@ -44,8 +39,8 @@ export const setObjective = async (
           transaction.set(newObjective.withConverter(ObjectiveConverter), objective) 
           : setDoc(newObjective.withConverter(ObjectiveConverter), objective));
   } catch (error) {
-    return new Failure(error);
+    throw error;
   }
-  return new Success(objectiveId);
+  return objective.id;
 };
 

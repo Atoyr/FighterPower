@@ -6,7 +6,6 @@ import {
 } from 'firebase/firestore'
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { KeyResult } from '../types';
 import { KeyResultConverter } from './Converter';
@@ -16,28 +15,28 @@ export const setKeyResult = async (
   userId: string, 
   objectiveId: string, 
   keyResult: keyResult, 
-  transaction?: Transaction ): Promise<Result<string, Error>> => {
+  transaction?: Transaction ): Promise<string> => {
   if (userId === "") {
-    return new Failure(new RangeError("userId is empty."));
+    throw new RangeError("userId is empty.");
   }
   if (objectiveId === "") {
-    return new Failure(new RangeError("objectiveId is empty."));
+    throw new RangeError("objectiveId is empty.");
   }
 
   let keyResultId : string = keyResult.id ?? "";
   let refKeyResult: KeyResult = null;
   if (keyResultId !== "") {
     // 存在チェック
-    const refKeyResultResult = await getKeyResult(
-      userId, 
-      objectiveId, 
-      keyResultId, 
-      transaction);
-
-    if ( refKeyResultResult.isFailure()) {
-      return new Failure(refKeyResultResult.value);
+    try {
+      const refKeyResultResult = await getKeyResult(
+        userId, 
+        objectiveId, 
+        keyResultId, 
+        transaction);
+      refKeyResult = refKeyResultResult.value as KeyResult;
+    } catch(error) {
+      throw error;
     }
-    refKeyResult = refKeyResultResult.value as KeyResult;
   }
 
   let newKeyResult: KeyResult;
@@ -49,7 +48,7 @@ export const setKeyResult = async (
   } else {
     // 楽観ロック
     if (refKeyResult.version != archive.version) {
-      return new Failure(new Error("archive update error"));
+      throw new Error("archive update error");
     }
     newKeyResult = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResult.id);
   }
@@ -59,7 +58,7 @@ export const setKeyResult = async (
             transaction.set(newKeyResult.withConverter(KeyResultConverter), keyResult) 
             : setDoc(newKeyResult.withConverter(KeyResultConverter), keyResult));
   } catch (error) {
-    return new Failure(error);
+    throw error;
   }
-  return new Success(keyResultId);
+  return keyResultId;
 };

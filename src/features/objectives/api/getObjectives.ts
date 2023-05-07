@@ -7,14 +7,13 @@ import {
 } from 'firebase/firestore';
 
 import { store } from '@/lib/firebase';
-import { Result, Success, Failure } from '@/types';
 
 import { Objective } from '../types';
 import { ObjectiveConverter } from './Converter';
 
-export const getObjectives = async (userId: string): Promise<Result<Array<Objective>, Error>> => {
+export const getObjectives = async (userId: string): Promise<Array<Objective>> => {
   if (userId === "") {
-    return new Failure(new RangeError("userId is empty."));
+    throw new RangeError("userId is empty.");
   }
 
   const ref = collection(store, `users/${userId}/objectives`).withConverter(ObjectiveConverter);
@@ -24,7 +23,7 @@ export const getObjectives = async (userId: string): Promise<Result<Array<Object
     objectives.push(doc.data());
   });
 
-  return new Success(objectives);
+  return objectives;
 };
 
 
