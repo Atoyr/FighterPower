@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { 
   Button, 
@@ -24,6 +24,12 @@ export const KeyResult = () => {
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResult } = keyResultId === "new" ? { data: null } : useQuery([ "key-result", authState.user.uid, objectiveId, keyResultId], () => getKeyResult(authState.user.uid, objectiveId, keyResultId));
+  const { mutate: updateKeyResultMutate } = useMutation(({userId, objectiveId, keyResult}) => setKeyResult(userId, objectiveId, keyResult), 
+  {
+    onSuccess: (id) => {
+      navigate(`../${objectiveId}`);
+    }
+  });
 
   const [ keyResultTitle, setKeyResultTitle] = useState(keyResult?.title ?? "");
   const [ keyResultRank, setKeyResultRank] = useState(keyResult?.rank ?? 3);
@@ -31,17 +37,11 @@ export const KeyResult = () => {
   const [ isEdit, setIsEdit] = useState(false);
 
   const onSave = async () => {
-    const kr = KeyResult ?? createKeyResult();
+    const kr = keyResult ?? createKeyResult();
     kr.title = keyResultTitle;
     kr.rank = keyResultRank;
     kr.memo = keyResultMemo;
-    const result = await setKeyResult(authState.user.uid, objectiveId, kr);
-    if(result.isSuccess()) { 
-      navigate(`../${objectiveId}`);
-    } else {
-      // TODO Error
-      console.log(result.value);
-    }
+    updateKeyResultMutate({userId: authState.user.uid, objectiveId: objectiveId, keyResult: kr});
   };
 
   const onCancel = () => {
