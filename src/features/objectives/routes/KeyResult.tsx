@@ -62,7 +62,7 @@ export const KeyResult = () => {
         <KeyResultNotFound />
       </Container>);
   } else {
-    const readOnly = objective.status ?? "open" !== "open";
+    const readOnly = (objective.status ?? "open") !== "open";
 
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>

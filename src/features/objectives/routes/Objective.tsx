@@ -21,8 +21,6 @@ import {
   getObjective, 
   setObjective } from '../api';
 import { KeyResultCard, ObjectiveNotFound } from '../components';
-import { useObjectiveKeyResults } from '../hooks';
-import { InputTitleDialogState } from '../stores';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
