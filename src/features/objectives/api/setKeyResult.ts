@@ -28,12 +28,11 @@ export const setKeyResult = async (
   if (keyResultId !== "") {
     // 存在チェック
     try {
-      const refKeyResultResult = await getKeyResult(
+      refKeyResult = await getKeyResult(
         userId, 
         objectiveId, 
         keyResultId, 
         transaction);
-      refKeyResult = refKeyResultResult.value as KeyResult;
     } catch(error) {
       throw error;
     }
@@ -47,8 +46,8 @@ export const setKeyResult = async (
     keyResultId = newKeyResult.id!;
   } else {
     // 楽観ロック
-    if (refKeyResult.version != archive.version) {
-      throw new Error("archive update error");
+    if (refKeyResult.version != keyResult.version) {
+      throw new Error("keyResult update error");
     }
     newKeyResult = doc(store, `users/${userId}/objectives/${objectiveId}/keyResults`, keyResult.id);
   }

@@ -24,8 +24,9 @@ export const setArchive = async (
   }
 
   let archiveId : string = archive.id ?? "";
+  let refArchive: Archive = null
   try {
-    const refArchiveResult = await getArchive(
+    refArchive = await getArchive(
       userId, 
       objectiveId, 
       archiveId, 
@@ -34,7 +35,6 @@ export const setArchive = async (
     throw error;
   }
 
-  const refArchive: Archive = refAcrhiveResult.value as Archive;
   let newArchive: Archive;
 
   if(refArchive == null) {

@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { useMutation, useQuery } from 'react-query';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import {
+  Box, 
+  Button, 
+  Container, 
+  IconButton, 
+  Skeleton, 
+  Typography} from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -28,8 +30,7 @@ const EDIT_KEY_RESULT = "edit_key_result";
 
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
-  const navigate = useNavigate();
-  const authState = useAuth();
+  const navigate = useNavigate(); const authState = useAuth();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
   const [ editObjectiveTitleError, setEditObjectiveTitleError ] = useState("");
@@ -76,7 +77,22 @@ export const Objective = () => {
           </Button>
         </Box>
         <Box>
-          <KeyResultCard title="foofoo" />
+          { keyResults ?
+            keyResults.map((keyResult) => {
+              return (
+              <KeyResultCard 
+                title={keyResult.title} 
+                rank={keyResult.rank} 
+                key={keyResult.id}
+                variant="h4"
+                component="h4"
+                sx={{my:1}}
+                onClick={() => navigate(`key-results/${keyResult.id}`)} />
+              );
+            })
+            :
+            <Skeleton variant="rectangular" width={50} height={150} />
+          }
         </Box>
       </Container>);
   } else {
