@@ -13,7 +13,8 @@ import {
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { EditableLabel } from '@/components/EditableLabel'
+import { EditableLabel } from '@/components/EditableLabel';
+import { EditableTextField } from '@/components/EditableTextField';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
@@ -33,7 +34,6 @@ export const Objective = () => {
   const navigate = useNavigate(); const authState = useAuth();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
-  const [ editObjectiveTitleError, setEditObjectiveTitleError ] = useState("");
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
@@ -46,7 +46,6 @@ export const Objective = () => {
 
 
   const saveObjectiveTitle = async (newValue) => {
-    setEditObjectiveTitleError("");
     if (newValue == "") {
       // TODO ERROR
       return;
@@ -58,11 +57,24 @@ export const Objective = () => {
     updateObjectiveMutate({userId: authState.user.uid, objective: o});
   };
 
+  const saveObjectiveMemo = async (newValue) => {
+    if (newValue == "") {
+      // TODO ERROR
+      return;
+    }
+    const o = {
+      ...objective, 
+      note: newValue, 
+    };
+    updateObjectiveMutate({userId: authState.user.uid, objective: o});
+  };
+
   if (objective) {
     // Main
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <EditableLabel label={objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
+        <EditableTextField label={objective.note} onSave={saveObjectiveMemo} allowEmpty={false}/>
         <Box>
           <Button variant="outlined"
             fullWidth
@@ -93,6 +105,19 @@ export const Objective = () => {
             :
             <Skeleton variant="rectangular" width={50} height={150} />
           }
+        </Box>
+        <Box>
+          <Button variant="outlined"
+            fullWidth
+            onClick={() => navigate(`key-results/new`)}
+            sx={{
+              my:1,
+              p:1,
+              height : { xs : 50 },
+              display: { xs: 'none', sm: 'flex' },
+            }}>
+            {"やること(指標)を実行する"}
+          </Button>
         </Box>
       </Container>);
   } else {
