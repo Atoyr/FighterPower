@@ -35,12 +35,13 @@ export const Objective = () => {
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
 
-  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
+  const { data: objective, refetch: refetchObjective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
   const { data: archives } = useQuery([ "archives", authState.user.uid, objectiveId], () => getArchives(authState.user.uid, objectiveId));
   const { mutate: updateObjectiveMutate } = useMutation(({userId, objective}) => setObjective(userId, objective), {
     onSuccess: (id) => {
       setObjectiveVersion(objectiveVersion + 1);
+      refetchObjective();
     }
   });
 
