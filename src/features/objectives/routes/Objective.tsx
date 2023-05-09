@@ -23,7 +23,7 @@ import {
   getKeyResults, 
   getObjective, 
   setObjective } from '../api';
-import { KeyResultCard, ObjectiveNotFound } from '../components';
+import { KeyResultCard, ObjectiveNotFound, SelectArchiveModeDialog } from '../components';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
@@ -34,6 +34,7 @@ export const Objective = () => {
   const navigate = useNavigate(); const authState = useAuth();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
+  const [ dialogOpen, setDialogOpen ] = useState(false);
 
   const { data: objective, refetch: refetchObjective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
@@ -68,6 +69,14 @@ export const Objective = () => {
       note: newValue, 
     };
     updateObjectiveMutate({userId: authState.user.uid, objective: o});
+  };
+
+  const handleDialogClose = (value) => {
+    if(value === "") {
+      return;
+    }
+
+    navigate(`archives/new?mode=${value}`);
   };
 
   if (objective) {
@@ -110,7 +119,7 @@ export const Objective = () => {
         <Box>
           <Button variant="outlined"
             fullWidth
-            onClick={() => navigate(`key-results/new`)}
+            onClick={() => setDialogOpen(true)}
             sx={{
               my:1,
               p:1,
@@ -120,6 +129,7 @@ export const Objective = () => {
             {"やること(指標)を実行する"}
           </Button>
         </Box>
+        <SelectArchiveModeDialog open={dialogOpen} onClose={handleDialogClose}/>
       </Container>);
   } else {
     // NotAccess

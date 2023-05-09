@@ -5,3 +5,4 @@ export * from './KeyResultNotFound';
 export * from './ObjectiveCard';
 export * from './ObjectiveNotFound';
 export * from './RankRating';
+export * from './SelectArchiveModeDialog';
