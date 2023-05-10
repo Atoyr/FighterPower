@@ -25,14 +25,16 @@ export const setArchive = async (
 
   let archiveId : string = archive.id ?? "";
   let refArchive: Archive = null
-  try {
-    refArchive = await getArchive(
-      userId, 
-      objectiveId, 
-      archiveId, 
-      transaction);
-  } catch (error) {
-    throw error;
+  if (archiveId !== ""){
+    try {
+      refArchive = await getArchive(
+        userId, 
+        objectiveId, 
+        archiveId, 
+        transaction);
+    } catch (error) {
+      throw error;
+    }
   }
 
   let newArchive: Archive;

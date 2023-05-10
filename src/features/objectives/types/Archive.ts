@@ -5,6 +5,7 @@ export type Archive = {
   order : number;
   type? : string;
   note : string;
+  selectKeyResults: Array<string>;
   createdAt? : Date;
   modifiedAt? : Date;
   version: number;

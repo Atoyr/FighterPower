@@ -70,6 +70,7 @@ export const ArchiveConverter: FirestoreDataConverter<Archive> = {
       order : archive.order,
       type : archive.type ?? "",
       note : archive.note,
+      selectKeyResults: archive.selectKeyResults ?? [], 
       createdAt : archive.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       version : archive.version ,
