@@ -136,7 +136,7 @@ export const NewArchive = () => {
           height : { xs : 50 },
           display: { xs: 'none', sm: 'flex' },
         }}>
-        {"やること(指標)を実行する"}
+        {"やること(指標)を開始する"}
       </Button>
     </Container>
       );
@@ -148,6 +148,10 @@ export const Archive = () => {
   const navigate = useNavigate();
   const authState = useAuth();
 
+  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
+  const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
+  const { data: archive } = useQuery([ "archive", authState.user.uid, objectiveId, archiveId], () => getArchive(authState.user.uid, objectiveId, archiveId));
+
   return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
       <Typography variant="h3" noWrap component="h3">
@@ -156,6 +160,21 @@ export const Archive = () => {
       <Typography variant="h3" noWrap component="h3">
       {archiveId}
       </Typography>
+        { keyResults ?
+          keyResults.filter((kr) => archive.selectKeyResults.includes(kr.id)).map((keyResult) => {
+            return(
+            <ToggleButton value={keyResult.id} key={keyResult.id}>
+              <Typography variant={"h4"} component={"h4"} noWrap 
+                sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
+                  {keyResult.title}
+              </Typography>
+              <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+            </ToggleButton>
+            );
+            })
+            :
+            <Skeleton variant="rectangular" width={50} height={150} />
+            }
     </Container>
       );
 };
