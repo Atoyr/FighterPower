@@ -14,7 +14,7 @@ export type updateArchiveProps = {
 
 export const updateArchive = async (
   {userId, objective, archive } : updateArchiveProps ): Promise<string> => {
-    await runTransaction(store, async (transaction: Transaction) => {
+    return await runTransaction<string>(store, async (transaction: Transaction) => {
       try {
         if (objective.type === "open") {
           objective.type = "executing"
