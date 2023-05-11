@@ -23,7 +23,7 @@ export const Landing = () => {
 
     SignIn(authParam,
       (user) => {
-        navigate('/app/home', { replace: true });
+        navigate('/app/dashboard', { replace: true });
       },
       (e) => {
         console.log(e);
@@ -51,15 +51,15 @@ export const Landing = () => {
     </Typography>
     { !AuthState?.user ? 
     <Box sx={{textAlign: "center"}}>
-      <Button variant="contained" href="signup" sx={{width: 250, mt: 2, mb: 1}}>無料で新規登録</Button>
+      <Button variant="contained" href="/auth/signup" sx={{width: 250, mt: 2, mb: 1}}>無料で新規登録</Button>
       <br />
-      <Link href="signin" sx={{width: 250, mt: 1, mb: 2}}>すでにアカウントをお持ちですか？ログイン</Link>
+      <Link href="/auth/signin" sx={{width: 250, mt: 1, mb: 2}}>すでにアカウントをお持ちですか？ログイン</Link>
       <br />
       <Button variant="outlined" onClick={handleAnonymous} sx={{width: 250, mt: 5, mb: 1}}>登録せず利用</Button>
     </Box>
     : 
     <Box sx={{textAlign: "center"}}>
-      <Button variant="contained" href="home" sx={{width: 250, mt: 2, mb: 1}}>HOME</Button>
+      <Button variant="contained" href="/app/dashboard" sx={{width: 250, mt: 2, mb: 1}}>HOME</Button>
     </Box> 
     }
   </Container>
