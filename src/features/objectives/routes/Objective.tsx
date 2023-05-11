@@ -22,7 +22,7 @@ import {
   getArchives, 
   getKeyResults, 
   getObjective, 
-  setObjective } from '../api';
+  setObjective} from '../api';
 import { KeyResultCard, ObjectiveNotFound, SelectArchiveModeDialog } from '../components';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";

@@ -19,13 +19,9 @@ import { StyledToggleButtonGroup } from '@/components/ToggleButton';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
-import { 
-  getArchive, 
-  getKeyResults, 
-  getObjective, 
-  setArchive } from '../api';
+import { getArchive, getKeyResults, getObjective } from '../api';
 import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound, RankRating } from '../components';
-import { createArchive } from '../functions';
+import { createArchive, updateArchive, updateArchiveProps } from '../functions';
 
 export const NewArchive = () => {
   const { objectiveId } = useParams<"objectiveId">();
@@ -42,7 +38,9 @@ export const NewArchive = () => {
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState(searchParams.get("mode") ?? "");
 
-  const { mutate: updateArchive } = useMutation(({userId, objectiveId, archive}) => setArchive(userId, objectiveId, archive), 
+  const { mutate: updateArchiveMutate } = useMutation((props: updateArchiveProps) => {
+    return updateArchive(props);
+  }, 
   {
     onSuccess: (id) => {
       navigate(`../${objectiveId}/archives/${id}`);
@@ -56,11 +54,10 @@ export const NewArchive = () => {
     archive.title = title;
     archive.type = mode;
     archive.selectKeyResults = selectKeyResults;
-    updateArchive({userId: authState.user.uid, objectiveId: objectiveId, archive: archive});
+    updateArchiveMutate({userId: authState.user.uid, objective: objective, archive: archive});
   };
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value);
   const handleMode = (event: React.ChangeEvent<HTMLInputElement>, newMode: string) => {
     if((newMode ?? "") !== "") {
       setMode(newMode);
@@ -128,7 +125,6 @@ export const NewArchive = () => {
             :
             <Skeleton variant="rectangular" width={50} height={150} />
             }
-
       </StyledToggleButtonGroup>
 
       <Button variant="outlined"

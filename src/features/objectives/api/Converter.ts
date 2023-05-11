@@ -18,7 +18,7 @@ export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
       createdAt : objective.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       tags : objective.tags ?? [], 
-      version : increment(1.0),
+      version : (objective.version ?? 0) + 1, 
     };
   },
   fromFirestore: (snapshot) => {
@@ -45,7 +45,7 @@ export const KeyResultConverter: FirestoreDataConverter<KeyResult> = {
       rank : keyResult.rank, 
       createdAt : keyResult.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
-      version : keyResult.version ,
+      version : (keyResult.version ?? 0) + 1, 
     };
   },
   fromFirestore: (snapshot) => {
@@ -73,7 +73,7 @@ export const ArchiveConverter: FirestoreDataConverter<Archive> = {
       selectKeyResults: archive.selectKeyResults ?? [], 
       createdAt : archive.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
-      version : archive.version ,
+      version : (archive.version ?? 0) + 1, 
     };
   },
   fromFirestore: (snapshot) => {
