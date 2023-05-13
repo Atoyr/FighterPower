@@ -19,11 +19,11 @@ import { StyledToggleButtonGroup } from '@/components/ToggleButton';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
-import { getArchive, getKeyResults, getObjective } from '../api';
+import { getAchive, getKeyResults, getObjective } from '../api';
 import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound, RankRating } from '../components';
-import { createArchive, updateArchive, updateArchiveProps } from '../functions';
+import { createAchive, updateAchive, updateAchiveProps } from '../functions';
 
-export const NewArchive = () => {
+export const NewAchive = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const navigate = useNavigate();
   const authState = useAuth();
@@ -34,27 +34,27 @@ export const NewArchive = () => {
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
 
-  const [selectKeyResults, setSelectKeyResults] = useState(() => []);
+  const [selectedKeyResults, setSelectedKeyResults] = useState(() => []);
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState(searchParams.get("mode") ?? "");
 
-  const { mutate: updateArchiveMutate } = useMutation((props: updateArchiveProps) => {
-    return updateArchive(props);
+  const { mutate: updateAchiveMutate } = useMutation((props: updateAchiveProps) => {
+    return updateAchive(props);
   }, 
   {
     onSuccess: (id) => {
-      navigate(`../${objectiveId}/archives/${id}`);
+      navigate(`../${objectiveId}/achives/${id}`);
     }
   });
 
-  const handleSelectKeyResults = ( event: React.MouseEvent<HTMLElement>, newSelectKeyResults: string[],) => setSelectKeyResults(newSelectKeyResults);
+  const handleSelectedKeyResults = ( event: React.MouseEvent<HTMLElement>, newSelectedKeyResults: string[],) => setSelectedKeyResults(newSelectedKeyResults);
 
   const handleExecuteButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    const archive = createArchive();
-    archive.title = title;
-    archive.type = mode;
-    archive.selectKeyResults = selectKeyResults;
-    updateArchiveMutate({userId: authState.user.uid, objective: objective, archive: archive});
+    const achive = createAchive();
+    achive.title = title;
+    achive.type = mode;
+    achive.selectedKeyResults = selectedKeyResults;
+    updateAchiveMutate({userId: authState.user.uid, objective: objective, achive: achive});
   };
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value);
@@ -105,7 +105,7 @@ export const NewArchive = () => {
         size="small"
         color="primary"
         orientation="vertical"
-        value={selectKeyResults}
+        value={selectedKeyResults}
         onChange={handleSelectKeyResults}
         sx={{ display: 'flex', width: '100%'}}
         aria-label="text formatting">
@@ -142,15 +142,15 @@ export const NewArchive = () => {
       );
 };
 
-export const Archive = () => {
+export const Achive = () => {
   const { objectiveId } = useParams<"objectiveId">();
-  const { archiveId } = useParams<"archiveId">();
+  const { achiveId } = useParams<"achiveId">();
   const navigate = useNavigate();
   const authState = useAuth();
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
-  const { data: archive } = useQuery([ "archive", authState.user.uid, objectiveId, archiveId], () => getArchive(authState.user.uid, objectiveId, archiveId));
+  const { data: achive } = useQuery([ "achive", authState.user.uid, objectiveId, achiveId], () => getAchive(authState.user.uid, objectiveId, achiveId));
 
   return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
@@ -158,10 +158,10 @@ export const Archive = () => {
       {objectiveId}
       </Typography>
       <Typography variant="h3" noWrap component="h3">
-      {archiveId}
+      {achiveId}
       </Typography>
         { keyResults ?
-          keyResults.filter((kr) => archive.selectKeyResults.includes(kr.id)).map((keyResult) => {
+          keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
             return(
             <ToggleButton value={keyResult.id} key={keyResult.id}>
               <Typography variant={"h4"} component={"h4"} noWrap 

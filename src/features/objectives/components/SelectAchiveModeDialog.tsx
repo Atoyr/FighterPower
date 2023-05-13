@@ -20,13 +20,13 @@ const modes = [
   { title: "CPU戦", key: "cpu", icon: () => <SmartToyTwoToneIcon />}, 
 ];
 
-export type SelectArchiveModeDialogProps = {
+export type SelectAchiveModeDialogProps = {
   open: boolean;
   selectedValue: string;
   onClose: (value: string) => void;
 };
 
-export const SelectArchiveModeDialog = (props: SelectArchiveModeDialogProps) => {
+export const SelectAchiveModeDialog = (props: SelectAchiveModeDialogProps) => {
   const { onClose, selectedValue, open } = props;
 
   const handleClose = () => {

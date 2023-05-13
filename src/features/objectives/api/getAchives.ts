@@ -8,12 +8,12 @@ import {
 
 import { store } from '@/lib/firebase';
 
-import { Archive } from '../types';
-import { ArchiveConverter } from './Converter';
+import { Achive } from '../types';
+import { AchiveConverter } from './Converter';
 
-export const getArchives = async (
+export const getAchives = async (
   userId: string, 
-  objectiveId: string): Promise<Array<Archive>> => {
+  objectiveId: string): Promise<Array<Achive>> => {
   if (userId == "") {
     throw new RangeError("userId is empty.");
   }
@@ -21,13 +21,13 @@ export const getArchives = async (
     throw new RangeError("objectiveId is empty.");
   }
 
-  const ref = collection(store, `users/${userId}/objectives/${objectiveId}/archives`).withConverter(ArchiveConverter);
+  const ref = collection(store, `users/${userId}/objectives/${objectiveId}/achives`).withConverter(AchiveConverter);
   const snapshot = await getDocs(query(ref, orderBy("order")));
-  const archives : Array<Archive> = [];
+  const achives : Array<Achive> = [];
   snapshot.forEach((doc) => {
-    archives.push(doc.data());
+    achives.push(doc.data());
   });
 
-  return archives;
+  return achives;
 };
 

@@ -1,4 +1,4 @@
-export * from './createArchive';
+export * from './createAchive';
 export * from './createKeyResult';
 export * from './createObjective';
-export * from './updateArchive';
+export * from './updateAchive';

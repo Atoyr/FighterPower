@@ -4,7 +4,7 @@ import {
   increment,
 } from 'firebase/firestore'
 
-import { Objective, KeyResult, Archive } from '../types';
+import { Objective, KeyResult, Achive } from '../types';
 
 export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
   toFirestore: (objective) => {
@@ -61,19 +61,19 @@ export const KeyResultConverter: FirestoreDataConverter<KeyResult> = {
   },
 };
 
-export const ArchiveConverter: FirestoreDataConverter<Archive> = {
-  toFirestore: (archive) => {
+export const AchiveConverter: FirestoreDataConverter<Achive> = {
+  toFirestore: (achive) => {
     return {
-      __type : 'archive',
-      id : archive.id ?? "",
-      title : archive.title,
-      order : archive.order,
-      type : archive.type ?? "",
-      note : archive.note,
-      selectKeyResults: archive.selectKeyResults ?? [], 
-      createdAt : archive.createdAt ?? serverTimestamp(),
+      __type : 'achive',
+      id : achive.id ?? "",
+      title : achive.title,
+      order : achive.order,
+      type : achive.type ?? "",
+      note : achive.note,
+      selectKeyResults: achive.selectKeyResults ?? [], 
+      createdAt : achive.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
-      version : (archive.version ?? 0) + 1, 
+      version : (achive.version ?? 0) + 1, 
     };
   },
   fromFirestore: (snapshot) => {
@@ -83,7 +83,7 @@ export const ArchiveConverter: FirestoreDataConverter<Archive> = {
       ...data,
       createdAt: data.createdAt?.toDate(),
       modifiedAt: data.modifiedAt?.toDate(),
-    } as Archive;
+    } as Achive;
     result.id = snapshot.id;
     return result;
   },

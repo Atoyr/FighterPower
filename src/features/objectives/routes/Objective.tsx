@@ -19,11 +19,11 @@ import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { 
-  getArchives, 
+  getAchives, 
   getKeyResults, 
   getObjective, 
   setObjective} from '../api';
-import { KeyResultCard, ObjectiveNotFound, SelectArchiveModeDialog } from '../components';
+import { KeyResultCard, ObjectiveNotFound, SelectAchiveModeDialog } from '../components';
 
 const EDIT_OBJECTIVE_TITLE = "edit_objective_title";
 const ADD_KEY_RESULT = "add_key_result";
@@ -38,7 +38,7 @@ export const Objective = () => {
 
   const { data: objective, refetch: refetchObjective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
-  const { data: archives } = useQuery([ "archives", authState.user.uid, objectiveId], () => getArchives(authState.user.uid, objectiveId));
+  const { data: achives } = useQuery([ "achives", authState.user.uid, objectiveId], () => getAchives(authState.user.uid, objectiveId));
   const { mutate: updateObjectiveMutate } = useMutation(({userId, objective}) => setObjective(userId, objective), {
     onSuccess: (id) => {
       setObjectiveVersion(objectiveVersion + 1);
@@ -76,7 +76,7 @@ export const Objective = () => {
       return;
     }
 
-    navigate(`archives/new?mode=${value}`);
+    navigate(`achives/new?mode=${value}`);
   };
 
   if (objective) {
@@ -129,7 +129,7 @@ export const Objective = () => {
             {"やること(指標)を実行する"}
           </Button>
         </Box>
-        <SelectArchiveModeDialog open={dialogOpen} onClose={handleDialogClose}/>
+        <SelectAchiveModeDialog open={dialogOpen} onClose={handleDialogClose}/>
       </Container>);
   } else {
     // NotAccess
