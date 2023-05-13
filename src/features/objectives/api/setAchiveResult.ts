@@ -7,9 +7,9 @@ import {
 
 import { store } from '@/lib/firebase';
 
-import { Achive } from '../types';
-import { AchiveConverter } from './Converter';
-import { getAchive } from './getAchive';
+import { AchiveResult } from '../types';
+import { AchiveResultConverter } from './Converter';
+import { getAchiveResult } from './getAchiveResult';
 
 export const setAchiveResult = async (
   userId: string, 
@@ -23,25 +23,29 @@ export const setAchiveResult = async (
   if (objectiveId === "") {
     throw new RangeError("objectiveId is empty.");
   }
+  if (achiveId === "") {
+    throw new RangeError("achiveId is empty.");
+  }
 
-  let achiveId : string = achive.id ?? "";
-  let refAchive: Achive = null
-  if (achiveId !== ""){
+  let achiveResultId : string = achiveResult.id ?? "";
+  let refAchiveResult: AchiveResult = null
+  if (achiveResultId !== ""){
     try {
-      refAchive = await getAchive(
+      refAchiveResult = await getAchiveResult(
         userId, 
         objectiveId, 
         achiveId, 
+        achiveResultId, 
         transaction);
     } catch (error) {
       throw error;
     }
   }
 
-  let newAchive: Achive;
+  let newAchiveResult: AchiveResult;
 
-  if(refAchive == null) {
-    newAchive = doc(collection(store, `users/${userId}/objectives/${objectiveId}/achives`));
+  if(refAchiveResult == null) {
+    newAchiveResult = doc(collection(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`));
     achive.id = newAchive.id;
     achiveId = newAchive.id!;
   } else {
@@ -49,16 +53,16 @@ export const setAchiveResult = async (
     if (refAchive.version != achive.version) {
       throw new Error("achive update error");
     }
-    newAchive = doc(store, `users/${userId}/objectives/${objectiveId}/achives`, achiveId);
+    newAchive = doc(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`, achiveResultId);
   }
 
   try {
     await (transaction ? 
-            transaction.set(newAchive.withConverter(AchiveConverter), achive) 
-            : setDoc(newAchive.withConverter(AchiveConverter), achive));
+            transaction.set(newAchive.withConverter(AchiveResultConverter), achiveResult) 
+            : setDoc(newAchive.withConverter(AchiveResultConverter), achiveResult));
   } catch (error) {
     throw error;
   }
-  return achiveId;
+  return achiveResultId;
 };
 

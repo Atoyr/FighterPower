@@ -70,7 +70,7 @@ export const AchiveConverter: FirestoreDataConverter<Achive> = {
       order : achive.order,
       type : achive.type ?? "",
       note : achive.note,
-      selectKeyResults: achive.selectKeyResults ?? [], 
+      selectedKeyResults: achive.selectedKeyResults ?? [], 
       createdAt : achive.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       version : (achive.version ?? 0) + 1, 
@@ -89,3 +89,27 @@ export const AchiveConverter: FirestoreDataConverter<Achive> = {
   },
 };
 
+export const AchiveResultConverter: FirestoreDataConverter<AchiveResult> = {
+  toFirestore: (achiveResult) => {
+    return {
+      __type : 'achive_result',
+      id : achiveResult.id ?? "",
+      selectedKeyResults: achiveResult.selectKeyResults ?? [], 
+      achivedStatus: achiveResult.achivedStatus ?? [], 
+      createdAt : achiveResult.createdAt ?? serverTimestamp(),
+      modifiedAt : serverTimestamp(),
+      version : (achiveResult.version ?? 0) + 1, 
+    };
+  },
+  fromFirestore: (snapshot) => {
+    const data = snapshot.data();
+    const result = {
+      id: snapshot.id,
+      ...data,
+      createdAt: data.createdAt?.toDate(),
+      modifiedAt: data.modifiedAt?.toDate(),
+    } as Achive;
+    result.id = snapshot.id;
+    return result;
+  },
+};

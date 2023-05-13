@@ -1,4 +1,5 @@
 export * from './getAchive';
+export * from './getAchiveResult';
 export * from './getAchives';
 export * from './getKeyResult';
 export * from './getKeyResults';

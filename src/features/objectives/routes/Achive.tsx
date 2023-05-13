@@ -106,7 +106,7 @@ export const NewAchive = () => {
         color="primary"
         orientation="vertical"
         value={selectedKeyResults}
-        onChange={handleSelectKeyResults}
+        onChange={handleSelectedKeyResults}
         sx={{ display: 'flex', width: '100%'}}
         aria-label="text formatting">
 
