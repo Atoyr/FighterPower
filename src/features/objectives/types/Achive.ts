@@ -5,6 +5,7 @@ export type Achive = {
   order : number;
   type? : string;
   note : string;
+  status : string;
   selectedKeyResults: Array<string>;
   createdAt? : Date;
   modifiedAt? : Date;

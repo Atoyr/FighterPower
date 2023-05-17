@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { 
   Button, 
   Box, 
+  Chip, 
   Container, 
   Divider, 
   Skeleton, 
@@ -19,7 +20,11 @@ import { StyledToggleButtonGroup } from '@/components/ToggleButton';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
-import { getAchive, getKeyResults, getObjective } from '../api';
+import { 
+  getAchive, 
+  getAchiveResults, 
+  getKeyResults, 
+  getObjective } from '../api';
 import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound, RankRating } from '../components';
 import { createAchive, updateAchive, updateAchiveProps } from '../functions';
 
@@ -151,30 +156,74 @@ export const Achive = () => {
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
   const { data: achive } = useQuery([ "achive", authState.user.uid, objectiveId, achiveId], () => getAchive(authState.user.uid, objectiveId, achiveId));
+  const { data: achiveResults } = useQuery([ "achive-results", authState.user.uid, objectiveId, achiveId], () => getAchiveResults(authState.user.uid, objectiveId, achiveId));
 
-  return (
+  if ((achive.type ?? "") === "training") {
+    return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
+      <Box>
       <Typography variant="h3" noWrap component="h3">
-      {objectiveId}
+      {objective.title}
       </Typography>
-      <Typography variant="h3" noWrap component="h3">
-      {achiveId}
-      </Typography>
-        { keyResults ?
-          keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
-            return(
-            <ToggleButton value={keyResult.id} key={keyResult.id}>
-              <Typography variant={"h4"} component={"h4"} noWrap 
-                sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
-                  {keyResult.title}
-              </Typography>
-              <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
-            </ToggleButton>
-            );
-            })
-            :
-            <Skeleton variant="rectangular" width={50} height={150} />
-            }
-    </Container>
-      );
+      <Divider />
+      <Box sx={{
+        display: 'flex', 
+        flexDirection: 'row', 
+        my: 2, 
+        }}>
+      <Typography variant="h3" noWrap component="h3">{achive.title}</Typography>
+        <Chip label="トレモ" variant="outlined" />
+      </Box>
+      </Box>
+      
+        <Typography variant="h3" noWrap component="h3">
+        {objectiveId}
+        </Typography>
+        <Typography variant="h3" noWrap component="h3">
+        {achiveId}
+        </Typography>
+          { keyResults ?
+            keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
+              return(
+              <ToggleButton value={keyResult.id} key={keyResult.id}>
+                <Typography variant={"h4"} component={"h4"} noWrap 
+                  sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
+                    {keyResult.title}
+                </Typography>
+                <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+              </ToggleButton>
+              );
+              })
+              :
+              <Skeleton variant="rectangular" width={50} height={150} />
+              }
+      </Container>
+        );
+  } else {
+    return (
+      <Container maxWidth="xl" sx={MainContainerStyle}>
+        <Typography variant="h3" noWrap component="h3">
+        {objectiveId}
+        </Typography>
+        <Typography variant="h3" noWrap component="h3">
+        {achiveId}
+        </Typography>
+          { keyResults ?
+            keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
+              return(
+              <ToggleButton value={keyResult.id} key={keyResult.id}>
+                <Typography variant={"h4"} component={"h4"} noWrap 
+                  sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
+                    {keyResult.title}
+                </Typography>
+                <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+              </ToggleButton>
+              );
+              })
+              :
+              <Skeleton variant="rectangular" width={50} height={150} />
+              }
+      </Container>
+        );
+  }
 };

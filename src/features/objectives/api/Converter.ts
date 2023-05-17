@@ -4,6 +4,8 @@ import {
   increment,
 } from 'firebase/firestore'
 
+import { AchiveStatus, AchiveResultStatus, ObjectiveStatus } from '@/constants';
+
 import { Objective, KeyResult, Achive } from '../types';
 
 export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
@@ -14,7 +16,7 @@ export const ObjectiveConverter: FirestoreDataConverter<Objective> = {
       title : objective.title,
       note : objective.note,
       valid : objective.valid,
-      status : objective.status ?? "open",
+      status : objective.status ?? ObjectiveStatus.open, 
       createdAt : objective.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       tags : objective.tags ?? [], 
@@ -70,6 +72,7 @@ export const AchiveConverter: FirestoreDataConverter<Achive> = {
       order : achive.order,
       type : achive.type ?? "",
       note : achive.note,
+      status : achive.status ?? AchiveStatus.open, 
       selectedKeyResults: achive.selectedKeyResults ?? [], 
       createdAt : achive.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
@@ -94,8 +97,10 @@ export const AchiveResultConverter: FirestoreDataConverter<AchiveResult> = {
     return {
       __type : 'achive_result',
       id : achiveResult.id ?? "",
-      selectedKeyResults: achiveResult.selectKeyResults ?? [], 
-      achivedStatus: achiveResult.achivedStatus ?? [], 
+      groupNo : achiveResult.groupNo ?? 1, 
+      selectedKeyResult: achiveResult.selectKeyResults ?? "", 
+      status: achiveResult.status ?? AchiveResultStatus.none, 
+      battleId: achiveResult.battleId ?? "", 
       createdAt : achiveResult.createdAt ?? serverTimestamp(),
       modifiedAt : serverTimestamp(),
       version : (achiveResult.version ?? 0) + 1, 
