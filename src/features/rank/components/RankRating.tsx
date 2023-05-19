@@ -6,57 +6,26 @@ import StarIcon from '@mui/icons-material/Star';
 
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { Ranks } from '@/constants';
-
-const labels: { [index: string]: string } = {
-  1: Ranks.D, 
-  2: Ranks.C, 
-  3: Ranks.B, 
-  4: Ranks.A, 
-  5: Ranks.S, 
-};
-
-const numberToString = (value: number) => {
-  if (1 <= value && value <= 5 ) {
-    return labels[value];
-  }
-  return "";
-};
-
-const stringToNumber = (value: string) => {
-  switch(value) {
-    case Ranks.D:
-      return 1;
-    case Ranks.C:
-      return 2;
-    case Ranks.B:
-      return 3;
-    case Ranks.A:
-      return 4;
-    case Ranks.S:
-      return 5;
-    default:
-      return 0;
-  }
-}
+import { Rank, RankValue } from '../types';
+import { getRank, getRankValue } from '../functions';
 
 const getLabelText = (value: number) => {
-  return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
+  return `${value} Star${value !== 1 ? 's' : ''}, ${getRank(value)}`;
 }
 
 export type RankRatingProps = {
-  value: number;
+  value: Rank;
   readOnly: boolean;
-  onChange?: (newValue: number) => void;
+  onChange?: (newValue: Rank) => void;
   size: string;
   sx: SxProps<Theme>;
 }
 
 export const RankRating = (props: RankRatingProps) => {
-  const [value, setValue] = useState<number>(props.value ?? 3);
+  const [value, setValue] = useState<number>(props.value ? getRankValue(props.value) : 3);
   const [hover, setHover] = useState(-1);
 
-  useEffect(() => { setValue(props.value); }, [props.value ?? 3]);
+  useEffect(() => { setValue(props.value); }, [props.value ? getRankValue(props.value) : 3]);
 
   const containerStyle = {
     width: 200,
@@ -80,7 +49,7 @@ export const RankRating = (props: RankRatingProps) => {
           }
           setValue(newValue);
           if (props.onChange) {
-            props.onChange(newValue);
+            props.onChange(getRank(newValue));
           }
         }}
         onChangeActive={(event, newHover) => {
@@ -94,3 +63,4 @@ export const RankRating = (props: RankRatingProps) => {
     </Box>
   );
 }
+
