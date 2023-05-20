@@ -32,7 +32,7 @@ export const KeyResult = () => {
   });
 
   const [ keyResultTitle, setKeyResultTitle] = useState(keyResult?.title ?? "");
-  const [ keyResultRank, setKeyResultRank] = useState(keyResult?.rank ?? "C");
+  const [ keyResultRank, setKeyResultRank] = useState(keyResult?.rank ?? 3);
   const [ keyResultMemo, setKeyResultMemo] = useState(keyResult?.memo ?? "");
   const [ isEdit, setIsEdit] = useState(false);
 
@@ -46,7 +46,7 @@ export const KeyResult = () => {
 
   const onCancel = () => {
     setKeyResultTitle(keyResult?.title ?? "");
-    setKeyResultRank(keyResult?.rank ?? "C");
+    setKeyResultRank(keyResult?.rank ?? 3);
     setKeyResultMemo(keyResult?.memo ?? "")
   }
 

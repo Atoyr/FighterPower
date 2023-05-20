@@ -1,4 +1,3 @@
-
 export const rankRatingLabels: { [index: string]: string } = {
   1: 'D', 
   2: 'C', 
