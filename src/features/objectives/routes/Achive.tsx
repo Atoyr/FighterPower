@@ -16,6 +16,7 @@ import {
   } from '@mui/material';
 
 import { EditableLabel } from '@/components/EditableLabel';
+import { StarRating } from '@/components/Rating';
 import { StyledToggleButtonGroup } from '@/components/ToggleButton';
 import { useAuth } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
@@ -25,7 +26,8 @@ import {
   getAchiveResults, 
   getKeyResults, 
   getObjective } from '../api';
-import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound, RankRating } from '../components';
+import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound } from '../components';
+import { rankRatingLabels } from '../constants';
 import { createAchive, updateAchive, updateAchiveProps } from '../functions';
 
 export const NewAchive = () => {
@@ -123,7 +125,7 @@ export const NewAchive = () => {
                 sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
                   {keyResult.title}
               </Typography>
-              <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+              <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
             </ToggleButton>
             );
             })
@@ -190,7 +192,7 @@ export const Achive = () => {
                   sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
                     {keyResult.title}
                 </Typography>
-                <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+                <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
               </ToggleButton>
               );
               })
@@ -216,7 +218,7 @@ export const Achive = () => {
                   sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
                     {keyResult.title}
                 </Typography>
-                <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large"/>
+                <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
               </ToggleButton>
               );
               })

@@ -6,55 +6,27 @@ import StarIcon from '@mui/icons-material/Star';
 
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { Ranks } from '@/constants';
-
-const labels: { [index: string]: string } = {
-  1: Ranks.D, 
-  2: Ranks.C, 
-  3: Ranks.B, 
-  4: Ranks.A, 
-  5: Ranks.S, 
+const defaultLabels: { [index: string]: string } = {
+  1: '1', 
+  2: '2', 
+  3: '3', 
+  4: '4', 
+  5: '5', 
 };
 
-const numberToString = (value: number) => {
-  if (1 <= value && value <= 5 ) {
-    return labels[value];
-  }
-  return "";
-};
-
-const stringToNumber = (value: string) => {
-  switch(value) {
-    case Ranks.D:
-      return 1;
-    case Ranks.C:
-      return 2;
-    case Ranks.B:
-      return 3;
-    case Ranks.A:
-      return 4;
-    case Ranks.S:
-      return 5;
-    default:
-      return 0;
-  }
-}
-
-const getLabelText = (value: number) => {
-  return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
-}
-
-export type RankRatingProps = {
+export type StarRatingProps = {
   value: number;
   readOnly: boolean;
   onChange?: (newValue: number) => void;
   size: string;
   sx: SxProps<Theme>;
+  labels: { [index: number]: string };
 }
 
-export const RankRating = (props: RankRatingProps) => {
+export const StarRating = (props: StarRatingProps) => {
   const [value, setValue] = useState<number>(props.value ?? 3);
   const [hover, setHover] = useState(-1);
+  const labels = props.labels ?? defaultLabels;
 
   useEffect(() => { setValue(props.value); }, [props.value ?? 3]);
 
@@ -63,6 +35,10 @@ export const RankRating = (props: RankRatingProps) => {
     display: 'flex',
     alignItems: 'center',
     ...props.sx, 
+  }
+
+  const getLabelText = (value: number) => {
+    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
   }
 
   return (
@@ -94,3 +70,4 @@ export const RankRating = (props: RankRatingProps) => {
     </Box>
   );
 }
+

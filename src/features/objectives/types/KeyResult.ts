@@ -4,7 +4,7 @@ export type KeyResult = {
   title : string;
   order : number;
   memo : string;
-  rank : string;
+  rank : number;
   createdAt? : Date;
   modifiedAt? : Date;
   version: number;

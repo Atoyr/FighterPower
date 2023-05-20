@@ -5,7 +5,9 @@ import {
   Typography, 
   } from '@mui/material';
 
-import { RankRating } from '../components';
+import { StarRating } from '@/components/Rating';
+
+import { rankRatingLabels } from '../constants';
 
 export type InputKeyResultProps = {
   title: string;
@@ -20,7 +22,7 @@ export type InputKeyResultProps = {
 export const InputKeyResult = (props: InputKeyResultProps) => {
 
   const [ title, setTitle] = useState(props?.title ?? "");
-  const [ rank, setRank] = useState<number>(props?.rank ?? 3);
+  const [ rank, setRank] = useState<number>(props?.rank ?? "C");
   const [ memo, setMemo] = useState(props?.memo ?? "");
 
   return(
@@ -45,7 +47,7 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
         }
       }}
       />
-    <RankRating 
+    <StarRating
       value={rank} 
       onChange={(newValue) => {
         setRank(newValue);
@@ -54,6 +56,7 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
         }
       }}
       readOnly={props.readOnly ?? false}
+      labels={rankRatingLabels}
       sx={{my: 1}}/>
     <TextField
       name="key_result_memo"

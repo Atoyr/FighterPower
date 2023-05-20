@@ -8,7 +8,9 @@ import {
 
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 
-import { RankRating } from '../components';
+import { StarRating } from '@/components/Rating';
+
+import { rankRatingLabels } from '../constants';
 
 type KeyResultCardProps = {
   title: string;
@@ -44,7 +46,7 @@ export const KeyResultCard = (props: KeyResultCardProps) => {
             sx={{ flexGrow: 1, mx: 1}}>
           {props.title}
           </Typography>
-          <RankRating sx={{mx: 1, flexGrow: 0 }} readOnly value={props.rank} size="large"/>
+          <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={props.rank} size="large" labels={rankRatingLabels}/>
     </Paper>
   );
 };
