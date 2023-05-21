@@ -23,7 +23,11 @@ import {
   getKeyResults, 
   getObjective, 
   setObjective} from '../api';
-import { KeyResultCard, ObjectiveNotFound, SelectAchiveModeDialog } from '../components';
+import { 
+  AchiveCard, 
+  KeyResultCard, 
+  ObjectiveNotFound, 
+  SelectAchiveModeDialog } from '../components';
 
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
@@ -124,6 +128,27 @@ export const Objective = () => {
             }}>
             {"やること(指標)を実行する"}
           </Button>
+        </Box>
+        <Box display="flex" flexDirection="row" flexWrap="wrap">
+          { achives ? 
+          achives.map((achive) => {
+            const href = `achives/${achive.id}`;
+            return (
+              <AchiveCard
+                sx={{
+                  m: { xs: 0, sm: 1 },
+                  mt: { xs: 1 },
+                }}
+                key={achive.id}
+                title={achive.title} 
+                onClick={() => navigate(href)} />
+            );
+          })
+          : 
+          <Stack spacing={1}>
+            <Skeleton variant="rectangular" width={250} height={150} />
+          </Stack>
+          }
         </Box>
         <SelectAchiveModeDialog open={dialogOpen} onClose={handleDialogClose}/>
       </Container>);

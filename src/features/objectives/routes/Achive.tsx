@@ -164,23 +164,18 @@ export const Achive = () => {
     return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
       <Box>
-      <Typography variant="h3" noWrap component="h3">
-      {objective.title}
-      </Typography>
-      <Divider />
-      <Box sx={{
-        display: 'flex', 
-        flexDirection: 'row', 
-        my: 2, 
-        }}>
-      <Typography variant="h3" noWrap component="h3">{achive.title}</Typography>
-        <Chip label="トレモ" variant="outlined" />
+        <Typography variant="h3" noWrap component="h3">{objective.title}</Typography>
+        <Divider />
+        <Box sx={{
+          display: 'flex', 
+          flexDirection: 'row', 
+          my: 2, 
+          }}>
+          <Typography variant="h3" noWrap component="h3" sx={{flex: 1}}>{achive.title}</Typography>
+          <Chip label="トレモ" variant="outlined" sx={{flex: 0}}/>
+        </Box>
+        <Divider />
       </Box>
-      </Box>
-      
-        <Typography variant="h3" noWrap component="h3">
-        {objectiveId}
-        </Typography>
         <Typography variant="h3" noWrap component="h3">
         {achiveId}
         </Typography>
