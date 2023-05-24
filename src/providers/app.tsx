@@ -13,7 +13,8 @@ import { Loading } from '@/components/Loading';
 import { MODE } from '@/config';
 import { queryClient } from '@/lib/react-query';
 
-import { AuthProvider } from './authProvider';
+import { AuthProvider } from './AuthProvider';
+import { AlertSnackbarProvider } from './AlertSnackbarProvider';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -52,17 +53,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <RecoilRoot>
         <HelmetProvider>
-          <QueryClientProvider client={queryClient}>
-            { MODE === "dev" && <ReactQueryDevtools />}
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <AuthProvider>
-                <Router>
-                  {children}
-                </Router>
-              </AuthProvider>
-            </ThemeProvider>
-          </QueryClientProvider>
+          <AlertSnackbarProvider>
+            <QueryClientProvider client={queryClient}>
+              { MODE === "dev" && <ReactQueryDevtools />}
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <AuthProvider>
+                  <Router>
+                    {children}
+                  </Router>
+                </AuthProvider>
+              </ThemeProvider>
+            </QueryClientProvider>
+          </AlertSnackbarProvider>
         </HelmetProvider>
       </RecoilRoot>
     </ErrorBoundary>

@@ -9,7 +9,7 @@ import {
   Typography, 
   } from '@mui/material';
 
-import { useAuth } from '@/hooks';
+import { useAuth, useErrorSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { getKeyResult, getObjective, setKeyResult } from '../api';
@@ -21,6 +21,7 @@ export const KeyResult = () => {
   const { keyResultId } = useParams<"keyResultId">();
   const navigate = useNavigate();
   const authState = useAuth();
+  const showErrorSnackbar = useErrorSnackbar();
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResult } = keyResultId === "new" ? { data: null } : useQuery([ "key-result", authState.user.uid, objectiveId, keyResultId], () => getKeyResult(authState.user.uid, objectiveId, keyResultId));
@@ -37,6 +38,10 @@ export const KeyResult = () => {
   const [ isEdit, setIsEdit] = useState(false);
 
   const onSave = async () => {
+    if(keyResultTitle === "") {
+      showErrorSnackbar("指標が空白です");
+      return;
+    }
     const kr = keyResult ?? createKeyResult();
     kr.title = keyResultTitle;
     kr.rank = keyResultRank;
