@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks';
 
 export const CenterArea = () => {
   const authState = useAuth();
-  const to = authState.user == null ? "/" : "home";
+  const to = authState.user === null ? "/" : "/app/home";
   return (
     <Box sx={{flexGrow: 1, px: 0.5, display: 'block', flexDirection: 'row', textAlign: 'center', justifyContent: 'center'}}>
       <Link to={to} style={{ display: 'block', alignItems: 'center', justifyContent: 'center'}}>
