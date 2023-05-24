@@ -18,7 +18,7 @@ import {
 import { EditableLabel } from '@/components/EditableLabel';
 import { StarRating } from '@/components/Rating';
 import { StyledToggleButtonGroup } from '@/components/ToggleButton';
-import { useAuth } from '@/hooks';
+import { useAuth, useErrorSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { 
@@ -34,6 +34,7 @@ export const NewAchive = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const navigate = useNavigate();
   const authState = useAuth();
+  const showErrorSnackbar = useErrorSnackbar();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -57,6 +58,11 @@ export const NewAchive = () => {
   const handleSelectedKeyResults = ( event: React.MouseEvent<HTMLElement>, newSelectedKeyResults: string[],) => setSelectedKeyResults(newSelectedKeyResults);
 
   const handleExecuteButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    if(title === "") {
+      showErrorSnackbar("タイトルが空白です");
+      return;
+    }
+    
     const achive = createAchive();
     achive.title = title;
     achive.type = mode;

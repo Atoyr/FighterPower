@@ -39,7 +39,7 @@ export const KeyResult = () => {
 
   const onSave = async () => {
     if(keyResultTitle === "") {
-      showErrorSnackbar("指標が空白です");
+      showErrorSnackbar("目標に向けてやること (指標)が空白です");
       return;
     }
     const kr = keyResult ?? createKeyResult();

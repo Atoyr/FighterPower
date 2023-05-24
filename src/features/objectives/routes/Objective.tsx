@@ -15,7 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { EditableLabel } from '@/components/EditableLabel';
 import { EditableTextField } from '@/components/EditableTextField';
-import { useAuth } from '@/hooks';
+import { useAuth, useErrorSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { 
@@ -32,6 +32,7 @@ import {
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
   const navigate = useNavigate(); const authState = useAuth();
+  const showErrorSnackbar = useErrorSnackbar();
 
   const [ objectiveVersion, setObjectiveVersion ] = useState(0);
   const [ dialogOpen, setDialogOpen ] = useState(false);
@@ -46,10 +47,9 @@ export const Objective = () => {
     }
   });
 
-
   const saveObjectiveTitle = async (newValue) => {
-    if (newValue == "") {
-      // TODO ERROR
+    if (newValue === "") {
+      showErrorSnackbar("目標に向けてやること (指標)が空白です");
       return;
     }
     const o = {
