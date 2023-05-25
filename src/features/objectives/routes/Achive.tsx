@@ -26,7 +26,11 @@ import {
   getAchiveResults, 
   getKeyResults, 
   getObjective } from '../api';
-import { KeyResultCard, KeyResultNotFound, ObjectiveNotFound } from '../components';
+import { 
+  AchiveStatusToggle, 
+  KeyResultCard, 
+  KeyResultNotFound, 
+  ObjectiveNotFound } from '../components';
 import { rankRatingLabels } from '../constants';
 import { createAchive, updateAchive, updateAchiveProps } from '../functions';
 
@@ -194,7 +198,9 @@ export const Achive = () => {
                     {keyResult.title}
                 </Typography>
                 <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
+                <AchiveStatusToggle status="success"/>
               </ToggleButton>
+
               );
               })
               :

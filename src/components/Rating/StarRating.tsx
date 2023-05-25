@@ -28,7 +28,7 @@ export const StarRating = (props: StarRatingProps) => {
   const [hover, setHover] = useState(-1);
   const labels = props.labels ?? defaultLabels;
 
-  useEffect(() => { setValue(props.value); }, [props.value ?? 3]);
+  useEffect(() => { setValue(props.value); }, [props.value]);
 
   const containerStyle = {
     width: 200,

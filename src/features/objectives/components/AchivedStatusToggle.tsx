@@ -6,27 +6,39 @@ import {
   } from '@mui/material';
 
 type AchiveStatusToggleProps = {
-
+  status: string;
 };
 
 export const AchiveStatusToggle = (props: AchiveStatusToggleProps) => {
+  const [achiveStatus, setAchiveStatus] = useState(props.status);
+  useEffect(() => { setAchiveStatus(props.status); }, [props.status]);
+
+  const handleAchiveStatus = (
+    event: React.MouseEvent<HTMLElement>,
+    newAchiveStatus: string | null,
+  ) => {
+    if(newAchiveStatus !== null) {
+      setAchiveStatus(newAchiveStatus);
+    }
+  };
 
   return(
       <ToggleButtonGroup
-        value={alignment}
+        color="primary"
+        value={achiveStatus}
         exclusive
-        onChange={handleAlignment}
+        onChange={handleAchiveStatus}
         aria-label="text alignment" >
-        <ToggleButton value="success" aria-label="left aligned">
+        <ToggleButton value="success" >
           {"成功"}
         </ToggleButton>
-        <ToggleButton value="failer" aria-label="centered">
+        <ToggleButton value="failer" >
           {"失敗"}
         </ToggleButton>
-        <ToggleButton value="no" aria-label="centered">
+        <ToggleButton value="no" >
           {"意識外"}
         </ToggleButton>
-        <ToggleButton value="nop" aria-label="centered">
+        <ToggleButton value="nop" >
           {"機会なし"}
         </ToggleButton>
       </ToggleButtonGroup>
