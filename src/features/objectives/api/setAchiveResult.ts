@@ -46,20 +46,20 @@ export const setAchiveResult = async (
 
   if(refAchiveResult == null) {
     newAchiveResult = doc(collection(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`));
-    achive.id = newAchive.id;
-    achiveId = newAchive.id!;
+    achiveResult.id = newAchiveResult.id;
+    achiveResultId = newAchiveResult.id!;
   } else {
     // 楽観ロック
-    if (refAchive.version != achive.version) {
+    if (refAchiveResult.version != achiveResult.version) {
       throw new Error("achive update error");
     }
-    newAchive = doc(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`, achiveResultId);
+    newAchiveResult = doc(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`, achiveResultId);
   }
 
   try {
     await (transaction ? 
-            transaction.set(newAchive.withConverter(AchiveResultConverter), achiveResult) 
-            : setDoc(newAchive.withConverter(AchiveResultConverter), achiveResult));
+            transaction.set(newAchiveResult.withConverter(AchiveResultConverter), achiveResult) 
+            : setDoc(newAchiveResult.withConverter(AchiveResultConverter), achiveResult));
   } catch (error) {
     throw error;
   }

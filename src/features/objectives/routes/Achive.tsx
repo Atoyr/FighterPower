@@ -5,9 +5,9 @@ import { useMutation, useQuery } from 'react-query';
 import { 
   Button, 
   Box, 
-  Chip, 
   Container, 
   Divider, 
+  Paper, 
   Skeleton, 
   TextField, 
   ToggleButton, 
@@ -18,7 +18,7 @@ import {
 import { EditableLabel } from '@/components/EditableLabel';
 import { StarRating } from '@/components/Rating';
 import { StyledToggleButtonGroup } from '@/components/ToggleButton';
-import { useAuth, useErrorSnackbar } from '@/hooks';
+import { useAuth, useErrorSnackbar, useSuccessSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { 
@@ -27,12 +27,18 @@ import {
   getKeyResults, 
   getObjective } from '../api';
 import { 
+  AchiveResultTypeChip, 
   AchiveStatusToggle, 
   KeyResultCard, 
   KeyResultNotFound, 
   ObjectiveNotFound } from '../components';
 import { rankRatingLabels } from '../constants';
-import { createAchive, updateAchive, updateAchiveProps } from '../functions';
+import { 
+  createAchive, 
+  updateAchive, 
+  updateAchiveProps, 
+  updateAchiveResults, 
+  updateAchiveResultsProps} from '../functions';
 
 export const NewAchive = () => {
   const { objectiveId } = useParams<"objectiveId">();
@@ -43,9 +49,7 @@ export const NewAchive = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
-  const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
-
+  const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId)); const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
   const [selectedKeyResults, setSelectedKeyResults] = useState(() => []);
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState(searchParams.get("mode") ?? "");
@@ -164,75 +168,88 @@ export const Achive = () => {
   const { achiveId } = useParams<"achiveId">();
   const navigate = useNavigate();
   const authState = useAuth();
+  const showSuccessSnackbar = useSuccessSnackbar();
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResults } = useQuery([ "key-results", authState.user.uid, objectiveId], () => getKeyResults(authState.user.uid, objectiveId));
   const { data: achive } = useQuery([ "achive", authState.user.uid, objectiveId, achiveId], () => getAchive(authState.user.uid, objectiveId, achiveId));
   const { data: achiveResults } = useQuery([ "achive-results", authState.user.uid, objectiveId, achiveId], () => getAchiveResults(authState.user.uid, objectiveId, achiveId));
 
-  if ((achive.type ?? "") === "training") {
-    return (
-    <Container maxWidth="xl" sx={MainContainerStyle}>
-      <Box>
-        <Typography variant="h3" noWrap component="h3">{objective.title}</Typography>
-        <Divider />
-        <Box sx={{
-          display: 'flex', 
-          flexDirection: 'row', 
-          my: 2, 
-          }}>
-          <Typography variant="h3" noWrap component="h3" sx={{flex: 1}}>{achive.title}</Typography>
-          <Chip label="トレモ" variant="outlined" sx={{flex: 0}}/>
-        </Box>
-        <Divider />
-      </Box>
-        <Typography variant="h3" noWrap component="h3">
-        {achiveId}
-        </Typography>
-          { keyResults ?
-            keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
-              return(
-              <ToggleButton value={keyResult.id} key={keyResult.id}>
-                <Typography variant={"h4"} component={"h4"} noWrap 
-                  sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
-                    {keyResult.title}
-                </Typography>
-                <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
-                <AchiveStatusToggle status="success"/>
-              </ToggleButton>
+  const [toggle, setToggle] = useState({});
 
-              );
-              })
-              :
-              <Skeleton variant="rectangular" width={50} height={150} />
-              }
-      </Container>
-        );
-  } else {
-    return (
-      <Container maxWidth="xl" sx={MainContainerStyle}>
-        <Typography variant="h3" noWrap component="h3">
-        {objectiveId}
-        </Typography>
-        <Typography variant="h3" noWrap component="h3">
-        {achiveId}
-        </Typography>
-          { keyResults ?
-            keyResults.filter((kr) => achive.selectedKeyResults.includes(kr.id)).map((keyResult) => {
-              return(
-              <ToggleButton value={keyResult.id} key={keyResult.id}>
-                <Typography variant={"h4"} component={"h4"} noWrap 
-                  sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
-                    {keyResult.title}
-                </Typography>
-                <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank} size="large" labels={rankRatingLabels}/>
-              </ToggleButton>
-              );
-              })
-              :
-              <Skeleton variant="rectangular" width={50} height={150} />
-              }
-      </Container>
-        );
+  const { mutate: updateAchiveResultsMutate } = useMutation((props) => {
+    const ids = Object.keys(props.toggle);
+    let ars = []
+    ids.forEach((id) => {
+      const status = props.toggle[id];
+      const achiveResult = achiveResults.find(ar => ar.id == id);
+      achiveResult.status = status;
+      ars = [...ars, achiveResult];
+    });
+    return  updateAchiveResults({userId: props.userId, objective: props.objective, achive: props.achive, achiveResults: ars});
+  }, 
+  {
+    onSuccess: (ids) => {
+      setToggle({});
+      showSuccessSnackbar("更新しました");
+    }
+  });
+
+  const handleToggleOnChange = (id, status) => {
+    setToggle((prevData) => {
+      const newData = { ...prevData };
+      if(newData.hasOwnProperty(id)) {
+        delete newData[id];
+      }
+      newData[id] = status;
+      return newData;
+    });
   }
+
+  const handleSaveButton = (event: React.MouseEvent<HTMLElement>) => {
+    updateAchiveResultsMutate({userId: authState.user.uid, objective: objective, achive: achive, toggle: toggle});
+  };
+
+  return (
+  <Container maxWidth="xl" sx={MainContainerStyle}>
+    <Box>
+      <Typography variant="h3" noWrap component="h3">{objective.title}</Typography>
+      <Divider />
+      <Box sx={{
+        display: 'flex', 
+        flexDirection: 'row', 
+        my: 2, 
+        }}>
+        <Typography variant="h3" noWrap component="h3" sx={{flex: 1}}>{achive.title}</Typography>
+        <AchiveResultTypeChip type={achive.type} sx={{flex: 0}}/>
+      </Box>
+      <Divider />
+    </Box>
+      { achiveResults.map((achiveResult) => {
+        const keyResult = keyResults.find(kr => kr.id == achiveResult.selectedKeyResult)
+        return(
+        <Paper key={achiveResult.id} elevation={3} sx={{my:1}}>
+          <Typography variant={"h4"} component={"h4"} noWrap 
+            sx={{ flexGrow: 1, mx: 1, textAlign: "left"}}>
+              {keyResult.title ?? ""}
+          </Typography>
+          <StarRating sx={{mx: 1, flexGrow: 0 }} readOnly value={keyResult.rank ?? ""} size="large" labels={rankRatingLabels}/>
+          <AchiveStatusToggle status={achiveResult.status} 
+            onChange={(newValue) => handleToggleOnChange(achiveResult.id, newValue)} sx={{mx:2, my:2}}/>
+        </Paper>
+        );
+      })}
+      <Button variant="outlined"
+        fullWidth
+        onClick={handleSaveButton}
+        sx={{
+          my:1,
+          p:1,
+          height : { xs : 50 },
+          display: { xs: 'none', sm: 'flex' },
+        }}>
+        {"保存する"}
+      </Button>
+    </Container>
+      );
 };

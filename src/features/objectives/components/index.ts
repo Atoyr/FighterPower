@@ -1,4 +1,5 @@
 export * from './AchiveCard';
+export * from './AchiveResultTypeChip';
 export * from './AchivedStatusToggle';
 export * from './InputKeyResult';
 export * from './InputObjectiveDialog';

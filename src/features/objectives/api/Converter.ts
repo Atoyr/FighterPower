@@ -98,7 +98,7 @@ export const AchiveResultConverter: FirestoreDataConverter<AchiveResult> = {
       __type : 'achive_result',
       id : achiveResult.id ?? "",
       groupNo : achiveResult.groupNo ?? 1, 
-      selectedKeyResult: achiveResult.selectKeyResults ?? "", 
+      selectedKeyResult: achiveResult.selectedKeyResult ?? "", 
       status: achiveResult.status ?? AchiveResultStatus.none, 
       battleId: achiveResult.battleId ?? "", 
       createdAt : achiveResult.createdAt ?? serverTimestamp(),

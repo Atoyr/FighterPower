@@ -4,9 +4,12 @@ import {
   ToggleButton, 
   ToggleButtonGroup
   } from '@mui/material';
+import { SxProps, Theme, useTheme } from '@mui/material/styles';
 
 type AchiveStatusToggleProps = {
   status: string;
+  onChange: (newValue: string) => void;
+  sx: SxProps<Theme>;
 };
 
 export const AchiveStatusToggle = (props: AchiveStatusToggleProps) => {
@@ -20,6 +23,13 @@ export const AchiveStatusToggle = (props: AchiveStatusToggleProps) => {
     if(newAchiveStatus !== null) {
       setAchiveStatus(newAchiveStatus);
     }
+
+    if(props.onChange) {
+      props.onChange(newAchiveStatus);
+    }
+  };
+  const style = {
+    ...props.sx, 
   };
 
   return(
@@ -28,6 +38,7 @@ export const AchiveStatusToggle = (props: AchiveStatusToggleProps) => {
         value={achiveStatus}
         exclusive
         onChange={handleAchiveStatus}
+        sx={style}
         aria-label="text alignment" >
         <ToggleButton value="success" >
           {"成功"}
@@ -35,10 +46,10 @@ export const AchiveStatusToggle = (props: AchiveStatusToggleProps) => {
         <ToggleButton value="failer" >
           {"失敗"}
         </ToggleButton>
-        <ToggleButton value="no" >
+        <ToggleButton value="outside" >
           {"意識外"}
         </ToggleButton>
-        <ToggleButton value="nop" >
+        <ToggleButton value="nochance" >
           {"機会なし"}
         </ToggleButton>
       </ToggleButtonGroup>

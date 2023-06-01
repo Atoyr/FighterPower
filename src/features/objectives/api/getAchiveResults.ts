@@ -25,8 +25,8 @@ export const getAchiveResults = async (
     throw new RangeError("achiveId is empty.");
   }
 
-  const ref = collection(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/Results`).withConverter(AchiveResultConverter);
-  const snapshot = await getDocs(query(ref, orderBy("order")));
+  const ref = collection(store, `users/${userId}/objectives/${objectiveId}/achives/${achiveId}/results`).withConverter(AchiveResultConverter);
+  const snapshot = await getDocs(query(ref, orderBy("groupNo")));
   const achives : Array<Achive> = [];
   snapshot.forEach((doc) => {
     achives.push(doc.data());

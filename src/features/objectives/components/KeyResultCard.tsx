@@ -22,7 +22,6 @@ type KeyResultCardProps = {
 };
 
 export const KeyResultCard = (props: KeyResultCardProps) => {
-  const theme = useTheme();
   const handleClick = () => {
     if(props.onClick) {
       props.onClick();

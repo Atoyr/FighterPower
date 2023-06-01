@@ -20,7 +20,13 @@ type AppProviderProps = {
   children: React.ReactNode;
 };
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#fdfdfd',
+    },
+  },
+});
 //  palette: {
 //    primary: {
 //      main: '#0052cc',
