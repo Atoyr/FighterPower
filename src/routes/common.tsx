@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
 
+import { MODE } from '@/config';
 import { lazyImport } from '@/utils/lazyImport';
 
 import { ApplicationBar } from '@/components/ApplicationBar';
 
 const { PublicLayout } = lazyImport(() => import('@/components/Layout'), 'PublicLayout');
+const { Debug } = lazyImport(() => import('@/features/misc'), 'Debug');
 const { Landing } = lazyImport(() => import('@/features/misc'), 'Landing');
 const { Privacy } = lazyImport(() => import('@/features/misc'), 'Privacy');
 const { Changelog } = lazyImport(() => import('@/features/misc'), 'Changelog');
@@ -31,6 +33,7 @@ export const commonRoutes = [
       { path: 'privacy', element: <Privacy />}, 
       { path: 'changelog', element: <Changelog />}, 
       { path: 'terms', element: <Terms />}, 
+      { path: 'debug', element: <Debug />}, 
       { path: '*', element: <NotFound />}, 
     ]
   }, 

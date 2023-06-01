@@ -22,6 +22,8 @@ type KeyResultCardProps = {
 };
 
 export const KeyResultCard = (props: KeyResultCardProps) => {
+  const theme = useTheme();
+
   const handleClick = () => {
     if(props.onClick) {
       props.onClick();
@@ -31,6 +33,10 @@ export const KeyResultCard = (props: KeyResultCardProps) => {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover, 
+      cursor: 'pointer', // カーソルスタイルをポインターに変更
+    },
     ...props.sx, 
   };
   return (
