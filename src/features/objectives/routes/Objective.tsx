@@ -85,6 +85,7 @@ export const Objective = () => {
       <Container maxWidth="xl" sx={MainContainerStyle}>
         <EditableLabel label={objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
         <EditableTextField label={objective.note} onSave={saveObjectiveMemo} allowEmpty={false}/>
+        { (objective?.status ?? "") === "open" ?
         <Box>
           <Button variant="outlined"
             fullWidth
@@ -98,6 +99,8 @@ export const Objective = () => {
             {"やること(指標)を追加"}
           </Button>
         </Box>
+        : <></>
+        }
         <Box>
           { keyResults ?
             keyResults.map((keyResult) => {
@@ -116,6 +119,7 @@ export const Objective = () => {
             <Skeleton variant="rectangular" width={50} height={150} />
           }
         </Box>
+        { (keyResults?.length ?? 0) !== 0 ?
         <Box>
           <Button variant="outlined"
             fullWidth
@@ -128,7 +132,9 @@ export const Objective = () => {
             }}>
             {"やること(指標)を実行する"}
           </Button>
-        </Box>
+        </Box> 
+        : <></>
+        }
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           { achives ? 
           achives.map((achive) => {
