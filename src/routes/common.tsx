@@ -23,6 +23,10 @@ const Layout = () => {
   );
 };
 
+const DebugMode = () => {
+  return ( MODE === "dev" ? <Debug /> : <NotFound />);
+}
+
 export const commonRoutes = [
   {
     path: '/', 
@@ -33,7 +37,7 @@ export const commonRoutes = [
       { path: 'privacy', element: <Privacy />}, 
       { path: 'changelog', element: <Changelog />}, 
       { path: 'terms', element: <Terms />}, 
-      { path: 'debug', element: <Debug />}, 
+      { path: 'debug', element: <DebugMode />},
       { path: '*', element: <NotFound />}, 
     ]
   }, 
