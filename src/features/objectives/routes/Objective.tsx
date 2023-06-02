@@ -13,6 +13,7 @@ import {
 
 import EditIcon from '@mui/icons-material/Edit';
 
+import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { EditableLabel } from '@/components/EditableLabel';
 import { EditableTextField } from '@/components/EditableTextField';
 import { useAuth, useErrorSnackbar } from '@/hooks';
@@ -46,6 +47,11 @@ export const Objective = () => {
       refetchObjective();
     }
   });
+
+  const breadcrumbs = [
+    { path: '/app/objectives', name: '目標一覧' },
+    { path: `/app/objectives/${objectiveId}`, name: objective.title }, 
+  ];
 
   const saveObjectiveTitle = async (newValue) => {
     if (newValue === "") {
@@ -83,6 +89,7 @@ export const Objective = () => {
     // Main
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
         <EditableLabel label={objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
         <EditableTextField label={objective.note} onSave={saveObjectiveMemo} allowEmpty={false}/>
         { (objective?.status ?? "") === "open" ?

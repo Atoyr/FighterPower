@@ -16,6 +16,7 @@ import {
   TextField, 
   Typography } from '@mui/material';
 
+import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { useAuth } from '@/hooks';
 
 import { getObjectives, setObjective } from '../api';
@@ -36,6 +37,10 @@ export const Objectives = () => {
       setOpenDialog(false);
     }});
 
+  const breadcrumbs = [
+    { path: '/app/objectives', name: '目標一覧' },
+  ];
+
   const onClose = (objectiveTitle:string, objectiveMemo:string) => {
     const objective = createObjective(objectiveTitle, objectiveMemo);
     createObjectiveMutate({userId: authState.user.uid!, objective: objective})
@@ -49,11 +54,11 @@ export const Objectives = () => {
   };
 
   return (
-    <Container maxWidth="xl" 
-    sx={{ mt: { xs: 1, sm: 1 } }}>
-    <Typography variant="h3" component="div" gutterBottom >
-    目標一覧
-    </Typography>
+    <Container maxWidth="xl" sx={{ mt: { xs: 1, sm: 1 } }}>
+      <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
+      <Typography variant="h3" component="div" gutterBottom >
+      目標一覧
+      </Typography>
     <Box sx={{mb: 1}} display="flex" flexDirection="row" flexWrap="wrap">
       <Button variant="contained" fullWidth onClick={openInputDialog}
         sx={{
