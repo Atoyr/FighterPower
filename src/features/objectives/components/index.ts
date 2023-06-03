@@ -7,4 +7,5 @@ export * from './KeyResultCard';
 export * from './KeyResultNotFound';
 export * from './ObjectiveCard';
 export * from './ObjectiveNotFound';
+export * from './ObjectiveStatusChip';
 export * from './SelectAchiveModeDialog';

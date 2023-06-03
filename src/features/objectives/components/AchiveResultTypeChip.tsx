@@ -9,13 +9,9 @@ type AchiveResultTypeChipProps = {
 };
 
 export const AchiveResultTypeChip = (props: AchiveResultTypeChipProps) => {
-
   return(
       <Chip 
         label={achiveResultType[props.type] ?? ""}
         variant="outlined" sx={props.sx}/>
   );
 };
-
-
-

@@ -10,16 +10,18 @@ import {
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 
 import { CARD_MIN_WIDTH, CARD_WIDTH, CARD_HEIGHT } from '../styles';
+import { ObjectiveStatusChip } from './ObjectiveStatusChip';
 
 type ObjectiveCardProps = {
   title: string;
+  status: string;
   createAt: Date;
   modifiedAt: Date;
   onClick: () => void;
   sx: SxProps<Theme>;
 }
 
-export const ObjectiveCard = ({title, createdAt, modifiedAt, onClick, sx} : ObjectiveCardProps) => {
+export const ObjectiveCard = ({title, status, createdAt, modifiedAt, onClick, sx} : ObjectiveCardProps) => {
   const theme = useTheme();
   const sizeStyle = {
       minWidth: CARD_MIN_WIDTH, 
@@ -47,6 +49,7 @@ export const ObjectiveCard = ({title, createdAt, modifiedAt, onClick, sx} : Obje
           <Typography variant="h6" noWrap component="h6" sx={{ textAlign: "left", textTransform: "none"}}>
             {title}
           </Typography>
+          <ObjectiveStatusChip status={status} />
           <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
           {"作成日:"}{createdAt?.toLocaleString("ja-JP") ?? ""}
           </Typography>

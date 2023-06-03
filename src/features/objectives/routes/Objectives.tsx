@@ -82,6 +82,7 @@ export const Objectives = () => {
             }}
             key={objective.id}
             title={objective.title} 
+            status={objective.status}
             createdAt={objective.createdAt} 
             modifiedAt={objective.modifiedAt}
             onClick={() => navigate(href)} />
