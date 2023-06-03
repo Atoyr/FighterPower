@@ -9,13 +9,14 @@ import {
 
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 
+import { getDiffDateTimeText } from '@/functions';
+
 import { CARD_MIN_WIDTH, CARD_WIDTH, CARD_HEIGHT } from '../styles';
 import { ObjectiveStatusChip } from './ObjectiveStatusChip';
 
 type ObjectiveCardProps = {
   title: string;
   status: string;
-  createAt: Date;
   modifiedAt: Date;
   onClick: () => void;
   sx: SxProps<Theme>;
@@ -51,10 +52,7 @@ export const ObjectiveCard = ({title, status, createdAt, modifiedAt, onClick, sx
           </Typography>
           <ObjectiveStatusChip status={status} />
           <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
-          {"作成日:"}{createdAt?.toLocaleString("ja-JP") ?? ""}
-          </Typography>
-          <Typography variant="caption" noWrap display="block" sx={{ textAlign: "right"}}>
-          {"最終更新日:"}{modifiedAt?.toLocaleString("ja-JP") ?? ""}
+          {getDiffDateTimeText({updatedDate: modifiedAt})}
           </Typography>
         </CardContent>
       </CardActionArea>
