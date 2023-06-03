@@ -9,6 +9,7 @@ import {
   Typography, 
   } from '@mui/material';
 
+import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { useAuth, useErrorSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
@@ -68,9 +69,15 @@ export const KeyResult = () => {
       </Container>);
   } else {
     const readOnly = (objective.status ?? "open") !== "open";
+    const breadcrumbs = [
+      { path: '/app/objectives', name: '目標一覧' },
+      { path: `/app/objectives/${objectiveId}`, name: objective.title }, 
+      { path: `/app/objectives/${objectiveId}/key-results/${keyResultId}`, name: keyResult?.title ?? "新規" }, 
+    ];
 
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
         <Typography variant="h3" noWrap component="h3">
         {objective.title}
         </Typography>

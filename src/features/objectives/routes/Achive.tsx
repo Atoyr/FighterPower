@@ -15,6 +15,7 @@ import {
   Typography, 
   } from '@mui/material';
 
+import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { EditableLabel } from '@/components/EditableLabel';
 import { StarRating } from '@/components/Rating';
 import { StyledToggleButtonGroup } from '@/components/ToggleButton';
@@ -54,6 +55,12 @@ export const NewAchive = () => {
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState(searchParams.get("mode") ?? "");
 
+  const breadcrumbs = [
+    { path: '/app/objectives', name: '目標一覧' },
+    { path: `/app/objectives/${objectiveId}`, name: objective.title }, 
+    { path: `/app/objectives/${objectiveId}/achives/new`, name: "新規" }, 
+  ];
+
   const { mutate: updateAchiveMutate } = useMutation((props: updateAchiveProps) => {
     return updateAchive(props);
   }, 
@@ -62,6 +69,7 @@ export const NewAchive = () => {
       navigate(`../${objectiveId}/achives/${id}`);
     }
   });
+
 
   const handleSelectedKeyResults = ( event: React.MouseEvent<HTMLElement>, newSelectedKeyResults: string[],) => setSelectedKeyResults(newSelectedKeyResults);
 
@@ -87,6 +95,7 @@ export const NewAchive = () => {
 
   return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
+      <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
       <Box>
       <Typography variant="h3" noWrap component="h3">
       {objective.title}
@@ -177,6 +186,12 @@ export const Achive = () => {
 
   const [toggle, setToggle] = useState({});
 
+  const breadcrumbs = [
+    { path: '/app/objectives', name: '目標一覧' },
+    { path: `/app/objectives/${objectiveId}`, name: objective.title }, 
+    { path: `/app/objectives/${objectiveId}/achives/${achiveId}`, name: achive?.title ?? "指標" }, 
+  ];
+
   const { mutate: updateAchiveResultsMutate } = useMutation((props) => {
     const ids = Object.keys(props.toggle);
     let ars = []
@@ -212,6 +227,7 @@ export const Achive = () => {
 
   return (
   <Container maxWidth="xl" sx={MainContainerStyle}>
+    <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
     <Box>
       <Typography variant="h3" noWrap component="h3">{objective.title}</Typography>
       <Divider />

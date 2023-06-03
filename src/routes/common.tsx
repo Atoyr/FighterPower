@@ -4,6 +4,7 @@ import { MODE } from '@/config';
 import { lazyImport } from '@/utils/lazyImport';
 
 import { ApplicationBar } from '@/components/ApplicationBar';
+import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 
 const { PublicLayout } = lazyImport(() => import('@/components/Layout'), 'PublicLayout');
 const { Debug } = lazyImport(() => import('@/features/misc'), 'Debug');
@@ -17,6 +18,7 @@ const Layout = () => {
   return(
       <ApplicationBar>
         <PublicLayout>
+          <BreadcrumbsSetter breadcrumbs={[]} />
           <Outlet />
         </PublicLayout>
       </ApplicationBar>
