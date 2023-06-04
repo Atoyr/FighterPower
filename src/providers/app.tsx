@@ -9,6 +9,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { ErrorFallback } from '@/components/ErrorFallback';
 import { Loading } from '@/components/Loading';
 import { MODE } from '@/config';
 import { queryClient } from '@/lib/react-query';
@@ -37,27 +38,11 @@ const theme = createTheme({
 //  },
 //});
 
-
-import { FallbackProps } from "react-error-boundary";
-
-export const ErrorFallback = ({
-  error,
-  resetErrorBoundary,
-}: FallbackProps) => {
-  return (
-    <div role="alert">
-      <p>Error Message</p>
-      <pre>{error!.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-};
-
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-  <Suspense fallback={ <Loading /> } >
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <RecoilRoot>
+  <RecoilRoot>
+    <Suspense fallback={ <Loading /> } >
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <AlertSnackbarProvider>
             <QueryClientProvider client={queryClient}>
@@ -73,8 +58,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             </QueryClientProvider>
           </AlertSnackbarProvider>
         </HelmetProvider>
-      </RecoilRoot>
-    </ErrorBoundary>
-  </Suspense>
+      </ErrorBoundary>
+    </Suspense>
+  </RecoilRoot>
   );
 };
