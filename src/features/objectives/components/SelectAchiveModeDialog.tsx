@@ -42,7 +42,7 @@ export const SelectAchiveModeDialog = (props: SelectAchiveModeDialogProps) => {
       <DialogTitle>{"入力する実行結果を選択してください"}</DialogTitle>
       <List sx={{ pt: 0 }}>
         {modes.map((mode) => (
-          <ListItem disableGutters key={mode}>
+          <ListItem disableGutters key={mode.key}>
             <ListItemButton onClick={() => handleListItemClick(mode.key)} key={mode.key}>
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>

@@ -74,8 +74,12 @@ export const NewAchive = () => {
   const handleSelectedKeyResults = ( event: React.MouseEvent<HTMLElement>, newSelectedKeyResults: string[],) => setSelectedKeyResults(newSelectedKeyResults);
 
   const handleExecuteButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    if(title === "") {
+    if (title === "") {
       showErrorSnackbar("タイトルが空白です");
+      return;
+    }
+    if (selectedKeyResults.length === 0) {
+      showErrorSnackbar("やること(指標)が選択されていません");
       return;
     }
     
