@@ -10,7 +10,7 @@ import {
   } from '@mui/material';
 
 import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
-import { useAuth, useErrorSnackbar } from '@/hooks';
+import { useAuth, useErrorSnackbar, useInfoSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
 import { getKeyResult, getObjective, setKeyResult } from '../api';
@@ -23,6 +23,7 @@ export const KeyResult = () => {
   const navigate = useNavigate();
   const authState = useAuth();
   const showErrorSnackbar = useErrorSnackbar();
+  const showInfoSnackbar = useInfoSnackbar();
 
   const { data: objective } = useQuery([ "objective", authState.user.uid, objectiveId], () => getObjective(authState.user.uid, objectiveId));
   const { data: keyResult } = keyResultId === "new" ? { data: null } : useQuery([ "key-result", authState.user.uid, objectiveId, keyResultId], () => getKeyResult(authState.user.uid, objectiveId, keyResultId));
@@ -54,6 +55,7 @@ export const KeyResult = () => {
     setKeyResultTitle(keyResult?.title ?? "");
     setKeyResultRank(keyResult?.rank ?? 3);
     setKeyResultMemo(keyResult?.memo ?? "")
+    showInfoSnackbar("キャンセルしました")
   }
 
   if (objective === null) {

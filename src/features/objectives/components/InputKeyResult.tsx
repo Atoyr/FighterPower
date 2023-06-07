@@ -19,11 +19,15 @@ export type InputKeyResultProps = {
   readOnly: boolean;
 }
 
-export const InputKeyResult = (props: InputKeyResultProps) => {
-
-  const [ title, setTitle] = useState(props?.title ?? "");
-  const [ rank, setRank] = useState<number>(props?.rank ?? "C");
-  const [ memo, setMemo] = useState(props?.memo ?? "");
+export const InputKeyResult = ({
+  title, 
+  rank, 
+  memo, 
+  onChangeTitle, 
+  onChangeRank, 
+  onChangeMemo, 
+  readOnly
+}: InputKeyResultProps) => {
 
   return(
   <>
@@ -38,24 +42,24 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
       fullWidth
       variant="standard"
       InputProps={{
-            readOnly: props.readOnly ?? false, 
+            readOnly: readOnly ?? false, 
           }}
       onChange={(event) => { 
-        setTitle(event.target.value)
-        if (props.onChangeTitle) {
-          props.onChangeTitle(title);
+        // HACK 
+        if (onChangeTitle) {
+          onChangeTitle(event.target.value);
         }
       }}
       />
     <StarRating
       value={rank} 
       onChange={(newValue) => {
-        setRank(newValue);
-        if (props.onChangeRank) {
-          props.onChangeRank(newValue);
+        // HACK 
+        if (onChangeRank) {
+          onChangeRank(newValue);
         }
       }}
-      readOnly={props.readOnly ?? false}
+      readOnly={readOnly ?? false}
       labels={rankRatingLabels}
       sx={{my: 1}}/>
     <TextField
@@ -67,13 +71,13 @@ export const InputKeyResult = (props: InputKeyResultProps) => {
       fullWidth
       multiline
       InputProps={{
-            readOnly: props.readOnly ?? false, 
+            readOnly: readOnly ?? false, 
           }}
       maxRows={8}
       onChange={(event) => { 
-        setMemo(event.target.value)
-        if (props.onChangeMemo) {
-          props.onChangeMemo(memo);
+        // HACK 
+        if (onChangeMemo) {
+          onChangeMemo(event.target.value);
         }
       }}
       />
