@@ -1,6 +1,6 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {Box, Container, Typography } from '@mui/material';
+
+import { Title } from '@/components/Title';
 
 export const Terms = () => {
   const headerSx = {
@@ -22,6 +22,7 @@ export const Terms = () => {
 
   return (
   <Container maxWidth="md">
+    <Title title="サービス利用規約" />
     <Box sx={{mt: 10, mb: 2}}>
       <Typography variant="h2" component="div" gutterBottom
         sx={{

@@ -1,9 +1,11 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import { Container, Typography } from '@mui/material';
+
+import { Title } from '@/components/Title';
 
 export const NotFound = () => {
   return (
   <Container>
+    <Title title="NOT FOUND" />
     <Typography variant="h1" component="div" gutterBottom
       sx={{ textAlign: "center", mt: 10, mb: 2, }}>
       404

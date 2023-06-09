@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { EditableLabel } from '@/components/EditableLabel';
 import { EditableTextField } from '@/components/EditableTextField';
+import { Title } from '@/components/Title';
 import { useAuth, useErrorSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
@@ -27,8 +28,7 @@ import {
 import { 
   AchiveCard, 
   KeyResultCard, 
-  ObjectiveNotFound, 
-  SelectAchiveModeDialog } from '../components';
+  ObjectiveNotFound, SelectAchiveModeDialog } from '../components';
 
 export const Objective = () => {
   const { objectiveId } = useParams<"objectiveId">();
@@ -89,6 +89,7 @@ export const Objective = () => {
     // Main
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <Title title={objective.title} />
         <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
         <EditableLabel label={objective.title} onSave={saveObjectiveTitle} allowEmpty={false}/>
         <EditableTextField label={objective.note} onSave={saveObjectiveMemo} allowEmpty={false}/>

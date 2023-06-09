@@ -17,6 +17,7 @@ import {
   Typography } from '@mui/material';
 
 import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
+import { Title } from '@/components/Title';
 import { useAuth } from '@/hooks';
 
 import { getObjectives, setObjective } from '../api';
@@ -55,6 +56,7 @@ export const Objectives = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: { xs: 1, sm: 1 } }}>
+      <Title title="目標一覧" />
       <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
       <Typography variant="h3" component="div" gutterBottom >
       目標一覧

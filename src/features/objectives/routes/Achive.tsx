@@ -18,6 +18,7 @@ import {
 import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
 import { EditableLabel } from '@/components/EditableLabel';
 import { StarRating } from '@/components/Rating';
+import { Title } from '@/components/Title';
 import { StyledToggleButtonGroup } from '@/components/ToggleButton';
 import { useAuth, useErrorSnackbar, useSuccessSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
@@ -99,6 +100,7 @@ export const NewAchive = () => {
 
   return (
     <Container maxWidth="xl" sx={MainContainerStyle}>
+      <Title title="指標 新規作成" />
       <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
       <Box>
       <Typography variant="h3" noWrap component="h3">
@@ -231,6 +233,7 @@ export const Achive = () => {
 
   return (
   <Container maxWidth="xl" sx={MainContainerStyle}>
+    <Title title={achive.title} />
     <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
     <Box>
       <Typography variant="h3" noWrap component="h3">{objective.title}</Typography>

@@ -10,6 +10,8 @@ import {
   } from '@mui/material';
 
 import { BreadcrumbsSetter } from '@/components/Breadcrumbs';
+import { Title } from '@/components/Title';
+
 import { useAuth, useErrorSnackbar, useInfoSnackbar } from '@/hooks';
 import { MainContainerStyle } from '@/styles';
 
@@ -62,11 +64,13 @@ export const KeyResult = () => {
     // Objectiveが取得できない場合
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <Title title="指標入力" />
         <ObjectiveNotFound />
       </Container>);
   } else if (keyResultId !== "new" && keyResult === null ) {
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <Title title="指標入力" />
         <KeyResultNotFound />
       </Container>);
   } else {
@@ -79,6 +83,7 @@ export const KeyResult = () => {
 
     return (
       <Container maxWidth="xl" sx={MainContainerStyle}>
+        <Title title={keyResultTitle} />
         <BreadcrumbsSetter breadcrumbs={breadcrumbs} />
         <Typography variant="h3" noWrap component="h3">
         {objective.title}

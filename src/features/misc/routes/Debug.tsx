@@ -1,10 +1,13 @@
 import { useTheme, Typography, Box } from '@mui/material';
 
+import { Title } from '@/components/Title';
+
 export const Debug = () => {
   const theme = useTheme();
 
   return (
     <div>
+      <Title title="DEBUG" />
       <Typography variant="h6">Color Palette</Typography>
       <Box display="flex" flexWrap="wrap">
         {Object.entries(theme.palette).map(([key, value]) => {

@@ -1,14 +1,20 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import Divider from '@mui/material/Divider';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';  
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import {
+  Container, 
+  Divider, 
+  Link, 
+  Typography, 
+} from '@mui/material';
+import {
+  Timeline, 
+  TimelineItem, 
+  TimelineConnector, 
+  TimelineContent, 
+  TimelineDot, 
+  TimelineOppositeContent, 
+  TimelineSeparator, 
+} from '@mui/lab';
+
+import { Title } from '@/components/Title';
 
 export const Changelog = () => {
   const Item = ({date, version, children}: { date: string, version: string, children: React.ReactNode}) => {
@@ -35,6 +41,7 @@ export const Changelog = () => {
 
   return (
   <Container maxWidth="md">
+    <Title title="変更履歴" />
     <Typography variant="h2" component="div" gutterBottom
       sx={{
         textAlign: "left",
