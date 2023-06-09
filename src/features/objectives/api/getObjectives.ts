@@ -17,7 +17,7 @@ export const getObjectives = async (userId: string): Promise<Array<Objective>> =
   }
 
   const ref = collection(store, `users/${userId}/objectives`).withConverter(ObjectiveConverter);
-  const snapshot = await getDocs(query( ref, orderBy("modifiedAt")));
+  const snapshot = await getDocs(query( ref, orderBy("modifiedAt", "desc")));
   const objectives : Array<Objective> = [];
   snapshot.forEach((doc) => {
     objectives.push(doc.data());
