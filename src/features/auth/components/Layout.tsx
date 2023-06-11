@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import { Head } from '@/components/Head';
+import { Title } from '@/components/Title';
 import { PublicLayout } from '@/components/Layout';
 
 type LayoutProps = {
@@ -10,7 +10,7 @@ type LayoutProps = {
 export const Layout = ({ children, title}: LayoutProps ) => {
   return(
   <PublicLayout >
-    <Head title={title} />
+    <Title title={title} />
       <Container component="main" maxWidth="xs">
         {children}
       </Container>

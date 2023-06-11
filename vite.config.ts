@@ -9,7 +9,7 @@ export default defineConfig(({command, mode}) => {
     plugins: [react(), svgr()],
     publicDir : "public", 
     build: {
-      outDir: mode == 'prod' ? '../dist' : `../dist_${mode}`,
+      outDir: mode == 'prod' ? './dist' : `./dist_${mode}`,
       emptyOutDir: true,
     },
     resolve: {
