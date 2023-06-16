@@ -52,6 +52,18 @@ export const Changelog = () => {
     </Typography>
     <Divider />
     <Timeline>
+      <Item date="2023/06/18" version="Version 0.3.0">
+        <div>
+          <Typography variant="body1" component="div" gutterBottom>
+          {"機能改修"}
+          </Typography>
+          <Typography variant="body2" component="div" gutterBottom>
+          {"目標管理の方式をOKRをベースとしたものに変更しました。"}
+          <br />
+          {"それに伴い、従来のデータは参照不可としています。"}
+          </Typography>
+        </div>
+      </Item>
       <Item date="2022/05/02" version="Version 0.2.0">
         <div>
           <Typography variant="body1" component="div" gutterBottom>
