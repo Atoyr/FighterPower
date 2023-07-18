@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { 
+  Box, 
   TextField, 
   Typography, 
   } from '@mui/material';
 
 import { StarRating } from '@/components/Rating';
+import { HelpTooltip } from '@/components/Tooltip';
 
 import { rankRatingLabels } from '../constants';
 
@@ -51,17 +53,23 @@ export const InputKeyResult = ({
         }
       }}
       />
-    <StarRating
-      value={rank} 
-      onChange={(newValue) => {
-        // HACK 
-        if (onChangeRank) {
-          onChangeRank(newValue);
-        }
-      }}
-      readOnly={readOnly ?? false}
-      labels={rankRatingLabels}
-      sx={{my: 1}}/>
+    <Box sx={{
+    display: 'flex',
+    flexDirection: 'row',}} >
+      <StarRating
+        value={rank} 
+        onChange={(newValue) => {
+          // HACK 
+          if (onChangeRank) {
+            onChangeRank(newValue);
+          }
+        }}
+        readOnly={readOnly ?? false}
+        labels={rankRatingLabels}
+        sx={{my: 1}}/>
+      <HelpTooltip title="クリア条件 D: 成功率50% C: 成功率60% B: 成功率70% A: 成功率80% S: 成功率90% " />
+
+    </Box>
     <TextField
       name="key_result_memo"
       id="key_result_memo"

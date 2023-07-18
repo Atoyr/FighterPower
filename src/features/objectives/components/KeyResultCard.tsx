@@ -9,6 +9,7 @@ import {
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 
 import { StarRating } from '@/components/Rating';
+import { HelpTooltip } from '@/components/Tooltip';
 
 import { rankRatingLabels } from '../constants';
 
