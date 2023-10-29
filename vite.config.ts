@@ -1,34 +1,21 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-const svgrPlugin = require('vite-plugin-svgr')
-import * as path from "path"
+import { resolve } from "path";
+import react from '@vitejs/plugin-react-swc';
+import svgr from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode}) => {
- return { 
-  root: './src',
-  build: {
-    outDir: mode == 'prod' ? '../public' : `../public_${mode}`,
-    emptyOutDir: true,
-  },
-  plugins: [
-    react(),
-    svgrPlugin({
-      svgrOptions: {
-        icon: true,
+  return { 
+    plugins: [react(), svgr()],
+    publicDir : "public", 
+    build: {
+      outDir: mode == 'prod' ? './dist' : `./dist_${mode}`,
+      emptyOutDir: true,
+    },
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
       }
-    })
-  ],
-  resolve: {
-    alias: {
-      "assets": path.resolve(__dirname, "src/assets"),
-      "components": path.resolve(__dirname, "src/components"),
-      "context": path.resolve(__dirname, "src/context"),
-      "data": path.resolve(__dirname, "src/data"),
-      "hook": path.resolve(__dirname, "src/hook"),
-      "lib": path.resolve(__dirname, "src/lib"),
-      "pages": path.resolve(__dirname, "src/pages"),
     }
   }
- }
 })

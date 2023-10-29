@@ -2,27 +2,29 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore';
 
-const apiKey: string = (import.meta.env.VITE_APIKEY ?? "") as string;
-const authDomain: string = (import.meta.env.VITE_AUTHDOMAIN ?? "") as string;
-const projectId: string = (import.meta.env.VITE_PROJECT_ID ?? "") as string;
-const storageBucket: string = (import.meta.env.VITE_STORAGE_BUCKET ?? "") as string;
-const messagingSenderId: string = (import.meta.env.VITE_MESSAGING_SENDER_ID ?? "") as string;
-const appId: string = (import.meta.env.VITE_APP_ID ?? "") as string;
-const measurementId: string = (import.meta.env.VITE_MEASUREMENT_ID ?? "") as string;
+import {
+  FIREBASE_API_KEY, 
+  FIREBASE_AUTH_DOMAIN, 
+  FIREBASE_PROJECT_ID, 
+  FIREBASE_STORAGE_BUCKET, 
+  FIREBASE_MESSAGING_SENDER_ID, 
+  FIREBASE_APP_ID, 
+  FIREBASE_MEASUREMENT_ID
+} from '@/config';
 
 const firebaseConfig = {
-    apiKey: apiKey,
-    authDomain: authDomain,
-    projectId: projectId,
-    storageBucket: storageBucket,
-    messagingSenderId: messagingSenderId,
-    appId: appId,
-    measurementId: messagingSenderId,
+    apiKey: FIREBASE_API_KEY, 
+    authDomain: FIREBASE_AUTH_DOMAIN, 
+    projectId: FIREBASE_PROJECT_ID, 
+    storageBucket: FIREBASE_STORAGE_BUCKET, 
+    messagingSenderId: FIREBASE_MESSAGING_SENDER_ID, 
+    appId: FIREBASE_APP_ID, 
+    measurementId: FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
-const firebaseAuth = getAuth();
-const firebaseFirestore = getFirestore();
+const auth = getAuth();
+const store = getFirestore();
 
 export default app;
-export { firebaseAuth, firebaseFirestore };
+export { auth, store };
